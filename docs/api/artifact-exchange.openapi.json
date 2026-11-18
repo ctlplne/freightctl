@@ -349,6 +349,12 @@
           "200": {
             "description": "Exact verified revision bytes or a requested byte range; no receiver-durability or business-processing claim.",
             "headers": {
+              "X-Exchange-Read-Authorization-ID": {
+                "description": "Read admission event ID for a full unconditional GET. A later report uses it after complete download verification.",
+                "schema": {
+                  "$ref": "#/components/schemas/ID"
+                }
+              },
               "X-Content-SHA256": {
                 "description": "Full immutable revision digest, including on a partial range response.",
                 "schema": {
@@ -406,6 +412,145 @@
           },
           "416": {
             "description": "Requested range is not satisfiable."
+          }
+        }
+      }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/exchanges/{exchange}/integrity-report": {
+      "parameters": [
+        {
+          "$ref": "#/components/parameters/tenant"
+        },
+        {
+          "$ref": "#/components/parameters/partner"
+        },
+        {
+          "$ref": "#/components/parameters/exchange"
+        }
+      ],
+      "post": {
+        "operationId": "recordRecipientIntegrityReport",
+        "summary": "Record the current recipient\u2019s length and SHA-256 report",
+        "description": "Use the exact authorization ID from an unconditional full GET and the length and SHA-256 computed from the complete download. Body limit 4 KiB. A valid report is a participant statement. Independent possession, durable storage and processing remain unknown.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserSession": [],
+            "csrfToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "$ref": "#/components/parameters/OperationKey"
+          },
+          {
+            "$ref": "#/components/parameters/Origin"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/IntegrityReportCommand"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The original report and its journal event committed together.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrityReport"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "The current recipient recovered the same report with the original key.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrityReport"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
+          }
+        }
+      },
+      "get": {
+        "operationId": "inspectRecipientIntegrityReport",
+        "summary": "Read the committed participant report",
+        "description": "Select incoming for a currently readable recipient grant. Select outgoing for the original sender under ordinary sender-receipt authority. Missing or unauthorized reports use the same refusal.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserSession": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "direction",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": ["incoming", "outgoing"]
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Original recipient-authored integrity report.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/IntegrityReport"
+                }
+              }
+            }
+          },
+          "400": {
+            "$ref": "#/components/responses/400"
+          },
+          "401": {
+            "$ref": "#/components/responses/401"
+          },
+          "403": {
+            "$ref": "#/components/responses/403"
+          },
+          "404": {
+            "$ref": "#/components/responses/404"
+          },
+          "409": {
+            "$ref": "#/components/responses/409"
+          },
+          "503": {
+            "$ref": "#/components/responses/503"
           }
         }
       }
@@ -1177,6 +1322,95 @@
           "size_bytes",
           "sha256",
           "acceptance_policy"
+        ]
+      },
+      "IntegrityReportCommand": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "schema_version": {
+            "type": "integer",
+            "const": 1
+          },
+          "exchange_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "request_hash": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "read_authorization_event_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "file_revision_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "size_bytes": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 0,
+            "maximum": 9223372036854775807
+          },
+          "sha256": {
+            "$ref": "#/components/schemas/SHA256"
+          }
+        },
+        "required": [
+          "schema_version",
+          "exchange_id",
+          "request_hash",
+          "read_authorization_event_id",
+          "file_revision_id",
+          "size_bytes",
+          "sha256"
+        ]
+      },
+      "IntegrityReport": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "profile": {
+            "const": "recipient-sha256-report-v1"
+          },
+          "exchange_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "request_hash": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "artifact": {
+            "$ref": "#/components/schemas/Artifact"
+          },
+          "read_authorization_event_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "observation": {
+            "const": "recipient-reported-sha256-and-length-match"
+          },
+          "event_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "recorded_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "receiver_persistence": {
+            "const": "unknown"
+          },
+          "business_processing": {
+            "const": "unknown"
+          }
+        },
+        "required": [
+          "profile",
+          "exchange_id",
+          "request_hash",
+          "artifact",
+          "read_authorization_event_id",
+          "observation",
+          "event_id",
+          "recorded_at",
+          "receiver_persistence",
+          "business_processing"
         ]
       },
       "ExchangeRequest": {

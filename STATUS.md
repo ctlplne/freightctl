@@ -361,6 +361,12 @@ records the guarded fast-forward to `439881e` and 17 original first-attempt
 workflows. Gitleaks scanned all eight outgoing commits and found zero leaks.
 Their native results remain due.
 
+[F538](docs/qualification/evidence/F538-recipient-https-integrity-report.json)
+records the recipient's length and SHA-256 statement for an exact authorized
+HTTPS read. Stock curl and PostgreSQL prove one report and one journal event
+with exact retries. Receiver persistence and business processing stay unknown.
+Native replay and report integration into other surfaces remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

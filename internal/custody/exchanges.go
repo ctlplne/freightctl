@@ -119,6 +119,16 @@ func (s *Service) InspectExchangeSource(ctx context.Context, scope store.Scope, 
 }
 
 func (s *Service) OpenExchangeReader(ctx context.Context, scope store.Scope, id string) (*store.File, *RevisionReader, error) {
+	return s.openExchangeReader(ctx, scope, id, false)
+}
+
+// OpenExchangeReportReader gives the full HTTP response's recipient an exact
+// read authorization selector for a later report, after ordinary admission.
+func (s *Service) OpenExchangeReportReader(ctx context.Context, scope store.Scope, id string) (*store.File, *RevisionReader, error) {
+	return s.openExchangeReader(ctx, scope, id, true)
+}
+
+func (s *Service) openExchangeReader(ctx context.Context, scope store.Scope, id string, reportEligible bool) (*store.File, *RevisionReader, error) {
 	if !store.ValidID(id) {
 		return nil, nil, store.ErrNotFound
 	}
@@ -156,15 +166,26 @@ func (s *Service) OpenExchangeReader(ctx context.Context, scope store.Scope, id 
 	if err = t.Reauthorize(admission); err != nil {
 		return nil, nil, err
 	}
-	if _, err = t.Append(admission, "ArtifactExchangeRetrievalAuthorized", e.ID, map[string]string{"file_revision_id": f.ID, "sha256": f.SHA256, "evidence": "read-authorized-only"}); err != nil {
+	payload := map[string]string{"file_revision_id": f.ID, "sha256": f.SHA256, "evidence": "read-authorized-only"}
+	if reportEligible {
+		payload["report_profile"] = store.ExchangeIntegrityReportProfile
+	}
+	event, err := t.Append(admission, "ArtifactExchangeRetrievalAuthorized", e.ID, payload)
+	if err != nil {
 		return nil, nil, err
 	}
 	if err = t.Tx.Commit(admission); err != nil {
 		return nil, nil, err
 	}
 	ok = true
-	return f, &RevisionReader{service: s, ctx: ctx, scope: scope, file: f, data: data, exchangeID: e.ID}, nil
+	reader := &RevisionReader{service: s, ctx: ctx, scope: scope, file: f, data: data, exchangeID: e.ID}
+	if reportEligible {
+		reader.reportAuthorization = event
+	}
+	return f, reader, nil
 }
+
+func (r *RevisionReader) ExchangeReportAuthorization() string { return r.reportAuthorization }
 
 func (r *RevisionReader) checkExchangeRead(ctx context.Context, t *store.Transaction) error {
 	limits, _, err := r.service.ExchangeLimits()

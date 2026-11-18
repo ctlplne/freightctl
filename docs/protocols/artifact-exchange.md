@@ -120,6 +120,35 @@ under their own permissions. Ordinary event feeds/audit exports retain the closu
 event identity and exact payload digest, keeping its operation key and private
 participant bindings in the protected journal.
 
+### Recipient integrity report
+
+After a full, unconditional `GET exchanges/{exchange}/file`, the recipient can
+send a report through `POST exchanges/{exchange}/integrity-report`. Save the
+`X-Exchange-Read-Authorization-ID` from the response. Read the complete body and
+compute its length and SHA-256 locally. HEAD, range and conditional requests
+leave this header out.
+
+Send `schema_version` 1, the `exchange_id`, the original `request_hash`, the
+`read_authorization_event_id` from the header, the `file_revision_id`, the
+measured `size_bytes`, and the measured `sha256`. The 4 KiB control body uses
+the ordinary authenticated scope and an `Idempotency-Key`. Browser sessions
+use the ordinary same-origin and CSRF checks. PostgreSQL verifies the exact
+recipient, active grant, offered revision, eligible read event, length and hash
+before committing the report and its journal event together.
+
+The receipt records `recipient-reported-sha256-and-length-match`. This is the
+authenticated participant's statement. Independent possession, durability at
+the receiver and business processing stay unknown. The report creates no
+delivery or execution authority. `availability-only-v1` remains the offer's
+contract. The recipient may choose to add one report per exchange.
+
+Repeat the same key and body while the incoming grant remains readable to get
+the original receipt. A different statement under that key and a second report
+both conflict. Read the exact receipt with `GET exchanges/{exchange}/integrity-report`
+and an explicit `direction=incoming` or `direction=outgoing`. Incoming reads
+require the live receive grant. The original sender can read an already recorded
+report after closure under ordinary sender-receipt authority.
+
 API/CLI closure, offered-view browser decline,reviewed browser sending and
 [sender history](artifact-exchange-outgoing.md) are implemented.
 [Browser endpoint administration](artifact-exchange-admin-browser.md) is implemented.

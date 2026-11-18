@@ -223,6 +223,15 @@ jobs:
         run: |
           sh scripts/go.sh test -tags=integration -timeout=120s -count=1 -p 1 -race -v \
             -run '^TestStockSFTPOnwardLostPublicationReplyReconcilesReadOnly$' ./internal/workflow
+      - name: Recipient integrity report from a stock HTTPS download
+        if: ${{ !cancelled() && steps.postgres.outcome == 'success' }}
+        env:
+          FREIGHTCTL_TEST_ADMIN_FILE: ${{ github.workspace }}/.private/pg-admin.dsn
+          FREIGHTCTL_TEST_RUNTIME_FILE: ${{ github.workspace }}/.private/pg-runtime.dsn
+        run: |
+          curl --version
+          sh scripts/go.sh test -tags=integration -timeout=120s -count=1 -p 1 -race -v \
+            -run '^TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload$' ./internal/api
       - name: Independent stock FTPS producer through HTTPS agent custody to stock SFTP
         if: ${{ !cancelled() && steps.postgres.outcome == 'success' && steps.stock_clients.outcome == 'success' }}
         env:

@@ -274,14 +274,33 @@ func (s *Server) downloadExchange(w http.ResponseWriter, r *http.Request) {
 		requestFailure(w, r, err)
 		return
 	}
-	file, reader, err := s.Service.OpenExchangeReader(r.Context(), identity, r.PathValue("exchange"))
+	open := s.Service.OpenExchangeReader
+	if fullExchangeGet(r) {
+		open = s.Service.OpenExchangeReportReader
+	}
+	file, reader, err := open(r.Context(), identity, r.PathValue("exchange"))
 	if err != nil {
 		requestFailure(w, r, err)
 		return
 	}
 	defer reader.Close()
+	if id := reader.ExchangeReportAuthorization(); id != "" {
+		w.Header().Set("X-Exchange-Read-Authorization-ID", id)
+	}
 	w.Header().Set("X-Artifact-Exchange-ID", r.PathValue("exchange"))
 	// No mutable filename or file path enters serving or content disposition.
 	// Range reads use the same bounded, live-authorized revision reader.
 	serveArtifactRevision(w, r, file, reader, `attachment; filename="artifact"`)
+}
+
+func fullExchangeGet(r *http.Request) bool {
+	if r.Method != http.MethodGet {
+		return false
+	}
+	for _, field := range []string{"Range", "If-Match", "If-None-Match", "If-Modified-Since", "If-Unmodified-Since", "If-Range"} {
+		if len(r.Header.Values(field)) != 0 {
+			return false
+		}
+	}
+	return true
 }

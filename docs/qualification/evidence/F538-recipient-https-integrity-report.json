@@ -1,0 +1,120 @@
+{
+  "schema_version": 1,
+  "id": "F538",
+  "observed_at": "2026-11-19",
+  "base_candidate": "1d73863bc8750706c2723bef1e6afa7a4507e562",
+  "qualification_claim": false,
+  "scope": "Recipient-supplied length and SHA-256 report for an exact authorized stock HTTPS read",
+  "first_failure": {
+    "finding": "The baseline served the complete bytes to stock curl but supplied no persisted read authorization selector for the explicit recipient report.",
+    "baseline_overlay_log": {
+      "sha256": "1835d0b4529598f8dee14635136c3acd567e84e7b3f98129f4c9cd1a02c21614",
+      "bytes": 337
+    }
+  },
+  "implementation_failure": {
+    "finding": "The existing deferred event guard safely rejected the new read admission payload. Migration 68 accepts the exact ordinary payload or the exact report-eligible payload under the same current recipient, policy and revision checks.",
+    "go_log": {
+      "sha256": "86cc60a516f9d2a1019ca62cded5841657298dcc93e4b30d9b1a229bcabcc65b",
+      "bytes": 308
+    },
+    "postgres_log": {
+      "sha256": "8929ba0fdc1e2419e6d66181f422acc48d946759313b4db8b2a35792c9b2cfc7",
+      "bytes": 3869
+    }
+  },
+  "local": {
+    "environment": "macOS ARM, Go 1.27.4, stock curl 8.7.1 with exact loopback TLS certificate trust, actual PostgreSQL 16.15, disk custody, ordinary bearer and browser-cookie identities",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "migration": 68,
+    "observed_reports": 1,
+    "observed_report_events": 1,
+    "delivery_intents": 0,
+    "race_first_green_log": {
+      "sha256": "6591fe7f2109dbf9aacc1ad7e2292d5eaa1a4d1746df1431cd5c2531da922f12",
+      "bytes": 2578
+    },
+    "final_race_and_vet_log": {
+      "sha256": "1c62a15a99c59a10be33027b04a9c78f15790c8b82daa8f0b790676368447d21",
+      "bytes": 2864
+    },
+    "assertions": [
+      "A separate authenticated recipient used stock curl to retrieve the complete immutable artifact, verified exact bytes and computed the report values from its downloaded copy.",
+      "The service verifies the original request, file revision, length, digest and an eligible read-authorized event for the same recipient. HEAD, Range, conditional and old-shaped read admissions supply no eligible report selector.",
+      "The recipient report and receipt commit together. The database refuses a stand-alone report event. A same-key bearer or browser-cookie retry returns the identical receipt. New-key duplicates, changed digest, wrong actor and forged event fail.",
+      "Original sender reads preserve the historical report after closure. Recipient reads and retries still require a live receive grant. Current source lineage and original HTTPS, closure and receipt tests pass again.",
+      "The receipt marks the statement as recipient-reported. Receiver persistence and business processing remain unknown. No report created or authorized an onward delivery."
+    ],
+    "static_checks": {
+      "tagged_go_vet": "pass",
+      "actionlint_1_7_12": "pass",
+      "schema_policy_contracts": "pass",
+      "metadata_summary_cases": 7,
+      "ftps_summary_cases": 74
+    }
+  },
+  "sources": [
+    {
+      "path": "internal/store/068_exchange_integrity_reports.sql",
+      "sha256": "c6b0a106eb6877c71534f8cd906c47e0a9a7eaa6cefd1d84df6fa90ed412dbf2",
+      "bytes": 7819
+    },
+    {
+      "path": "internal/store/exchange_integrity_reports.go",
+      "sha256": "8da21b3ee1725c7e21c2c8b41bb437d74262319108004545cf5851a232169651",
+      "bytes": 7231
+    },
+    {
+      "path": "internal/store/store.go",
+      "sha256": "12266fa0965a6525a04f53df7d7db543fad3daec5d982baa0ca3eb77f6cb9407",
+      "bytes": 29445
+    },
+    {
+      "path": "internal/api/exchange_integrity_reports.go",
+      "sha256": "4fec60af0d8b612ac3d953e6a1bddf0dca26cbd1c918b7aa914b3b306c12048e",
+      "bytes": 1592
+    },
+    {
+      "path": "internal/api/exchange_integrity_integration_test.go",
+      "sha256": "8d5c3ade907dde62e5b3dcc54f114c0a2cf1573cb1b27c0df3b666a243ae7931",
+      "bytes": 10645
+    },
+    {
+      "path": "internal/api/artifact_exchanges.go",
+      "sha256": "33e14f22f5fb6cc21a33e675cc23ac86cba0a03b7c5522cb3c74e9ad4267de85",
+      "bytes": 7147
+    },
+    {
+      "path": "internal/custody/exchanges.go",
+      "sha256": "c06b6942d9cdbf53fe7a73f60f4441e6f3f92e7ea18c4c1677ae4f4eb0753bb2",
+      "bytes": 7657
+    },
+    {
+      "path": "internal/custody/writer.go",
+      "sha256": "7199fc18a94b38bec6983630dce8628146ad6b2477781d909e48e10d53f49030",
+      "bytes": 12468
+    },
+    {
+      "path": "docs/api/artifact-exchange.openapi.json",
+      "sha256": "9c77d14e3b9e89cee1d11ba1ecff575d45c644ff26a5501eb08e299e23e9fd19",
+      "bytes": 50849
+    },
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "9f2046c051efbcad11545a5d968392a6c1c8ca6102dc2d66ffb0666a0e6448c2",
+      "bytes": 17053
+    },
+    {
+      "path": "scripts/metadata_contract.py",
+      "sha256": "ed3265195a0cf9657bc91a79d54be957ba37ad0ba46b60081b21b67f1c5ccca7",
+      "bytes": 5156
+    }
+  ],
+  "remaining": [
+    "Run the exact report native Linux x86 and ARM steps and schema-68 backup and restore.",
+    "Add the report to ordinary evidence, CLI, browser and agent workflows. Any receiver-owned durability or business receipt needs a separate contract and evidence.",
+    "The complete AX05 and AX-J01/AX-J02 profiles stay open."
+  ]
+}
