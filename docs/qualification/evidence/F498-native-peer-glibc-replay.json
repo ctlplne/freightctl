@@ -1,0 +1,57 @@
+{
+  "schema_version": 1,
+  "id": "F498",
+  "observed_at": "2026-11-18",
+  "candidate": "b7b0eb5483d5d5fae6017be6d202436d0049edbb",
+  "base_evidence": "docs/qualification/evidence/F483-x86-native-peer-advisories.json",
+  "scope": "Original x86 peer image result and pinned upstream inputs for a possible musl peer",
+  "qualification_claim": false,
+  "native_x86": {
+    "run_id": 44322163267,
+    "attempt": 1,
+    "job_id": 134863688195,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/44322163267/job/134863688195",
+    "conclusion": "failure",
+    "raw_log_sha256": "baddf89ef2315bbd08c87573d856b20484efd0510ede0e6355358b1c4bfdaf92",
+    "raw_log_bytes": 314603,
+    "upstream_ftp_engine_step": "failure",
+    "postgresql_integration_step": "skipped",
+    "enforcing_image_scan": "failure",
+    "image_id": "sha256:254a0625a92d8ef5e492797714dbf046f3fffcc1c57466985bdbecff58eecb7d",
+    "report_sha256": "6a6fb1dfa05c0a5870a86cf2b143762e6eef7cf423ded550b4d647a32dc127d6",
+    "feed_database_sha256": "7244f40ff53c4ac2909d8fba04aa4937354a620c380dc83bbc51df715f6cd68d",
+    "feed_updated_at": "2026-11-18T13:03:23.615586+00:00",
+    "blocking_unknown_without_fix_metadata": [
+      "CVE-2026-100290",
+      "CVE-2026-115819",
+      "CVE-2026-121757",
+      "CVE-2026-121758",
+      "CVE-2026-124024"
+    ],
+    "suppressed_findings": 0,
+    "new_blocking_advisories_since_F483": 0
+  },
+  "native_macos_unit": {
+    "run_id": 44322162732,
+    "job_id": 134863685874,
+    "conclusion": "cancelled",
+    "recorded_step_count": 0,
+    "unit_test_result": "unverified",
+    "matrix_metadata_sha256": "a79ba9d659ee1cf410040450850df6fdf1825a0520db679c5c1425c81e27d03b"
+  },
+  "upstream_registry_metadata": {
+    "image": "docker.io/library/node:26.13.0-alpine3.24",
+    "source": "https://hub.docker.com/_/node",
+    "index_digest": "sha256:8996bb5821d62a8fd9bb27c1cb07462f3fdce6e47d640c6a881ead0b064ce216",
+    "amd64_manifest_digest": "sha256:b2646ba6d774dc22c24d89fc37103fcf4c4467e870c78b9519aa403300b2835a",
+    "arm64_manifest_digest": "sha256:20c29f6abefc3dffbdcae5677e4ee5dd0c45073a24ff6f5a7f25010b825f0a7b",
+    "source_revision": "34e1b0030b415bdea959ccb15afda976a0761346",
+    "manifest_metadata_sha256": "364f3e528c0c0b06b1a1355d436c5c36e372dddab68ffd00ec31cf90d925f7ac",
+    "runtime_and_scan_result": "unverified"
+  },
+  "remaining": [
+    "Retain the Debian runtime security findings and qualify a pinned shell-free runtime preserving the exact Node and OpenPGP behavior.",
+    "Verify musl and every shipped package are inventoried and require an enforcing fresh-feed scan on native x86 and ARM with zero suppressions.",
+    "Preserve and finish the last original ARM job and replay the native failure and skipped steps."
+  ]
+}

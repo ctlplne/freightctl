@@ -115,6 +115,13 @@ records the native source-scan matrix at `b7b0eb5`. Windows and Linux ARM
 passed. GitHub marked the macOS ARM job canceled with no assigned runner
 and no recorded steps. The macOS scan remains unverified.
 
+[F498](docs/qualification/evidence/F498-native-peer-glibc-replay.json)
+preserves the original `b7b0eb5` x86 image scan. The same five glibc
+advisories block the peer image. The native x86 PostgreSQL step was
+skipped after the FTP engine step failed. An official Node Alpine image
+has pinned x86 and ARM manifests. Its shell-free runtime and enforcing
+scan still require proof.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
