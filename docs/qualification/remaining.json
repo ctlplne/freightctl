@@ -2075,7 +2075,8 @@
         "docs/qualification/evidence/F539-native-generated-lineage-original.json",
         "docs/qualification/evidence/F540-native-cli-mcp-integrity-report.json",
         "docs/qualification/evidence/F541-stock-mcp-tls-boundary.json",
-        "docs/qualification/evidence/F542-original-lineage-batch-terminal.json"
+        "docs/qualification/evidence/F542-original-lineage-batch-terminal.json",
+        "docs/qualification/evidence/F543-guarded-integrity-surfaces-batch.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -2269,7 +2270,8 @@
         "F539 records the exact original generated lineage test passing on native Linux Chrome and the three native source scans passing. The separate original recipient UI step remains red. The workflow catalog shows one later-visible successful document-container original in addition to the 17 launch observations. Terminal replay for the full batch remains due.",
         "F540 uses the native CLI to verify and sync downloaded bytes before preparing an explicit report command. The stock MCP SDK submits the exact command under the recipient's original key. Scoped CLI, MCP and HTTPS reads and retries return the same report, including sender history after recipient revocation and daemon restart. Native Linux, schema-68 restore and browser report integration remain due.",
         "F541 repairs the original architecture import failure by routing stock MCP fixture TLS through internal/crypto. The workflow template requires 79 tables and 78 forced-RLS tables under schema 68, and the receiver snapshot covers all 78 non-event tables. The exact local stock OpenSSH and governed FTPS recovery replays pass.",
-        "F542 preserves 18 original workflows and 39 jobs at 439881e, with 13 workflow passes and five failures. Both native Linux hosts passed the exact stock OpenSSH lost-reply test. The original ARM FTPS producer passed both modes and the x86 explicit probe ended before a stock control connection with worker exit status 2. Exact schema-68 native replays and the remaining original failures stay open."
+        "F542 preserves 18 original workflows and 39 jobs at 439881e, with 13 workflow passes and five failures. Both native Linux hosts passed the exact stock OpenSSH lost-reply test. The original ARM FTPS producer passed both modes and the x86 explicit probe ended before a stock control connection with worker exit status 2. Exact schema-68 native replays and the remaining original failures stay open.",
+        "F543 records the guarded fast-forward from 439881e to 7fda192 after all prior originals became terminal. Gitleaks passed on six owner-authored and owner-committed commits. Eighteen exact first attempts include the report, restore, crypto boundary and FTPS client replay. Their native results remain open."
       ],
       "current_item": {
         "id": "F425",

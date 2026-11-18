@@ -389,6 +389,11 @@ Linux hosts passed the lost OpenSSH reply recovery. The stock FTPS producer
 passed on ARM. Its x86 worker exited with status 2 before logging a control
 connection, leaving the TLS version refusal unverified.
 
+[F543](docs/qualification/evidence/F543-guarded-integrity-surfaces-batch.json)
+records the fast-forward to `7fda192` with Gitleaks checking all six outgoing
+commits and finding zero leaks. GitHub created 18 original first-attempt
+workflows. Exact native report and schema-68 restore results remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

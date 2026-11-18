@@ -1,0 +1,156 @@
+{
+  "schema_version": 1,
+  "id": "F543",
+  "observed_at": "2026-11-19",
+  "candidate": "7fda19225e0650fc325bf8b6ad31bfe72fde1423",
+  "qualification_claim": false,
+  "preceding_terminal_record": "docs/qualification/evidence/F542-original-lineage-batch-terminal.json",
+  "report_integration_record": "docs/qualification/evidence/F540-native-cli-mcp-integrity-report.json",
+  "tls_fixture_repair_record": "docs/qualification/evidence/F541-stock-mcp-tls-boundary.json",
+  "push": {
+    "previous": "439881e7ee734c0118201e4fe56266ab3a949fd8",
+    "remote_ref": "refs/heads/main",
+    "remote_head_verified": true,
+    "fast_forward": true,
+    "owner_author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+    "commits": [
+      "1d73863bc8750706c2723bef1e6afa7a4507e562",
+      "8a9f1bddcf8e0ef3876e29aaa65d1e3ff11acbfa",
+      "bb8221fccf1dab765298d6347ca719ff6f046b90",
+      "7251c793c282663cc242c06a158950173a58ece7",
+      "76927669610fcc745d215550fc6dcda99943334a",
+      "7fda19225e0650fc325bf8b6ad31bfe72fde1423"
+    ],
+    "previous_attempt_one_workflows_terminal": 18,
+    "pre_push_guard": ".githooks/pre-push",
+    "gitleaks_version": "8.30.1",
+    "gitleaks_commits_scanned": 6,
+    "gitleaks_reported_bytes": 118624,
+    "gitleaks_leaks": 0,
+    "redacted_log": {
+      "sha256": "6d1612faeca13c6a0ae87281fe7dad6464aedcbcfcdc74258258e61ee0abf511",
+      "bytes": 211
+    }
+  },
+  "originals_at_first_recorded_observation": [
+    {
+      "name": "Core correctness and security",
+      "run": 44406961816,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native FTPS client and independent stock receiver",
+      "run": 44406961743,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native FTPS dispatch approval qualification",
+      "run": 44406961422,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native FTPS stock clients and custody",
+      "run": 44406961759,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native FTPS workflow consent qualification",
+      "run": 44406961447,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native JSON intake and custody interfaces",
+      "run": 44406961794,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "run": 44406961886,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native Windows and macOS unit checks",
+      "run": 44406961485,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native artifact receive browser",
+      "run": 44406961548,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native browser and FTPS operator qualification",
+      "run": 44406961892,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native first enrollment and browser exchange",
+      "run": 44406961574,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native immutable HTTPS stock resume",
+      "run": 44406961970,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native independent DAV application",
+      "run": 44406961340,
+      "attempt": 1,
+      "status": "in_progress"
+    },
+    {
+      "name": "Native legacy SCP regular-file custody",
+      "run": 44406961630,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native reproducible core binaries",
+      "run": 44406961486,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native source vulnerability configurations",
+      "run": 44406961862,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native tus stock client and custody checkpoints",
+      "run": 44406961456,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Stock peer and browser qualification",
+      "run": 44406961418,
+      "attempt": 1,
+      "status": "queued"
+    }
+  ],
+  "status_counts": {
+    "queued": 17,
+    "in_progress": 1
+  },
+  "originals_metadata": {
+    "sha256": "c40423c0cb46582747967f48812e3bc048c484cbc6ed6b31d7d1ce892731c675",
+    "bytes": 220873
+  },
+  "remaining": [
+    "Collect the exact original native report, schema-68 restore, architecture and security outcomes from all triggered workflows. Preserve the original x86 FTPS refusal and other open journeys."
+  ]
+}
