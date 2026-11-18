@@ -12,7 +12,7 @@ import (
 )
 
 const sftpgoMigrationUsage = "freightctl migration-plan-sftpgo --source-file <protected SFTPGo Community format-17 JSON dump>"
-const sftpgoCalendarUsage = "freightctl migration-prepare-sftpgo-calendar --source-file <protected dump> --request-file <protected calendar mapping>"
+const sftpgoCalendarUsage = "freightctl migration-prepare-sftpgo-calendar --source-file <protected dump> --request-file <protected calendar mapping> [--occurrences-file <protected source record>]"
 
 func migrationPlanSFTPGo(args []string, output io.Writer) error {
 	flags := flag.NewFlagSet("migration-plan-sftpgo", flag.ContinueOnError)
@@ -49,11 +49,12 @@ type sftpgoCalendarRequest struct {
 }
 
 type preparedSFTPGoCalendar struct {
-	SourceSHA256    string                     `json:"source_sha256"`
-	SourceSchedule  string                     `json:"source_schedule"`
-	SourceRuleState string                     `json:"source_rule_state"`
-	RuleDisposition string                     `json:"source_rule_disposition"`
-	Selection       workflow.ScheduleSelection `json:"selection"`
+	SourceSHA256    string                       `json:"source_sha256"`
+	SourceSchedule  string                       `json:"source_schedule"`
+	SourceRuleState string                       `json:"source_rule_state"`
+	RuleDisposition string                       `json:"source_rule_disposition"`
+	Selection       workflow.ScheduleSelection   `json:"selection"`
+	Comparison      *migrationCalendarComparison `json:"comparison,omitempty"`
 }
 
 func migrationPrepareSFTPGoCalendar(args []string, output io.Writer) error {
@@ -61,6 +62,7 @@ func migrationPrepareSFTPGoCalendar(args []string, output io.Writer) error {
 	flags.SetOutput(io.Discard)
 	sourcePath := flags.String("source-file", "", "protected SFTPGo Community JSON dump")
 	requestPath := flags.String("request-file", "", "protected calendar mapping")
+	occurrencesPath := flags.String("occurrences-file", "", "protected source calendar occurrence record")
 	if err := flags.Parse(args); errors.Is(err, flag.ErrHelp) {
 		_, err := io.WriteString(output, sftpgoCalendarUsage+"\n")
 		return err
@@ -84,6 +86,12 @@ func migrationPrepareSFTPGoCalendar(args []string, output io.Writer) error {
 	prepared, err := prepareSFTPGoCalendar(plan, request)
 	if err != nil {
 		return err
+	}
+	if *occurrencesPath != "" {
+		prepared.Comparison, err = compareProtectedCalendarOccurrences(prepared, *occurrencesPath)
+		if err != nil {
+			return err
+		}
 	}
 	encoder := json.NewEncoder(output)
 	encoder.SetIndent("", "  ")

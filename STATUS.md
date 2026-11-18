@@ -107,6 +107,12 @@ planner. freightctl and the exact scheduler dependency pinned by SFTPGo
 agree on 77 occurrences across two original exports. A month/day rule
 remains unsupported. This compares timing before any workflow action.
 
+[F472](docs/qualification/evidence/F472-protected-calendar-occurrence-record.json)
+adds a protected source occurrence record to calendar preparation. The CLI
+matches the exact stock reference and shows both sides of a one-minute shift,
+even when the counts are equal. Live operational observations and workflow
+effect comparisons remain due.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

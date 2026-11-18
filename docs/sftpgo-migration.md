@@ -85,6 +85,24 @@ rule. Use the selection through [ordinary schedule preview and approval](schedul
 with the intended tenant and partner. That flow verifies the current
 destination, workflow, authority, approval and custody state.
 
+## Compare a source occurrence record
+
+Add `--occurrences-file .private/source-occurrences.json` to the preparation
+command when you have the source's full occurrence list for the selected
+window. The protected record uses `schema_version: 1`, the same
+`source_sha256` and `source_schedule`, matching `starts_at` and
+`ends_at`, and an `occurrences` array of sorted, unique UTC timestamps at
+whole-second precision. The window includes its start and excludes its end.
+Use `[]` for an observed empty window. Choose a shorter window when either
+calendar would exceed 512 occurrences.
+
+The comparison reports the reference file's digest, the counts on each side,
+and the exact UTC times that appear on only one side. An equal count can
+hide a shifted run, so review `only_recorded` and `only_prepared` before
+ordinary preview. This compares supplied timing evidence. Comparing file
+selection, output bytes and downstream effects needs separate isolated
+execution.
+
 Stock export exercises cover disabled scheduled rules and their shared action,
 a disabled user with a role, primary group and folder references, scoped
 credentials, and a password-protected share. Effective permission and storage

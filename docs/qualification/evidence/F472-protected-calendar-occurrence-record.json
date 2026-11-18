@@ -1,0 +1,51 @@
+{
+  "schema_version": 1,
+  "id": "F472",
+  "observed_at": "2026-11-18",
+  "base_candidate": "46639c1",
+  "base_evidence": "docs/qualification/evidence/F471-sftpgo-calendar-occurrence-comparison.json",
+  "scope": "Read-only comparison of a prepared calendar with a protected occurrence record bound to one exact stock export row and UTC window",
+  "qualification_claim": false,
+  "platform": "darwin/arm64",
+  "go_version": "go1.27.4",
+  "red": {
+    "exit_code": 1,
+    "observation": "The previous CLI rejects the occurrence-record flag.",
+    "log_sha256": "0f11e9a6ffc30c9c1f798feb98b7ad6d9afbf546833c04e4764ab7c577634a19"
+  },
+  "reference": {
+    "stock_export_sha256": "d62de485c9249125bd3e569e000b835ac56d42d5d64e6b1a46a65b4cfc23fd0d",
+    "prepared_mapping_sha256": "ed5b3d64ded67a86f1d8718597f3563696e556e42649e7d2d8a297ca8dc3895a",
+    "source_method": "Calculate exact source-side UTC occurrences using the scheduler version and module checksums retained in F471, with the unchanged stock source row and prepared window.",
+    "private_reference_directory": ".private/freightctl-f472-witness",
+    "reference_driver_sha256": "048808cebc7a1db08e73968ce30e4591cb2415e2beb2e3f9bc2eb4e41603f88b",
+    "reference_record_sha256": "92c539e52b59de3c61c7f55b5aa1c69a81879a4fab9157dc96c4fdaba539d31e",
+    "window_start_inclusive": "2027-01-01T00:00:00Z",
+    "window_end_exclusive": "2027-02-01T00:00:00Z"
+  },
+  "native_cli": {
+    "executable_sha256": "09733447faa3eff63ed70064d46b09451757a16f4bd66d83454f7859cfb72a11",
+    "matching_output_sha256": "46669e1f5ac9e9eeb5b26f28d761aea212e9c146b25d51dfd04edeb0dc889cc8",
+    "mismatching_output_sha256": "9853dd44bebac3592d1cfa028f931afa88ed7a910e656972eb03e3aaf174a5dd",
+    "matching_fixture_recorded_count": 4,
+    "matching_fixture_prepared_count": 4,
+    "mismatch_preserves_identical_counts_and_reports_shift": true,
+    "only_recorded_for_mismatching_fixture": ["2027-01-12T07:01:00Z"],
+    "only_prepared_for_mismatching_fixture": ["2027-01-12T07:00:00Z"],
+    "wrong_row_refused_before_output": true,
+    "no_reference_output_matches_existing_format_and_bytes": true,
+    "matching_replay_byte_identical_and_reference_unchanged": true,
+    "actions_executed": 0
+  },
+  "checks": {
+    "focused_race_cases_including_parents": 21,
+    "focused_race_log_sha256": "636c3db1b9df1512068da727faac2ce2cf8671b46d2d1ba3dabb4acdec9a3756",
+    "affected_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Compare real operational observations and the remaining file selection, byte output, access, recovery and downstream effect contracts.",
+    "Prove live reviewed destination adoption, controlled cutover and exit."
+  ]
+}
