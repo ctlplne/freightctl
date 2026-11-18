@@ -348,7 +348,7 @@ separate lost OpenSSH reply still needs its native replay.
 passes the actual generated-artifact lineage in sandboxed Chromium. The
 same sender session sees the input link after a separate release. The
 recipient receives the exact output with the source evidence withheld.
-The new native Linux Chrome step remains due.
+F539 records the native Linux Chrome replay.
 
 [F536](docs/qualification/evidence/F536-original-reviewed-onward-batch-terminal.json)
 records all 17 original workflows and 37 jobs at `2c19ff2`. Nine workflows
@@ -366,6 +366,11 @@ records the recipient's length and SHA-256 statement for an exact authorized
 HTTPS read. Stock curl and PostgreSQL prove one report and one journal event
 with exact retries. Receiver persistence and business processing stay unknown.
 Native replay and report integration into other surfaces remain due.
+
+[F539](docs/qualification/evidence/F539-native-generated-lineage-original.json)
+records the original generated-artifact lineage step passing on Linux x86
+Chrome with real PostgreSQL. The separate recipient UI step still failed.
+The three exact source-scan configurations and the core workflow passed.
 
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed

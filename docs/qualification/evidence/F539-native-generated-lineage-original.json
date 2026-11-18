@@ -1,0 +1,132 @@
+{
+  "schema_version": 1,
+  "id": "F539",
+  "observed_at": "2026-11-19",
+  "candidate": "439881e7ee734c0118201e4fe56266ab3a949fd8",
+  "qualification_claim": false,
+  "launch_record": "docs/qualification/evidence/F537-guarded-generated-lineage-batch.json",
+  "local_lineage_record": "docs/qualification/evidence/F535-live-browser-projection-lineage.json",
+  "native_lineage": {
+    "run": 44400839844,
+    "job": 135143087150,
+    "attempt": 1,
+    "platform": "Ubuntu 24.04 x86_64",
+    "job_conclusion": "failure",
+    "passing_step": {
+      "number": 9,
+      "name": "Generated artifact lineage in separate sender and recipient browser sessions",
+      "conclusion": "success",
+      "safe_log": {
+        "sha256": "84ee3e144929b81492b5bec5892018c7744dd9123c2146c4eaab5cff37a600f3",
+        "bytes": 3020
+      }
+    },
+    "browser_version": "157.0.8103.50",
+    "node": "26.13.0",
+    "race_enabled": true,
+    "sign_ins": 2,
+    "https_traces": 5,
+    "accessibility_checks": 2,
+    "external_egress": 0,
+    "effect_requests": 0,
+    "original_failed_step": {
+      "number": 8,
+      "name": "Actual recipient UI, exact bytes, unrelated user and endpoint revocation",
+      "conclusion": "failure"
+    },
+    "metadata": {
+      "sha256": "edf58006857bd1e3d114f657dd2f416fcb36a6f734a2430471d78af24631d409",
+      "bytes": 3455
+    }
+  },
+  "native_source_scan": {
+    "run": 44400839475,
+    "attempt": 1,
+    "scope": "Default source on each actual host",
+    "conclusion": "success",
+    "jobs": [
+      {
+        "job": 135143086825,
+        "name": "Native vulnerability source (darwin/arm64)",
+        "step": 4,
+        "conclusion": "success",
+        "native": {
+          "GOARCH": "arm64",
+          "GOHOSTARCH": "arm64",
+          "GOHOSTOS": "darwin",
+          "GOOS": "darwin",
+          "GOVERSION": "go1.27.4"
+        },
+        "source_report_sha256": "dc97257e4aae27270ec93dd541923320b7d7ba317a2ea27b113fc9201586b206",
+        "log": {
+          "sha256": "5ed588c49fe7dca96fe5a884dedd5dff98c4044c5c639af4d928196f71499a69",
+          "bytes": 46093
+        }
+      },
+      {
+        "job": 135143087315,
+        "name": "Native vulnerability source (windows/amd64)",
+        "step": 4,
+        "conclusion": "success",
+        "native": {
+          "GOARCH": "amd64",
+          "GOHOSTARCH": "amd64",
+          "GOHOSTOS": "windows",
+          "GOOS": "windows",
+          "GOVERSION": "go1.27.4"
+        },
+        "source_report_sha256": "d8c5931b1a06c2d85f00dce914ec25cfdbf69b6ec3868c0ff04e5d0aa0e53d38",
+        "log": {
+          "sha256": "3de43d98bdf625a8f49b81fcec6a43eaca2897bc2d7224be7c158b9608845d01",
+          "bytes": 45969
+        }
+      },
+      {
+        "job": 135143087392,
+        "name": "Native vulnerability source (linux/arm64)",
+        "step": 4,
+        "conclusion": "success",
+        "native": {
+          "GOARCH": "arm64",
+          "GOHOSTARCH": "arm64",
+          "GOHOSTOS": "linux",
+          "GOOS": "linux",
+          "GOVERSION": "go1.27.4"
+        },
+        "source_report_sha256": "68907eb1ae60ba0a6972bdd7317e37881da08cd4c6efbf7823648e13f3490727",
+        "log": {
+          "sha256": "6ac4153453be885fa736d90503795951e84d640b52b80ee345893780632ce921",
+          "bytes": 44866
+        }
+      }
+    ],
+    "metadata": {
+      "sha256": "55849528809d2cf33c8cbdde64e0bea1fe947d8e3d438af18fa1ac135aae25f2",
+      "bytes": 6824
+    }
+  },
+  "candidate_snapshot": {
+    "first_observation_workflows": 17,
+    "catalogued_workflows": 18,
+    "states": {
+      "completed": 15,
+      "in_progress": 3
+    },
+    "later_visible_original": {
+      "run": 44400839551,
+      "name": "Native document container contracts",
+      "conclusion": "success"
+    },
+    "core_run": 44400839821,
+    "core_conclusion": "success",
+    "metadata": {
+      "sha256": "42ca180b7b7f0fedac45ccaf75756fbddd044ee2af0bee9e9a285ed0b968cb1f",
+      "bytes": 220493
+    }
+  },
+  "remaining": [
+    "Keep the failed original receive-browser step visible and complete its original journey. The passing lineage step proves only the exact generated-artifact scope.",
+    "Collect terminal original job outcomes for the complete batch. Preserve both stock native fault replays and all unreconciled failures.",
+    "Run the new schema 68 recipient report on its own exact candidate after the guarded push condition opens."
+  ]
+}
