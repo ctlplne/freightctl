@@ -43,6 +43,6 @@ func TestStockFTPSProducerToAgentAndSeparatelyApprovedStockSFTP(t *testing.T) {
 		manifest := &CollectionManifest{Schema: 1, Batch: "00000000-0000-4000-8000-000000000509",
 			Files: []CollectionFile{{Name: "one.csv", Size: int64(len(body)), SHA256: secure.Digest(body)}},
 		}
-		proveCollectionAgentOnward(t, f, x.selection, binary, body, "", manifest, nil)
+		proveCollectionAgentOnward(t, f, x.selection, binary, body, "", manifest, nil, false)
 	})
 }

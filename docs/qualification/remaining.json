@@ -2050,7 +2050,8 @@
         "docs/qualification/evidence/F517-stock-collection-https-exchange.json",
         "docs/qualification/evidence/F518-operator-connection-provisioning-https.json",
         "docs/qualification/evidence/F519-browser-operator-sftp-provision.json",
-        "docs/qualification/evidence/F520-native-stock-ftps-first-results.json"
+        "docs/qualification/evidence/F520-native-stock-ftps-first-results.json",
+        "docs/qualification/evidence/F522-stock-sftp-mcp-exchange.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -2225,9 +2226,10 @@
         "F510 reproduces the standalone listener exit with an independent OpenSSL client. The supervised variant starts stock vsftpd per control socket through stock inetd. Two serial full journeys in each mode pass against one continuously running listener with the same isolation, read-only and TLS guards. The standalone failure remains open.",
         "F513 pins the signed Alpine producer packages for native ARM and x86 and adds the exact repeated stock source journey to the native Linux matrix. The checked-in harness passes all four local exchanges on macOS ARM and rejects incomplete or mismatched witness logs. F520 records the green native ARM result and the red x86 TLS refusal witness.",
         "F516 passes a local read-only stock OpenSSH producer through the governed ready manifest, scoped HTTPS retrieval, agent-owned custody and separately approved delivery to another stock OpenSSH daemon. The source credential cannot write and the original source bytes remain intact. Native Linux and the additional surfaces and recovery cases stay open.",
-        "F517 uses the ordinary stock HTTPS API for collection preview, queue and capture, endpoint enrollment, exact offer and scoped receive, owned copy, and separately approved onward dispatch. Original receipts stay stable on retry. CLI review and copy recovery agree with HTTP. Native Linux, MCP, browser and interruption cases remain open.",
+        "F517 uses the ordinary stock HTTPS API for collection preview, queue and capture, endpoint enrollment, exact offer and scoped receive, owned copy, and separately approved onward dispatch. Original receipts stay stable on retry. CLI review and copy recovery agree with HTTP. Native Linux, browser and interruption cases remain open.",
         "F518 adds the ordinary HTTPS operator command for the existing exact SFTP provision and revoke service. The stock replay verifies stale authority and cross-partner refusal, actor-private connection reads, HTTP and CLI receipt recovery and work refusal after revocation. Native Linux remains open.",
-        "F519 passes separate operator assignment and withdrawal in sandboxed Chromium with PostgreSQL. A real committed response is dropped. Reload and retry recover the original receipt, and explicit withdrawal records a second decision. The separate stock OpenSSH journey passes again. Native Linux browser evidence remains due."
+        "F519 passes separate operator assignment and withdrawal in sandboxed Chromium with PostgreSQL. A real committed response is dropped. Reload and retry recover the original receipt, and explicit withdrawal records a second decision. The separate stock OpenSSH journey passes again. Native Linux browser evidence remains due.",
+        "F522 passes the stock SDK source review, offer, discovery, owned copy and separately approved onward delivery between independent OpenSSH peers. HTTP and CLI recover the original receipts. MCP and HTTPS refuse queued work after route withdrawal without contacting the receiver. Native Linux MCP proof remains due."
       ],
       "current_item": {
         "id": "F425",

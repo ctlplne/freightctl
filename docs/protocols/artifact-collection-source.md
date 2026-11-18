@@ -37,8 +37,8 @@ run assignments are preserved;this interface cannot adopt or replay them.
 The protected-reference CLI command is `workflow-collection-exchange-source`
 with `--collection-id` and `--collection-input-id`. The read-only MCP tool is
 `freightctl.collection_source` with those two IDs. It uses the same service and
-has no actor,scope,address,approval,content or execution argument. The modern
-catalog now has18tools;inference remains off.
+derives the actor and scope from the caller's authenticated credential.
+Inference stays off.
 
 For a published input,the browser's **Review collected artifact** action reads
 this fresh source/correlation,checks it against the selected exact input,then
@@ -63,9 +63,24 @@ the CLI. The agent recovers the HTTP copy receipt with the same key in the CLI
 after its receive view closes. Reusing the copy key with a different path
 fails. Withdrawing the assigned SFTP route blocks an already queued HTTPS work
 request before it contacts the receiver. These assertions pass with stock SFTP
-and with both FTPS producers. Native Linux, MCP, browser and process-death
-recovery remain open.
+and with both FTPS producers. Native Linux and process-death recovery remain
+open.
 [F517 replay](../qualification/evidence/F517-stock-collection-https-exchange.json)
+
+After capture and endpoint enrollment, an MCP caller can review the exact
+source with `freightctl.collection_source`, prepare an offer with
+`freightctl.prepare_exchange`, then submit it with `freightctl.offer_exchange`
+using the returned request hash. The recipient calls
+`freightctl.incoming_exchanges` and `freightctl.retrieval_descriptor`, fetches
+bytes through the returned authenticated HTTPS path, and calls
+`freightctl.copy_received_artifact` using its own write permission. A separate
+grant, registered route and approved workflow are required for
+`freightctl.prepare_onward`, `freightctl.start_onward` and
+`freightctl.work_onward`. `freightctl.onward_status` checks the original run
+receipt and current state. The local stock SDK replay verified each step
+against real PostgreSQL, stock curl and separate OpenSSH peers. Native Linux
+MCP proof and the full browser exchange remain due.
+[F522 replay](../qualification/evidence/F522-stock-sftp-mcp-exchange.json)
 
 The FTPS profile uses explicit AUTH TLS or implicit FTPS from a separately
 provisioned freightctl producer. A collector reads the ready manifest and pins

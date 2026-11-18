@@ -35,7 +35,7 @@ func TestFTPSCollectionToAgentAndSeparatelyApprovedStockSFTP(t *testing.T) {
 			original := publishFTPSCollectionObject(t, x, "one.csv", body)
 			manifest := publishFTPSCollectionManifest(t, x, x.source.Manifest, []CollectionFile{{Name: "one.csv", Size: int64(len(body)), SHA256: original.SHA256}})
 
-			proveCollectionAgentOnward(t, x.f, x.selection, binary, body, original.ID, manifest, x.listener.contacts.Load)
+			proveCollectionAgentOnward(t, x.f, x.selection, binary, body, original.ID, manifest, x.listener.contacts.Load, false)
 			if !bytes.Equal(readReceiverBytes(t, x.producer, "/inbox/one.csv"), body) {
 				t.Fatal("read-only collection changed the producer bytes")
 			}
@@ -43,12 +43,12 @@ func TestFTPSCollectionToAgentAndSeparatelyApprovedStockSFTP(t *testing.T) {
 	}
 }
 
-func proveCollectionAgentOnward(t *testing.T, f *fixture, selection CollectionSelection, binary string, body []byte, sourceFileID string, manifest *CollectionManifest, contacts func() int64) {
+func proveCollectionAgentOnward(t *testing.T, f *fixture, selection CollectionSelection, binary string, body []byte, sourceFileID string, manifest *CollectionManifest, contacts func() int64, useMCP bool) {
 	t.Helper()
 	service := f.s.Custody
 	service.Exchanges = custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 16, MaxEndpoints: 16}
 	client := collectedExchangeStockClient(t, f, binary)
-	sender := client(f.tokenPath)
+	sender := client.curl(f.tokenPath)
 	job := captureCollectionOverHTTPS(t, sender, selection, contacts)
 	captured := requireCollectedBytes(t, f, job.ID, body)
 	input := captured.Inputs[0]
@@ -78,13 +78,18 @@ func proveCollectionAgentOnward(t *testing.T, f *fixture, selection CollectionSe
 	}
 	proof := secure.Digest(secret.Bytes)
 	secret.Close()
-	curl := client(token)
+	curl := client.curl(token)
+	var senderTools, recipientTools stockExchangeTools
 	account := store.AccountCommand{Operation: "create", ID: secure.NewID(), CredentialHash: proof,
 		Policy: &store.AccountPolicy{Label: "Receiving agent", Root: "/", Permissions: []string{"read", "list", "write"}}}
 	if _, err = service.DB.ChangeAccount(f.ctx, f.scope, "enroll-receiving-agent", account); err != nil {
 		t.Fatal(err)
 	}
 	agent := store.Scope{Tenant: f.scope.Tenant, Partner: f.scope.Partner, TokenHash: proof}
+	if useMCP {
+		senderTools = client.tools(t, f.ctx, f.tokenPath)
+		recipientTools = client.tools(t, f.ctx, token)
+	}
 	if _, stream, err := service.OpenFileReader(f.ctx, agent, *input.FileID); !errors.Is(err, store.ErrNotFound) {
 		if stream != nil {
 			stream.Close()
@@ -139,6 +144,15 @@ func proveCollectionAgentOnward(t *testing.T, f *fixture, selection CollectionSe
 		bytes.Contains(reviewWire, []byte("one.csv")) || bytes.Contains(reviewWire, []byte(service.Disk.Identity())) {
 		t.Fatal("HTTPS and CLI source review differ or disclose private references")
 	}
+	if useMCP {
+		args := map[string]any{"collection_id": job.ID, "input_id": input.ID}
+		recipientTools("collection_source", args, "permission_denied")
+		mcpReview := senderTools("collection_source", args, "")
+		if readStockExchangeJSON[CollectedExchangeSource](t, mcpReview) != source ||
+			bytes.Contains(mcpReview, []byte("one.csv")) || bytes.Contains(mcpReview, []byte(service.Disk.Identity())) {
+			t.Fatal("MCP source review differs from HTTPS and CLI or discloses private references")
+		}
+	}
 	if err = f.admin.QueryRow(f.ctx, `SELECT count(*) FROM events`).Scan(&afterReview); err != nil || afterReview != beforeReview || (contacts != nil && contacts() != 1) {
 		t.Fatal("source review generated a domain event or contacted the producer", err)
 	}
@@ -147,7 +161,12 @@ func proveCollectionAgentOnward(t *testing.T, f *fixture, selection CollectionSe
 	}, ExpiresAt: time.Now().UTC().Add(2 * time.Minute).Truncate(time.Microsecond), Receipt: "availability-only-v1"}
 	curl("/exchanges", "receive-does-not-authorize-offer", request, 403)
 	const offerKey = "collected-artifact-offer"
-	offer := readStockExchangeJSON[store.ArtifactExchangeResult](t, sender("/exchanges", offerKey, request, 201))
+	var offer store.ArtifactExchangeResult
+	if useMCP {
+		offer = prepareAndOfferStockExchange(t, senderTools, recipientTools, request, offerKey)
+	} else {
+		offer = readStockExchangeJSON[store.ArtifactExchangeResult](t, sender("/exchanges", offerKey, request, 201))
+	}
 	replay := readStockExchangeJSON[store.ArtifactExchangeResult](t, sender("/exchanges", offerKey, request, 200))
 	if offer.Replayed || !replay.Replayed || replay.Exchange.ID != offer.Exchange.ID || replay.Exchange.EventID != offer.Exchange.EventID {
 		t.Fatal("HTTPS offer retry replaced the original view")
@@ -158,6 +177,9 @@ func proveCollectionAgentOnward(t *testing.T, f *fixture, selection CollectionSe
 		t.Fatal("stock recipient did not discover the exact allowed view")
 	}
 	receive := "/exchanges/" + offer.Exchange.ID + "/file"
+	if useMCP {
+		verifyStockExchangeDiscovery(t, client, recipientTools, endpoint.Endpoint.ID, offer.Exchange, receive)
+	}
 	if actual := curl(receive, "", nil, 200); !bytes.Equal(actual, body) || secure.Digest(actual) != source.Artifact.SHA256 {
 		t.Fatal("stock recipient saved different bytes")
 	}
@@ -193,7 +215,14 @@ func proveCollectionAgentOnward(t *testing.T, f *fixture, selection CollectionSe
 		}
 		return copied
 	}
-	owned := readStockExchangeJSON[custody.ExchangeCopyResult](t, curl("/exchange-copies", copyKey, copyRequest, 201))
+	var owned custody.ExchangeCopyResult
+	if useMCP {
+		args := map[string]any{"request": copyRequest, "request_key": copyKey}
+		senderTools("copy_received_artifact", args, "not_found")
+		owned = readStockExchangeJSON[custody.ExchangeCopyResult](t, recipientTools("copy_received_artifact", args, ""))
+	} else {
+		owned = readStockExchangeJSON[custody.ExchangeCopyResult](t, curl("/exchange-copies", copyKey, copyRequest, 201))
+	}
 	if owned.Replayed || owned.Artifact.ID == source.Artifact.ID || owned.Artifact.ID == sourceFileID ||
 		owned.Artifact.SHA256 != source.Artifact.SHA256 || owned.Artifact.Size != source.Artifact.Size || owned.Source != copyRequest.ExchangeCopyOrigin {
 		t.Fatal("recipient-owned copy missed the exact received source")
@@ -230,7 +259,7 @@ func proveCollectionAgentOnward(t *testing.T, f *fixture, selection CollectionSe
 	if !ownedReplay.Replayed || ownedReplay.Artifact != owned.Artifact || ownedReplay.EventID != owned.EventID {
 		t.Fatal("recovering owned copy reopened or replaced the original view")
 	}
-	queued := requireAgentStockOnward(t, &agentFixture, curl, stock, provisioned.Connection, source.Artifact, owned.Artifact)
+	queued := requireAgentStockOnward(t, &agentFixture, curl, recipientTools, stock, provisioned.Connection, source.Artifact, owned.Artifact)
 	beforeRevoke := stock.sessions(t)
 	revoke := ConnectionProvisionCommand{Operation: "revoke", Connection: &provisioned.Connection, ProvisionEvent: provisioned.EventID}
 	curl("/connections/provisioning/commands", "recipient-cannot-revoke-provision", revoke, 403)
@@ -242,7 +271,13 @@ func proveCollectionAgentOnward(t *testing.T, f *fixture, selection CollectionSe
 	if !again.Replayed || repeat != revoked {
 		t.Fatal("operator revoke retry changed the original receipt")
 	}
-	curl("/onward/work", "work-after-provision-revoked", queued, 409)
+	blocked := readStockExchangeJSON[map[string]string](t, curl("/onward/work", "work-after-provision-revoked", queued, 409))
+	if useMCP {
+		if blocked["error"] != "operation_state_conflict" {
+			t.Fatal("HTTP work refused the revoked route for a different reason")
+		}
+		recipientTools("work_onward", stockMCPWorkArguments(queued, "work-after-provision-revoked"), "operation_state_conflict")
+	}
 	if stock.sessions(t) != beforeRevoke {
 		t.Fatal("revoked route permitted queued work or receiver contact")
 	}
@@ -296,7 +331,13 @@ func captureCollectionOverHTTPS(t *testing.T, sender stockExchangeRequest, selec
 	return job
 }
 
-func collectedExchangeStockClient(t *testing.T, f *fixture, binary string) func(string) stockExchangeRequest {
+type stockExchangeHTTPS struct {
+	prefix      string
+	certificate string
+	curl        func(string) stockExchangeRequest
+}
+
+func collectedExchangeStockClient(t *testing.T, f *fixture, binary string) stockExchangeHTTPS {
 	t.Helper()
 	dir := t.TempDir()
 	cert, key := filepath.Join(dir, "localhost.crt"), filepath.Join(dir, "localhost.key")
@@ -338,7 +379,7 @@ func collectedExchangeStockClient(t *testing.T, f *fixture, binary string) func(
 		time.Sleep(25 * time.Millisecond)
 	}
 	prefix := "https://" + address + "/v1/tenants/" + f.scope.Tenant + "/partners/" + f.scope.Partner
-	return func(token string) stockExchangeRequest {
+	curl := func(token string) stockExchangeRequest {
 		t.Helper()
 		secret, err := secure.ReadSecret(token, 64)
 		if err != nil {
@@ -395,6 +436,7 @@ func collectedExchangeStockClient(t *testing.T, f *fixture, binary string) func(
 			return response
 		}
 	}
+	return stockExchangeHTTPS{prefix: prefix, certificate: cert, curl: curl}
 }
 
 type stockOnwardAction struct {
@@ -417,7 +459,7 @@ type stockOnwardWorkResult struct {
 	} `json:"steps"`
 }
 
-func requireAgentStockOnward(t *testing.T, agent *fixture, curl stockExchangeRequest, stock *mixedStockReceiver, connection Reference, original, owned store.ExchangeArtifact) stockOnwardAction {
+func requireAgentStockOnward(t *testing.T, agent *fixture, curl stockExchangeRequest, tools stockExchangeTools, stock *mixedStockReceiver, connection Reference, original, owned store.ExchangeArtifact) stockOnwardAction {
 	t.Helper()
 	scope := agent.scope
 	definition := Definition{Schema: 1, Name: "Send separately approved owned artifact", Steps: []Step{{
@@ -434,14 +476,29 @@ func requireAgentStockOnward(t *testing.T, agent *fixture, curl stockExchangeReq
 	}
 	start := OnwardStart{Request: request, ReviewHash: review.ReviewHash}
 	const startKey = "approve-and-queue-owned-onward"
-	result := readStockExchangeJSON[Result](t, curl("/onward/runs", startKey, start, 200))
+	lookup := OnwardLookup{Start: start, ReceiptKey: startKey}
+	var result Result
+	var mcpRun string
+	if tools != nil {
+		mcpRun = startStockMCPOnward(t, tools, review, startKey)
+		result = readStockExchangeJSON[Result](t, curl("/onward/receipts", "", lookup, 200))
+	} else {
+		result = readStockExchangeJSON[Result](t, curl("/onward/runs", startKey, start, 200))
+	}
 	run := readStockExchangeJSON[OnwardRunReceipt](t, result.Resource)
-	if result.Replayed || run.Profile != OnwardProfile || run.ReviewHash != review.ReviewHash || run.FileID != owned.ID || run.State != "queued" || stock.sessions(t) != 0 {
+	if result.Replayed != (tools != nil) || (tools != nil && mcpRun != run.ID) || run.Profile != OnwardProfile ||
+		run.ReviewHash != review.ReviewHash || run.FileID != owned.ID || run.State != "queued" || stock.sessions(t) != 0 {
 		t.Fatal("only the separately approved owned revision should queue")
 	}
 	action := stockOnwardAction{Start: start, RunID: run.ID, ReceiptKey: startKey}
 	const workKey = "execute-owned-onward"
-	worked := readStockExchangeJSON[stockOnwardWorkResult](t, curl("/onward/work", workKey, action, 200))
+	var worked stockOnwardWorkResult
+	if tools != nil {
+		verifyStockMCPOnwardStatus(t, tools, review, action)
+		worked = readStockExchangeJSON[stockOnwardWorkResult](t, tools("work_onward", stockMCPWorkArguments(action, workKey), ""))
+	} else {
+		worked = readStockExchangeJSON[stockOnwardWorkResult](t, curl("/onward/work", workKey, action, 200))
+	}
 	if worked.Replayed || worked.RunID != run.ID || worked.Artifact != owned || worked.ObservedState != "succeeded" ||
 		worked.ReceiverPersistence != "unknown" || worked.BusinessProcessing != "unknown" ||
 		len(worked.Steps) != 1 || worked.Steps[0].DeliveryID != worked.SelectedDeliveryID {
@@ -459,7 +516,6 @@ func requireAgentStockOnward(t *testing.T, agent *fixture, curl stockExchangeReq
 		t.Fatal("stock onward receipt lost the exact owned revision or inflated the outcome", err)
 	}
 	contacts := stock.sessions(t)
-	lookup := OnwardLookup{Start: start, ReceiptKey: startKey}
 	replay := readStockExchangeJSON[Result](t, curl("/onward/receipts", "", lookup, 200))
 	restart := readStockExchangeJSON[Result](t, curl("/onward/runs", startKey, start, 200))
 	if !replay.Replayed || !restart.Replayed || !bytes.Equal(replay.Resource, result.Resource) ||

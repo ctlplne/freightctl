@@ -16,6 +16,15 @@ import (
 // The producer and receiver use separate stock daemons, directories and keys.
 // The collector credential can read the ready manifest and payload on the source.
 func TestStockSFTPCollectionToAgentAndSeparatelyApprovedStockSFTP(t *testing.T) {
+	testStockSFTPCollectionToAgent(t, false)
+}
+
+func TestStockSFTPCollectionToAgentOverMCPAndSeparatelyApprovedStockSFTP(t *testing.T) {
+	testStockSFTPCollectionToAgent(t, true)
+}
+
+func testStockSFTPCollectionToAgent(t *testing.T, useMCP bool) {
+	t.Helper()
 	binary := routingKeyCLI(t)
 	f := setup(t)
 	producer := newStockSFTPPeer(t, f, true)
@@ -36,7 +45,7 @@ func TestStockSFTPCollectionToAgentAndSeparatelyApprovedStockSFTP(t *testing.T) 
 	}
 	proveCollectionAgentOnward(t, f, selection, binary, body, "", manifest, func() int64 {
 		return int64(producer.sessions(t))
-	})
+	}, useMCP)
 
 	// Check the peer's own read-only policy with the actual collection key.
 	batch := filepath.Join(t.TempDir(), "write.batch")

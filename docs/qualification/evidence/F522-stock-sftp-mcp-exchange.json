@@ -1,0 +1,64 @@
+{
+  "schema_version": 1,
+  "id": "F522",
+  "observed_at": "2026-11-19",
+  "base_candidate": "ad853993162e4a600efd65d2873916c962c34ea3",
+  "qualification_claim": false,
+  "scope": "Stock SFTP governed source, authenticated MCP agent control, HTTPS byte receipt and separately approved stock SFTP onward delivery",
+  "prior_https_record": "docs/qualification/evidence/F517-stock-collection-https-exchange.json",
+  "first_failure": {
+    "result": "The live MCP call after route withdrawal returned operation_state_conflict. The test expected revision_conflict. The revision and receipt remained exact and the route state was revoked. The test now requires the same specific state refusal over HTTPS and MCP.",
+    "log": {
+      "sha256": "987518b5cde13a73b3c9633ed9da0d5626938d40b807d40af23988ecb95b84df",
+      "bytes": 452
+    },
+    "returned_error_sha256": "fdd11805c8d1fcd346b62bdc9fafbb0357b5d7676cc32695f232e63e52a9df12"
+  },
+  "local_race_replay": {
+    "environment": "macOS ARM, real PostgreSQL 16.15, Model Context Protocol Go SDK 1.8.0 with protocol 2026-07-28, stock curl and independent stock OpenSSH daemons on task-owned loopback",
+    "inference_enabled": false,
+    "log": {
+      "sha256": "900be6fe7d0236b5fa3d9bf6a945c80a1fa2cef49dcb592f0affbbc41e853600",
+      "bytes": 867
+    },
+    "assertions": [
+      "The read-only OpenSSH source accepted one collection session and refused an authenticated write. The ready manifest and payload stay byte-identical.",
+      "MCP, CLI and HTTPS agree on the captured revision and its complete origin. Another participant cannot read the source. The review writes no event and starts no peer session.",
+      "The SDK produces an offer under the reviewed exact hash. Wrong hashes and unauthorized offers are refused. The original HTTPS replay recovers the same event. The SDK discovers the one authorized view and returns only the scope-bound byte descriptor. Stock curl verifies the retrieved digest.",
+      "MCP creates separate agent custody. CLI recovers the same copy after the view closes. An unrelated requester or a changed destination cannot reuse the authority or key.",
+      "The independently approved workflow is reviewed, queued, checked and dispatched through the SDK. Without worker execution the receiver has zero sessions. The HTTPS retries recover the same run and work receipts with no new connection. OpenSSH and a stock SFTP readback verify the exact bytes.",
+      "The operator withdraws the exact route. HTTPS and MCP report operation_state_conflict for the queued work with zero further receiver contacts.",
+      "The original stock SFTP HTTPS and both freightctl FTPS collection modes pass the shared harness again."
+    ]
+  },
+  "sources": [
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "f730cd4738c84abdbcca553dcfcf8561f40387dee87fcddf9c972b2370fe48eb",
+      "bytes": 14734
+    },
+    {
+      "path": "internal/workflow/mcp_stock_sftp_exchange_integration_test.go",
+      "sha256": "ef34214cbd2ad0ed2fd0533d9d117b21efd211502b0600e3ffc7007114fa70d9",
+      "bytes": 8433
+    },
+    {
+      "path": "internal/workflow/sftp_collection_exchange_integration_test.go",
+      "sha256": "565cca8fe18569959a987a4bf020151ac7efdcf7c618f1f6f672f1b1ffec2bac",
+      "bytes": 2541
+    },
+    {
+      "path": "internal/workflow/ftps_collection_exchange_integration_test.go",
+      "sha256": "e0b98058109e8fb112c3cd52b32cc94b569ab0add7fea78158d94898b01e7e57",
+      "bytes": 27371
+    },
+    {
+      "path": "internal/workflow/ftps_stock_producer_exchange_integration_test.go",
+      "sha256": "e4b914c4d921745eb419ad5ae6387a85ea43c2f5e1259f12cf28be793c7c5a46",
+      "bytes": 1966
+    }
+  ],
+  "remaining": [
+    "Run the exact MCP replay on native Linux ARM and x86. Qualify the complete browser exchange, process-death recovery and remaining adapter-role profiles."
+  ]
+}

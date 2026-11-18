@@ -252,6 +252,14 @@ finished. Gitleaks found zero leaks across six owner commits. The first
 snapshot contains eight queued original runs, including the operator browser
 and stock FTPS producer replays.
 
+[F522](docs/qualification/evidence/F522-stock-sftp-mcp-exchange.json)
+replays read-only OpenSSH collection, stock MCP source review, offer and
+custody copy, then separately approved delivery to another OpenSSH daemon.
+Stock curl reads the exact bytes over authenticated HTTPS. The HTTPS and CLI
+retries recover the same receipts. MCP and HTTPS both refuse queued work
+after withdrawal, and the receiver sees no new connection. Native Linux
+MCP proof and the browser exchange remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
