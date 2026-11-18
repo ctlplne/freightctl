@@ -491,6 +491,13 @@ signer and the native CLI verified the original message and its exact digest.
 Changed bytes, wrong signers and signed warnings or failures were refused.
 AS2 transport, encrypted messages and durable receipt recovery remain due.
 
+[F560](docs/qualification/evidence/F560-original-restore-and-exchange-batch-terminal.json)
+records all 19 original workflows and 43 jobs at `5525129`. Both Linux
+architectures passed the full PostgreSQL integration step and the scoped
+integrity replays. Both metadata restores and the independent FTPS producer
+steps failed. The x86 producer missed the TLS refusal alert. The ARM peer
+image failed to build before either TLS mode started.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

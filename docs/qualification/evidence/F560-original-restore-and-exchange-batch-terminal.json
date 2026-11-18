@@ -1,0 +1,530 @@
+{
+  "schema_version": 1,
+  "id": "F560",
+  "observed_at": "2026-11-19",
+  "candidate": "5525129f428eeea91d569cfec659205e42009589",
+  "attempt": 1,
+  "qualification_claim": false,
+  "launch": "docs/qualification/evidence/F551-guarded-browser-integrity-dav-batch.json",
+  "original_counts": {
+    "workflows": 19,
+    "workflow_successes": 14,
+    "workflow_failures": 5,
+    "jobs": 43,
+    "job_successes": 33,
+    "job_failures": 10
+  },
+  "protected_inventory": {
+    "sha256": "bee5150d82c103788ee507a5385f321cc6b5ca287a65b288a975c75c38964b5d",
+    "bytes": 12130
+  },
+  "successes_inside_failed_native_workflow": [
+    {
+      "id": 135195415593,
+      "successes": [
+        "All implemented real PostgreSQL integration and migration tests",
+        "Scan the exact independent peer image and enforce complete evidence",
+        "Recipient integrity report from a stock HTTPS download",
+        "Recipient integrity report across the native CLI and stock MCP SDK"
+      ]
+    },
+    {
+      "id": 135195415658,
+      "successes": [
+        "All implemented real PostgreSQL integration and migration tests",
+        "Scan the exact independent peer image and enforce complete evidence",
+        "Recipient integrity report from a stock HTTPS download",
+        "Recipient integrity report across the native CLI and stock MCP SDK"
+      ]
+    }
+  ],
+  "ftps_producer_originals": [
+    {
+      "id": 135195415593,
+      "architecture": "amd64",
+      "observation": "The explicit TLS 1.2 refusal probe had an unexpected EOF after attempting ClientHello. One stock worker exited with status 2 and the producer recorded zero control connections.",
+      "original_job_log": {
+        "sha256": "0a94c541087fa356df94b37747c6d17d97b469ae730abfe09c3ec45057bbe9b5",
+        "bytes": 783713
+      }
+    },
+    {
+      "id": 135195415658,
+      "architecture": "arm64",
+      "observation": "The independent peer image build exited 1 before starting either mode. There was no TLS policy observation on this attempt.",
+      "original_job_log": {
+        "sha256": "703220627b70e6001cf75ebc8baf861c930d139d860b5859d3944bf555cd8f97",
+        "bytes": 750890
+      }
+    }
+  ],
+  "related_scoped_results": [
+    "docs/qualification/evidence/F555-native-browser-integrity-dav-originals.json",
+    "docs/qualification/evidence/F558-native-x86-ftps-receiver-isolation.json"
+  ],
+  "originals": [
+    {
+      "id": 44415734731,
+      "name": "Native first enrollment and browser exchange",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "0fbaf2075c9ceb0f4aa4bfe66d1503a45fcbdc3e484a37eca0467707927da409",
+        "bytes": 3029
+      },
+      "jobs": [
+        {
+          "id": 135195415107,
+          "name": "first-run",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415734743,
+      "name": "Native browser and FTPS operator qualification",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "fed1a076f3317e4532705ded5210f9cd70d83329f898a91f291146a77e1c6108",
+        "bytes": 3244
+      },
+      "jobs": [
+        {
+          "id": 135195414580,
+          "name": "Native x86 browser and live FTPS governance",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415734762,
+      "name": "Native FTPS stock clients and custody",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "7a548848ab2f06240b4119d5ae75de0a44e6322be852ea0c05ee1655afe63f48",
+        "bytes": 5505
+      },
+      "jobs": [
+        {
+          "id": 135195415076,
+          "name": "Native FTPS (arm64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415251,
+          "name": "Native FTPS (x86_64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415734778,
+      "name": "Native FTPS dispatch approval qualification",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "2a6128b06482d4fc987ea2f26dbcd4bed72503484bcd42a50f00d814742d53bb",
+        "bytes": 3221
+      },
+      "jobs": [
+        {
+          "id": 135195414581,
+          "name": "Native x86 public FTPS dispatch consent",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415734781,
+      "name": "Native reproducible core binaries",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "292e98281f282155e12b6f5c41cd398a4566a3481c39c00973085147d75e35d8",
+        "bytes": 4958
+      },
+      "jobs": [
+        {
+          "id": 135195458863,
+          "name": "Native core reproduction (amd64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195459345,
+          "name": "Native core reproduction (arm64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415734788,
+      "name": "Native Windows and macOS unit checks",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "38d9ce3fa7709e64932f9a98a4f57334caa62d764452f05fdce7d187c5ddfd64",
+        "bytes": 4673
+      },
+      "jobs": [
+        {
+          "id": 135195414788,
+          "name": "windows-amd64",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415080,
+          "name": "macos-arm64",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415734794,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "ba8a04605ee4082dba1c425cb6fa9a3c1b8357e3bf44f223388e9afcd12aae78",
+        "bytes": 18267
+      },
+      "jobs": [
+        {
+          "id": 135195415222,
+          "name": "Native metadata restore (x86_64)",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Back up, restore and verify exact metadata and access controls"
+          ]
+        },
+        {
+          "id": 135195415562,
+          "name": "Native metadata restore (arm64)",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Back up, restore and verify exact metadata and access controls"
+          ]
+        },
+        {
+          "id": 135195415593,
+          "name": "Native Go and PostgreSQL (x86_64)",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Independent stock FTPS producer through HTTPS agent custody to stock SFTP"
+          ]
+        },
+        {
+          "id": 135195415644,
+          "name": "bounded-fuzz",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415658,
+          "name": "Native Go and PostgreSQL (arm64)",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Independent stock FTPS producer through HTTPS agent custody to stock SFTP"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 44415734797,
+      "name": "Native legacy SCP regular-file custody",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "1480388f1f9454d5dd033c6c24c70a96f61cfd8dc1f2fce50249a7eea1c6f949",
+        "bytes": 5353
+      },
+      "jobs": [
+        {
+          "id": 135195415030,
+          "name": "Native legacy SCP (arm64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415425,
+          "name": "Native legacy SCP (x86_64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415734808,
+      "name": "Native document container contracts",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "d50ad4b8f264c0d4426a9d903307acc51a02b03a34bd808d4ddd8a3341dfd809",
+        "bytes": 6487
+      },
+      "jobs": [
+        {
+          "id": 135195415282,
+          "name": "Native ZIP stock producer (x86_64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415392,
+          "name": "Native ZIP stock producer (arm64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415734828,
+      "name": "Stock peer and browser qualification",
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "cf22150d6f8e18271ef00fc326c36d4c6bdbf4ebbf8d8ef4a7b13654e1a6342a",
+        "bytes": 21836
+      },
+      "jobs": [
+        {
+          "id": 135195415275,
+          "name": "Stock peers (intake-routing)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415637,
+          "name": "Stock peers (captured-routing)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415713,
+          "name": "Stock peers (handoff-routing)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415829,
+          "name": "Stock peers (arrivals-schedules)",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Collected stock SFTP artifact through browser custody to stock SFTP"
+          ]
+        },
+        {
+          "id": 135195415855,
+          "name": "Stock peers (routing)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415734862,
+      "name": "Native tus stock client and custody checkpoints",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "800c2b06574869b39a65b3a1475480aaeaeb4da09ae8ab850dd341cbefe3f3f2",
+        "bytes": 6617
+      },
+      "jobs": [
+        {
+          "id": 135195415485,
+          "name": "Native tus resume (arm64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415917,
+          "name": "Native tus resume (x86_64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415734864,
+      "name": "Native FTPS workflow consent qualification",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "68add75a82558fd6920dcee32405f2ec43399b4f86452e8eec6659c6321fec18",
+        "bytes": 7298
+      },
+      "jobs": [
+        {
+          "id": 135195415092,
+          "name": "Native x86 registered FTPS workflow consent (recipient-encrypted)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415484,
+          "name": "Native x86 registered FTPS workflow consent (plaintext)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415734893,
+      "name": "Native artifact receive browser",
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "231bd5ad87e0612c7823e9933f38da407b2214a4859660ee6dc180dbf48a5083",
+        "bytes": 3675
+      },
+      "jobs": [
+        {
+          "id": 135195415085,
+          "name": "receive-browser",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Actual recipient UI, exact bytes, unrelated user and endpoint revocation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 44415734898,
+      "name": "Native FTPS client and independent stock receiver",
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "9b80e8b487121270c6b09c011683073df71c89bcdde89856c60d21e3a2daeccb",
+        "bytes": 11454
+      },
+      "jobs": [
+        {
+          "id": 135195414814,
+          "name": "Native FTPS client (aarch64, system)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415145,
+          "name": "Native FTPS client (x86_64, no-ktls)",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Actual client with two loopback TLS receivers and independent files",
+            "Failed receiver process diagnostic (never qualification)"
+          ]
+        },
+        {
+          "id": 135195415220,
+          "name": "Native FTPS client (aarch64, no-ktls)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415376,
+          "name": "Native FTPS client (x86_64, system)",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Actual client with two loopback TLS receivers and independent files",
+            "Failed receiver process diagnostic (never qualification)"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 44415734917,
+      "name": "Core correctness and security",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "2640a7cdf6f55aadf574ca751f8399c5288f4f451ca1d684b4f49dbfb9049382",
+        "bytes": 3746
+      },
+      "jobs": [
+        {
+          "id": 135195415278,
+          "name": "source-and-browser",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415734925,
+      "name": "Native source vulnerability configurations",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "f258c3c5d7d7dbfc493a7de3ab7b75d116024e222e4c088ff413cc6e272e74f0",
+        "bytes": 6824
+      },
+      "jobs": [
+        {
+          "id": 135195415762,
+          "name": "Native vulnerability source (darwin/arm64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415974,
+          "name": "Native vulnerability source (linux/arm64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195416222,
+          "name": "Native vulnerability source (windows/amd64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415735105,
+      "name": "Native immutable HTTPS stock resume",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "da9a47c25fe489222d2f6ec98d3efbd3405d6c3cbf4da35542e355686ca190c6",
+        "bytes": 5363
+      },
+      "jobs": [
+        {
+          "id": 135195415084,
+          "name": "Native immutable HTTPS resume (arm64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195415722,
+          "name": "Native immutable HTTPS resume (x86_64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415735114,
+      "name": "Native JSON intake and custody interfaces",
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "3aa30ff8aca35a16f70752b70e4958446e7d879d9d334c096e0b83752531f13f",
+        "bytes": 9063
+      },
+      "jobs": [
+        {
+          "id": 135195416041,
+          "name": "Native JSON custody (arm64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195416422,
+          "name": "Native Chrome JSON policy and held bytes",
+          "conclusion": "success"
+        },
+        {
+          "id": 135195416425,
+          "name": "Native JSON custody (x86_64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44415735115,
+      "name": "Native independent DAV application",
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "038b1315c7b9f3c0251e1068191e612dd9836a4b766807f5e22c75a5711241e1",
+        "bytes": 7854
+      },
+      "jobs": [
+        {
+          "id": 135195415843,
+          "name": "Native stock rclone DAV (amd64)",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Actual independent DAV application,exact bytes,conditional writes and current authority",
+            "Actual direct DAV delivery,independent stock receiver,CLI and approvals"
+          ]
+        },
+        {
+          "id": 135195416387,
+          "name": "Native stock rclone DAV (arm64)",
+          "conclusion": "failure",
+          "failed_steps": [
+            "Actual independent DAV application,exact bytes,conditional writes and current authority",
+            "Actual direct DAV delivery,independent stock receiver,CLI and approvals"
+          ]
+        }
+      ]
+    }
+  ],
+  "remaining": [
+    "Native restore on both architectures, the separate stock source and receiver FTPS checks, independent stock DAV, native recipient authority and the stock SFTP browser replay remain open.",
+    "F552, F556 and F557 need their exact original Linux replays on the next source candidate.",
+    "All baseline rows, customer journeys and exchange profiles retain their final-source evidence requirements."
+  ]
+}
