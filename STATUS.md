@@ -86,6 +86,11 @@ paths and credential patterns as a single range. The original real
 PostgreSQL test and both prior-policy refusal cases pass locally against a
 synthetic responder. Native Linux replay remains due.
 
+[F475](docs/qualification/evidence/F475-guarded-native-batch.json) records the
+fast-forward to `b1145f2` after all previous originals finished. Gitleaks
+reported zero leaks across all twelve outgoing owner commits. The new native
+replay is underway.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
