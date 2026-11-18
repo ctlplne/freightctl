@@ -308,7 +308,8 @@ func (c *HTTPSReadClient) request(ctx context.Context, method, target string, bo
 			request.Body = http.NoBody
 		}
 	}
-	// An effect is never made replayable by a rewind function or retry key.
+	// A caller never receives a rewind function for its request body.
+	// The DAV writer also disables connection reuse when sending operation keys.
 	request.GetBody = nil
 	for name, values := range headers {
 		request.Header[name] = append([]string(nil), values...)

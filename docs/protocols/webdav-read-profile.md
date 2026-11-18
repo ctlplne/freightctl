@@ -544,6 +544,17 @@ fsync,power-loss durability and business acceptance remain unconfirmed.
 Original creation receipts and completed work retain their original meanings.
 Receiving an artifact grants no permission to create this separate send.
 
+For a freightctl receiver, use its DAV route under the approved tenant and
+partner as the prefix for both directories. Enroll a bearer identity with
+read, write and path-management access to those directories. Keep the stage
+private and mount recipient readers at the inbox. The sender supplies
+`X-Content-SHA256` on the exclusive PUT and distinct `Idempotency-Key`
+values for PUT and MOVE. Each key is derived from the exact stage and final
+paths, file size and SHA-256. The receiver can bind its own receipt to each
+operation. Each request uses a fresh HTTP/1.1 connection under pinned TLS 1.3,
+so the HTTP client cannot reuse a connection to retry the effect. Readback
+requests carry no mutation key.
+
 The profile covers direct delivery. Registered workflow bindings and recipient
 encryption remain due. The original Linux ARM64 and AMD64 jobs reached the
 stock rclone receiver and found that it overwrites an existing exclusive
@@ -554,6 +565,8 @@ The real PostgreSQL recovery test uses a TLS fixture that commits the final
 effect and drops the MOVE response. The test checks the original attempt and
 fence, the unchanged state after a refused repeat, and read-only reconciliation.
 CI runs this test and the freightctl-to-freightctl bearer collection test using
-the PostgreSQL fixture. Stock application, Basic collection and stock delivery
-each require passing the stock peer's source and binary security gates. The
-modified steps have compiled locally and await native replay.
+the PostgreSQL fixture. A separate direct delivery check exercises two
+freightctl custody instances, an inbox-scoped reader and a non-overwrite
+collision. That check has compiled locally and awaits native execution.
+Stock application, Basic collection and stock delivery each require passing
+the stock peer's source and binary security gates.

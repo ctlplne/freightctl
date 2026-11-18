@@ -9,6 +9,8 @@ import (
 	"net/http"
 	"net/url"
 	"os"
+	"strconv"
+	"strings"
 	"sync"
 	"sync/atomic"
 
@@ -47,6 +49,13 @@ func NewDAVDeliveryClient(ctx context.Context, d HTTPSReadDestination, stage, fi
 	if err != nil {
 		return nil, errors.Join(ErrDAVDelivery, err)
 	}
+	// The receiver's operation key records a receipt. Go's HTTP transport
+	// also treats the key as permission to retry on a reused connection.
+	// Use one HTTP/1 exchange per connection to keep writes one-shot.
+	protocols := new(http.Protocols)
+	protocols.SetHTTP1(true)
+	read.transport.Protocols = protocols
+	read.transport.DisableKeepAlives = true
 	return &DAVDeliveryClient{read: read, stage: stage, final: final, size: size, digest: digest}, nil
 }
 
@@ -90,6 +99,13 @@ func davDeliveryHeaders() http.Header {
 	return http.Header{"Cache-Control": {"no-cache, no-store"}, "Pragma": {"no-cache"}}
 }
 
+func (c *DAVDeliveryClient) mutationHeaders(method string) http.Header {
+	headers := davDeliveryHeaders()
+	meaning := strings.Join([]string{"freightctl-webdav-delivery-v1", c.stage, c.final, strconv.FormatInt(c.size, 10), c.digest}, "\x00")
+	headers.Set("Idempotency-Key", "dav-"+strings.ToLower(method)+"-"+Digest([]byte(meaning)))
+	return headers
+}
+
 // PutStage attempts exclusive creation once. A failure says nothing about
 // whether the receiver retained bytes. No automatic resend or cleanup follows.
 // Caller keeps ownership of the already verified immutable custody descriptor.
@@ -105,9 +121,10 @@ func (c *DAVDeliveryClient) PutStage(ctx context.Context, file *os.File) error {
 	}
 	c.stageAttempted = true
 	source := &davDeliverySource{ctx: ctx, check: c.read.check, source: io.NewSectionReader(file, 0, c.size)}
-	headers := davDeliveryHeaders()
+	headers := c.mutationHeaders(http.MethodPut)
 	headers.Set("If-None-Match", "*")
 	headers.Set("Content-Type", "application/octet-stream")
+	headers.Set("X-Content-SHA256", c.digest)
 	response, err := c.read.request(ctx, http.MethodPut, c.stage, source, c.size, headers)
 	if err != nil {
 		return errors.Join(ErrDAVDelivery, err)
@@ -219,7 +236,7 @@ func (c *DAVDeliveryClient) Publish(ctx context.Context) error {
 	c.published = true
 	_, port, _ := net.SplitHostPort(c.read.dest.Address)
 	destination := url.URL{Scheme: "https", Host: net.JoinHostPort(c.read.dest.ServerName, port), Path: c.final}
-	headers := davDeliveryHeaders()
+	headers := c.mutationHeaders("MOVE")
 	headers.Set("Destination", destination.String())
 	headers.Set("Overwrite", "F")
 	headers.Set("If-Match", c.stageETag)

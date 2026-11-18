@@ -1078,7 +1078,8 @@
         "docs/qualification/evidence/F446-ambiguous-work-refusal-proof.json",
         "docs/qualification/evidence/F449-dav-stage-create-ack.json",
         "docs/qualification/evidence/F450-dav-native-proof-dependencies.json",
-        "docs/qualification/evidence/F451-dav-stock-scan-diagnostics.json"
+        "docs/qualification/evidence/F451-dav-stock-scan-diagnostics.json",
+        "docs/qualification/evidence/F461-dav-custody-peer.json"
       ],
       "remaining_details": [
         "F010 verifies durable held intake for configured new revisions, exact CSV contracts, separate hash/revision-bound release and ordinary delivery of released bytes. Antivirus/ICAP/DLP, cryptographic signatures/encryption, other formats/transforms, re-scan/exception governance, retrospective policy and the complete business-file journey remain mandatory.",
@@ -1245,7 +1246,8 @@
         "F446 corrects only the new DAV lost-reply proof. The actual old nil-error predicate fails the observed ErrState safe refusal;focused green now requires exact ErrState,nil result,nonempty identical whole-row hashes for events/intents/receipts/files/ciphertexts and identical receiver bytes/read/write counts. Production worker/state machine unchanged. Native compile/vet/architecture pass;original ARM/x86 replay and full final-source outcomes remain owed. Rclone exclusive-stage overwrite remains separately failed/unqualified with its original assertion intact.",
         "F449 requires receipt of this client\u2019s own complete DAV exclusive-create acknowledgement before stage GET or MOVE. Actual loopback TLS reds prove matching pre-existing bytes were promoted after no PUT, a refused PUT and a truncated 201 response. All three now refuse with no stage read or MOVE and no resend. Existing valid PUT/readback/publish and read-only final reconciliation pass focused checks. The original rclone condition failure and independent native receiver proof remain due.",
         "F450 runs the native PostgreSQL/TLS lost-MOVE and ordinary bearer source proofs separately from stock rclone. Both original architectures stopped at the stock source converter and skipped their database proof steps. Exact Linux candidate, real PostgreSQL, whole-state and receiver activity assertions are retained. Stock application, Basic source and stock delivery still require full stock source and binary security passes. Workflow syntax and five native Go selectors compile. Native execution is owed.",
-        "F451 exposes only advisory IDs grouped by converter reachability level and the exact report SHA-256 for stock DAV scans. Both original source gates failed with exit 3 and exposed no finding IDs. Local regressions and the actual pinned converter outputs pass. Source and binary coverage, converter command and its original enforcing exit code are preserved. Native stock replay remains due."
+        "F451 exposes only advisory IDs grouped by converter reachability level and the exact report SHA-256 for stock DAV scans. Both original source gates failed with exit 3 and exposed no finding IDs. Local regressions and the actual pinned converter outputs pass. Source and binary coverage, converter command and its original enforcing exit code are preserved. Native stock replay remains due.",
+        "F461 sends the exact digest on DAV PUT and separate fixed operation keys on PUT and MOVE. It uses fresh pinned HTTP/1.1 connections so these receiver receipt keys cannot enable a repeated effect. The previous sender receives a local rejection for missing headers. The focused TLS checks pass for both credentials and loss of a MOVE reply, and the native two-instance custody proof compiles. This leaves stock DAV and broader workflow qualification open."
       ],
       "current_item": {
         "id": "F425",

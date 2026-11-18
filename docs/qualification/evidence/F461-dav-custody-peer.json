@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "id": "F461",
+  "observed_at": "2026-11-18",
+  "base_candidate": "4b6211ab5f25bd175fc0169066746ccf528e94d5",
+  "qualification_claim": false,
+  "changed": "Send the exact SHA-256 on the exclusive DAV stage creation and bind a distinct stable receiver receipt key to each PUT or MOVE. Each request uses a fresh HTTP/1.1 connection under pinned TLS. Final and stage readback remain read-only. Existing approval, lease, fencing, validator and ambiguity rules remain required.",
+  "local_red": "Both bearer and Basic loopback contracts refused the original sender for missing the required custody creation fields.",
+  "local_green": "Nine race-enabled DAV tests pass. They bind exact headers and four distinct connections on the happy path, exercise both credential types, and show exactly one MOVE when the receiver loses its acknowledgement.",
+  "native_proof_scope": "Compiled Linux workflow step for two actual freightctl API handlers with separate PostgreSQL databases and storage, a constrained receiver writer, an inbox-mounted reader, an independent byte read and a preserved final collision. Execution is due. The same product on either side cannot qualify unrelated implementations.",
+  "checks": [
+    "Affected Go vet and formatting",
+    "Native integration target compilation",
+    "CI syntax and core architecture",
+    "Qualification references"
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/dav-application.yml",
+      "bytes": 4192,
+      "sha256": "3a9bb8788cd33747c8da5cc9dcdf3065d594fafb3ea4c6da3ab7c0d8ce849082"
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "bytes": 41539,
+      "sha256": "c053df6c1eec55b17ce5a9e46b6287dfa2e27e1f0754873525c4b980267902ff"
+    },
+    {
+      "reference": "docs/qualification/artifact-exchange.json",
+      "bytes": 33593,
+      "sha256": "08fd5f9b077b8efb32cddd2e9a5baae7ed743aa8568c8b5c637a50ebb767d0db"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 723931,
+      "sha256": "edea7a84a68deab8b8b4b498192ba57c00104e20381e4b8b6751ded112b2dbae"
+    },
+    {
+      "reference": "internal/crypto/dav_delivery.go",
+      "bytes": 8550,
+      "sha256": "7660508eb485a5338bc8e071feb542343ddaf812533b305d8f3f80c33d9c01b5"
+    },
+    {
+      "reference": "internal/crypto/dav_delivery_test.go",
+      "bytes": 19504,
+      "sha256": "0c583767c2ecb09e7b3d35b620d88470f0de41f8a89943843e7d19b613898284"
+    },
+    {
+      "reference": "internal/crypto/https_read.go",
+      "bytes": 10853,
+      "sha256": "309327f473f22730c5e21a6be2e45fd6dbe473e29f0b7cf2f0fc984eca522c4b"
+    },
+    {
+      "reference": "internal/api/dav_delivery_custody_integration_test.go",
+      "bytes": 7153,
+      "sha256": "5a7b7fe8313f6206491d3cb9eac9214910b74600ed6473b3cd5a81a167bc4286"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f461-dav-custody-wire-red.log",
+      "bytes": 1170,
+      "sha256": "2115f0cdcd39b84909d08b404d94aae2cb44076667be9f7828d9820f5689e574"
+    },
+    {
+      "reference": ".private/freightctl-f461-dav-custody-wire-final.log",
+      "bytes": 6653,
+      "sha256": "bceaa31e283e0cc7a9da826a2107c68e21d77625809db2cd89cbadef96cb4f22"
+    },
+    {
+      "reference": ".private/freightctl-f461-dav-custody-static.log",
+      "bytes": 221,
+      "sha256": "027be5303675cf7da458ecce9c84b64cf810e81e575ea3f042c83194cec9d9d0"
+    }
+  ],
+  "owed": [
+    "Native PostgreSQL two-instance custody and loss-of-acknowledgement runtime",
+    "Independent stock conditional receiver, workflow integration and final-source tests"
+  ]
+}

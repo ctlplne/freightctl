@@ -89,3 +89,7 @@ jobs:
         if: ${{ !cancelled() && steps.database.outcome == 'success' }}
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVDeliveryNativeLostMoveReplyReconcilesReadOnly$' -count=1 -v ./internal/api
+      - name: Direct DAV delivery between separate freightctl custody instances
+        if: ${{ !cancelled() && steps.database.outcome == 'success' }}
+        run: |
+          sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVDeliveryNativeFreightctlCustodyPeer$' -count=1 -v ./internal/api

@@ -66,10 +66,13 @@ func TestDAVDeliveryExactExclusiveStageReadbackAndConditionalPublication(t *test
 			var mu sync.Mutex
 			files := map[string][]byte{}
 			var methods []string
+			connections := map[string]bool{}
+			var putKey string
 			d, _ := httpsReadFixture(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 				mu.Lock()
 				defer mu.Unlock()
 				methods = append(methods, r.Method+" "+r.URL.Path)
+				connections[r.RemoteAddr] = true
 				credentialOK := r.Header.Get("Authorization") == "Bearer "+strings.Repeat("d", 64)
 				if mode == "basic" {
 					u, p, ok := r.BasicAuth()
@@ -82,6 +85,12 @@ func TestDAVDeliveryExactExclusiveStageReadbackAndConditionalPublication(t *test
 				}
 				switch r.Method {
 				case "PUT":
+					putKey = r.Header.Get("Idempotency-Key")
+					if !strings.HasPrefix(putKey, "dav-put-") || r.Header.Get("X-Content-SHA256") != Digest(data) {
+						t.Error("receiver-required create identity and exact digest are missing")
+						w.WriteHeader(400)
+						return
+					}
 					if r.URL.Path != stage || r.Header.Get("If-None-Match") != "*" || r.ContentLength != int64(len(data)) || len(r.TransferEncoding) != 0 || files[stage] != nil {
 						t.Error("stage was not a fixed-length exclusive create")
 						w.WriteHeader(412)
@@ -96,6 +105,9 @@ func TestDAVDeliveryExactExclusiveStageReadbackAndConditionalPublication(t *test
 					files[stage] = body
 					w.WriteHeader(201)
 				case "GET":
+					if r.Header.Get("Idempotency-Key") != "" || r.Header.Get("X-Content-SHA256") != "" {
+						t.Error("a read carried mutation metadata")
+					}
 					body, found := files[r.URL.Path]
 					if !found {
 						w.WriteHeader(404)
@@ -104,6 +116,12 @@ func TestDAVDeliveryExactExclusiveStageReadbackAndConditionalPublication(t *test
 					w.Header().Set("ETag", `"exact-stage-revision"`)
 					w.Write(body)
 				case "MOVE":
+					key := r.Header.Get("Idempotency-Key")
+					if !strings.HasPrefix(key, "dav-move-") || key == putKey || r.Header.Get("X-Content-SHA256") != "" {
+						t.Error("MOVE did not carry its own operation identity")
+						w.WriteHeader(400)
+						return
+					}
 					u, err := url.Parse(r.Header.Get("Destination"))
 					if err != nil || u.Scheme != "https" || u.Host != r.Host || u.Path != final || u.RawQuery != "" || u.Fragment != "" || r.URL.Path != stage || r.Header.Get("Overwrite") != "F" || r.Header.Get("If-Match") != `"exact-stage-revision"` || files[final] != nil || files[stage] == nil {
 						t.Error("publication lost exact source ETag or same-authority non-overwrite destination")
@@ -154,10 +172,58 @@ func TestDAVDeliveryExactExclusiveStageReadbackAndConditionalPublication(t *test
 			if strings.Join(methods, "|") != "PUT "+stage+"|GET "+stage+"|MOVE "+stage+"|GET "+final || !bytes.Equal(files[final], data) || files[stage] != nil {
 				t.Fatal("unexpected effects,stage retention or final bytes")
 			}
+			if len(connections) != len(methods) {
+				t.Fatal("requests reused a connection despite receiver idempotency headers")
+			}
 			if pos, err := file.Seek(0, io.SeekCurrent); err != nil || pos != 9 {
 				t.Fatal("transport changed caller's custody descriptor position")
 			}
 		})
+	}
+}
+
+func TestDAVDeliveryKeyDoesNotRetryLostMoveReply(t *testing.T) {
+	data := []byte("conditional move with a lost response")
+	var moves atomic.Int32
+	d, _ := httpsReadFixture(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		switch r.Method {
+		case http.MethodPut:
+			io.Copy(io.Discard, r.Body)
+			w.WriteHeader(http.StatusCreated)
+		case http.MethodGet:
+			w.Header().Set("ETag", `"verified-stage"`)
+			w.Write(data)
+		case "MOVE":
+			if !strings.HasPrefix(r.Header.Get("Idempotency-Key"), "dav-move-") {
+				t.Error("test did not exercise a receiver operation key")
+			}
+			moves.Add(1)
+			conn, _, err := w.(http.Hijacker).Hijack()
+			if err != nil {
+				t.Error("fixture could not lose the response after the effect")
+				return
+			}
+			conn.Close()
+		default:
+			t.Error("unexpected DAV effect")
+		}
+	}))
+	client, err := NewDAVDeliveryClient(t.Context(), d, "/stage/file", "/inbox/file", int64(len(data)), Digest(data), func() error { return nil })
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer client.Close()
+	if err = client.PutStage(t.Context(), davDeliveryFile(t, data)); err != nil {
+		t.Fatal(err)
+	}
+	if err = client.VerifyStage(t.Context()); err != nil {
+		t.Fatal(err)
+	}
+	if err = client.Publish(t.Context()); !errors.Is(err, ErrDAVDelivery) {
+		t.Fatal("lost acknowledgement claimed success", err)
+	}
+	if err = client.Publish(t.Context()); !errors.Is(err, ErrDAVDelivery) || moves.Load() != 1 {
+		t.Fatal("receiver operation key enabled a repeat MOVE", err)
 	}
 }
 
