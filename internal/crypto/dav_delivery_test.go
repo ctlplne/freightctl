@@ -161,17 +161,85 @@ func TestDAVDeliveryExactExclusiveStageReadbackAndConditionalPublication(t *test
 	}
 }
 
+func TestDAVDeliveryCannotPromoteAStageWithoutItsOwnCreateAcknowledgement(t *testing.T) {
+	const stage, final = "/stage/file", "/inbox/file"
+	data := []byte("pre-existing bytes match the exact source")
+	for _, scenario := range []string{"no-put", "refused-put", "incomplete-acknowledgement"} {
+		t.Run(scenario, func(t *testing.T) {
+			var puts, stageReads, moves, finalReads atomic.Int64
+			d, _ := httpsReadFixture(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				switch {
+				case r.Method == "PUT" && r.URL.Path == stage:
+					puts.Add(1)
+					io.Copy(io.Discard, r.Body)
+					if scenario == "refused-put" {
+						w.WriteHeader(http.StatusPreconditionFailed)
+					} else {
+						w.Header().Set("Content-Length", "2")
+						w.WriteHeader(http.StatusCreated)
+						w.Write([]byte("a"))
+					}
+				case r.Method == "GET" && r.URL.Path == stage:
+					stageReads.Add(1)
+					w.Header().Set("ETag", `"pre-existing-stage"`)
+					w.Write(data)
+				case r.Method == "GET" && r.URL.Path == final:
+					finalReads.Add(1)
+					w.Write(data)
+				case r.Method == "MOVE" && r.URL.Path == stage:
+					moves.Add(1)
+					w.WriteHeader(http.StatusCreated)
+				default:
+					t.Error("unexpected receiver contact")
+					w.WriteHeader(http.StatusBadRequest)
+				}
+			}))
+			client, err := NewDAVDeliveryClient(t.Context(), d, stage, final, int64(len(data)), Digest(data), func() error { return nil })
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer client.Close()
+			var expectedPuts int64
+			if scenario != "no-put" {
+				expectedPuts = 1
+				file := davDeliveryFile(t, data)
+				if err := client.PutStage(t.Context(), file); !errors.Is(err, ErrDAVDelivery) {
+					t.Fatal("uncertain exclusive create acknowledged", err)
+				}
+				if err := client.PutStage(t.Context(), file); !errors.Is(err, ErrDAVDelivery) {
+					t.Fatal("uncertain exclusive create repeated", err)
+				}
+			}
+			stageErr := client.VerifyStage(t.Context())
+			moveErr := client.Publish(t.Context())
+			if !errors.Is(stageErr, ErrDAVDelivery) || !errors.Is(moveErr, ErrDAVDelivery) || puts.Load() != expectedPuts || stageReads.Load() != 0 || moves.Load() != 0 {
+				t.Fatalf("unacknowledged stage gained access: verify=%v publish=%v PUT=%d stage GET=%d MOVE=%d", stageErr, moveErr, puts.Load(), stageReads.Load(), moves.Load())
+			}
+			if err := client.VerifyFinal(t.Context()); err != nil || finalReads.Load() != 1 {
+				t.Fatal("final-path read-only reconciliation was blocked", err)
+			}
+		})
+	}
+}
+
 func TestDAVDeliveryNeverPromotesPartialUnboundOrEncodedStage(t *testing.T) {
 	data := []byte("exact bytes")
 	for _, kind := range []string{"wrong-hash", "short", "extra", "partial", "encoded", "weak-etag", "missing-etag", "duplicate-etag", "redirect"} {
 		t.Run(kind, func(t *testing.T) {
-			var moves atomic.Int64
+			var puts, reads, moves atomic.Int64
 			d, _ := httpsReadFixture(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				if r.Method == "PUT" {
+					puts.Add(1)
+					io.Copy(io.Discard, r.Body)
+					w.WriteHeader(http.StatusCreated)
+					return
+				}
 				if r.Method != "GET" {
 					moves.Add(1)
 					w.WriteHeader(201)
 					return
 				}
+				reads.Add(1)
 				body := data
 				w.Header().Set("ETag", `"stage"`)
 				switch kind {
@@ -203,8 +271,11 @@ func TestDAVDeliveryNeverPromotesPartialUnboundOrEncodedStage(t *testing.T) {
 				t.Fatal(err)
 			}
 			defer client.Close()
-			if client.VerifyStage(t.Context()) == nil || client.Publish(t.Context()) == nil || moves.Load() != 0 {
-				t.Fatal("bad stage acquired publication authority or caused a write")
+			if err := client.PutStage(t.Context(), davDeliveryFile(t, data)); err != nil {
+				t.Fatal("fixture stage create failed", err)
+			}
+			if client.VerifyStage(t.Context()) == nil || client.Publish(t.Context()) == nil || puts.Load() != 1 || reads.Load() != 1 || moves.Load() != 0 {
+				t.Fatal("bad stage acquired publication authority or bypassed readback")
 			}
 		})
 	}
@@ -225,8 +296,12 @@ func TestDAVDeliveryRefusesReplacementMultistatusRedirectAndOversizedAcknowledge
 						w.Write(data)
 						return
 					}
-					writes.Add(1)
 					io.Copy(io.Discard, r.Body)
+					if operation == "MOVE" && r.Method == "PUT" {
+						w.WriteHeader(http.StatusCreated)
+						return
+					}
+					writes.Add(1)
 					w.Header().Set("Location", outside.URL+"/changed")
 					w.WriteHeader(status)
 					if status == 201 {
@@ -245,6 +320,9 @@ func TestDAVDeliveryRefusesReplacementMultistatusRedirectAndOversizedAcknowledge
 						t.Fatal("failed stage write automatically repeated")
 					}
 				} else {
+					if err = client.PutStage(t.Context(), davDeliveryFile(t, data)); err != nil {
+						t.Fatal("fixture stage create failed", err)
+					}
 					if err = client.VerifyStage(t.Context()); err != nil {
 						t.Fatal(err)
 					}
@@ -266,6 +344,11 @@ func TestDAVDeliveryRechecksAuthorityCredentialAndSourceBeforeEffects(t *testing
 	var hits atomic.Int64
 	d, _ := httpsReadFixture(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		hits.Add(1)
+		if r.Method == "PUT" {
+			io.Copy(io.Discard, r.Body)
+			w.WriteHeader(http.StatusCreated)
+			return
+		}
 		w.Header().Set("ETag", `"stage"`)
 		w.Write(data)
 	}))
@@ -285,18 +368,21 @@ func TestDAVDeliveryRechecksAuthorityCredentialAndSourceBeforeEffects(t *testing
 	if client.PutStage(t.Context(), davDeliveryFile(t, []byte("wrong size"))) == nil || hits.Load() != 0 {
 		t.Fatal("wrong source descriptor contacted peer")
 	}
+	if err = client.PutStage(t.Context(), davDeliveryFile(t, data)); err != nil {
+		t.Fatal("fixture stage create failed", err)
+	}
 	if err = client.VerifyStage(t.Context()); err != nil {
 		t.Fatal(err)
 	}
 	revoked.Store(true)
-	if err = client.Publish(t.Context()); !errors.Is(err, denied) || hits.Load() != 1 {
+	if err = client.Publish(t.Context()); !errors.Is(err, denied) || hits.Load() != 2 {
 		t.Fatal("withdrawn authority retained a publication capability")
 	}
 	revoked.Store(false)
 	if err = os.WriteFile(d.TokenFile, []byte("changed"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	if client.VerifyFinal(t.Context()) == nil || hits.Load() != 1 {
+	if client.VerifyFinal(t.Context()) == nil || hits.Load() != 2 {
 		t.Fatal("changed credential contacted peer under old approval")
 	}
 	guarded := &davDeliverySource{ctx: t.Context(), check: check, source: io.NewSectionReader(davDeliveryFile(t, data), 0, int64(len(data)))}

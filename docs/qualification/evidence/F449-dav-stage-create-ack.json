@@ -1,0 +1,69 @@
+{
+  "schema_version": 1,
+  "id": "F449",
+  "observed_at": "2026-11-18",
+  "base_candidate": "0fb19669ea4e08d7628fb02fb73c3b81424ce1b6",
+  "qualification_claim": false,
+  "changed": "Require a complete own exclusive PUT acknowledgement to unlock stage readback and conditional publication. An attempted upload can never be repeated through the same client.",
+  "original_peer_failure": "docs/qualification/evidence/F445-resume-native-terminal.json",
+  "local_red": "On actual loopback HTTPS, matching existing stage bytes enabled stage GET and MOVE after an omitted PUT, a 412 PUT and a truncated 201 PUT.",
+  "local_green": "The same three cases refuse with zero stage GET/MOVE and no repeated PUT. The final-only GET still observes exact bytes. Eight affected TLS contract tests pass with the race detector. Existing malformed GET and MOVE tests still reach the exact intended step after a successful fixture PUT.",
+  "interface_and_static": [
+    "macOS ARM64 loopback TLS with Go 1.27.4",
+    "Affected Go formatting, vet, delivery contract tests and diff checks"
+  ],
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "bytes": 5847,
+      "sha256": "f2a740c5a83a1ffe587517c2b54b66861d8aadbd6938b1f0caac11dcc8b98f45"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 717701,
+      "sha256": "70e120ce6d498b24d14d1e93f05f35b42e2651b74d29f52d1b45ed056b686cf3"
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "bytes": 40386,
+      "sha256": "8053a049cffd070b980d15ae8a82917482834cd5b870c1fe604cc301e473cf37"
+    },
+    {
+      "reference": "internal/crypto/dav_delivery.go",
+      "bytes": 7765,
+      "sha256": "a4da4cabea13eca140a8e2ffdbbee3aa6a4188472b3fc31e746ee578aea3b7e8"
+    },
+    {
+      "reference": "internal/crypto/dav_delivery_test.go",
+      "bytes": 17112,
+      "sha256": "074217584ce8a3fd304e87eb55e73307c2baf2ebaeff4f69a7ebdb09b406e5f3"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f449-stage-red.log",
+      "bytes": 2268,
+      "sha256": "588be9f472155b284de26f9902aca6e547bf156b01ecc920334607e0b423e5fc"
+    },
+    {
+      "reference": ".private/freightctl-f449-stage-protocol-red.log",
+      "bytes": 1190,
+      "sha256": "417468a7d3b00e01e0d028917c060bc5be090ee874cdcb967270150e2492eb84"
+    },
+    {
+      "reference": ".private/freightctl-f449-stage-green.log",
+      "bytes": 6575,
+      "sha256": "cef9b714a456b338dcae64244107e6fdae4529a0b7fe2897f27f633003de3812"
+    },
+    {
+      "reference": ".private/freightctl-f449-stage-verified.log",
+      "bytes": 6533,
+      "sha256": "e766e3208160b2c68f4a00c7f1f58052966061dcbd2588117b3abcb5e4265422"
+    }
+  ],
+  "owed": [
+    "Real PostgreSQL and native DAV recovery replay",
+    "An independent DAV receiver that enforces exclusive PUT and ETag-bound non-overwriting MOVE, plus separate downstream deduplication evidence",
+    "Original stock rclone failure and full final-source qualification"
+  ]
+}

@@ -32,6 +32,12 @@ module-only,not called. The original failures are preserved.
 still fails on a reachable test finding. Original Linux, Windows, macOS and
 stock rclone security gates require replay on the patched source.
 
+[F449](docs/qualification/evidence/F449-dav-stage-create-ack.json) requires
+the DAV client to receive a complete exclusive-create acknowledgment before
+it reads or moves the stage. Loopback TLS tests confirm that pre-existing
+matching bytes cannot authorize a MOVE. Final-path reconciliation remains
+read-only. An independent receiver that enforces the same contract is still due.
+
 F442 implements direct DAV delivery schema3 through the existing custody,
 durable intent,draft/approval,worker slot,lease/fence and reconciliation paths.
 Exact pinned TLS1.3 and protected bearer/Basic references,private-stage contract,

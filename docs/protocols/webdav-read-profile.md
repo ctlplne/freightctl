@@ -532,6 +532,9 @@ policy and adds exact DAV definition/source/effect guards.
 Before any stage byte can leave,the worker commits `publishing` with its ordinary
 lease/fence and current authority. PUT,stage verification,MOVE or final-read
 failure then leaves `ambiguous`;there is no automatic resend or cleanup.
+The transport requires a complete exclusive-create response to its own PUT
+before it reads the stage or attempts MOVE. A stage that contains matching
+bytes can predate a failed or refused PUT.
 `delivery-reconcile --delivery-id ID` only reads the original final path.
 Matching bytes may establish current integrity while upload/MOVE replies,
 fsync,power-loss durability and business acceptance remain unconfirmed.

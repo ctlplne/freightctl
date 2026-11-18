@@ -27,8 +27,10 @@ type DAVDeliveryClient struct {
 	size              int64
 	digest            string
 	mu                sync.Mutex
-	stored, published bool
+	stageAttempted    bool
+	stageAcknowledged bool
 	stageETag         string
+	published         bool
 }
 
 func NewDAVDeliveryClient(ctx context.Context, d HTTPSReadDestination, stage, final string, size int64, digest string, check func() error) (*DAVDeliveryClient, error) {
@@ -94,15 +96,14 @@ func davDeliveryHeaders() http.Header {
 func (c *DAVDeliveryClient) PutStage(ctx context.Context, file *os.File) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
-	if c.stored || c.published || file == nil {
+	if c.stageAttempted || file == nil {
 		return ErrDAVDelivery
 	}
 	info, err := file.Stat()
 	if err != nil || !info.Mode().IsRegular() || info.Size() != c.size {
 		return ErrDAVDelivery
 	}
-	c.stored = true
-	c.stageETag = ""
+	c.stageAttempted = true
 	source := &davDeliverySource{ctx: ctx, check: c.read.check, source: io.NewSectionReader(file, 0, c.size)}
 	headers := davDeliveryHeaders()
 	headers.Set("If-None-Match", "*")
@@ -114,6 +115,7 @@ func (c *DAVDeliveryClient) PutStage(ctx context.Context, file *os.File) error {
 	if err = davDeliveryAcknowledgement(response); err != nil || source.read.Load() != c.size {
 		return errors.Join(ErrDAVDelivery, err)
 	}
+	c.stageAcknowledged = true
 	return nil
 }
 
@@ -189,11 +191,13 @@ func (c *DAVDeliveryClient) verify(ctx context.Context, path string, stage bool)
 	return tag, nil
 }
 
+// The create acknowledgement must come from this client. Matching bytes could
+// already be on the peer, even after it refused the exclusive PUT.
 func (c *DAVDeliveryClient) VerifyStage(ctx context.Context) error {
 	c.mu.Lock()
 	defer c.mu.Unlock()
 	c.stageETag = ""
-	if c.published {
+	if !c.stageAcknowledged || c.published {
 		return ErrDAVDelivery
 	}
 	tag, err := c.verify(ctx, c.stage, true)
