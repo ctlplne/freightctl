@@ -142,6 +142,12 @@ link. PostgreSQL replay returns the original receipt, and a fresh key
 cannot overwrite an existing path. A governed destination still holds
 the restored bytes for checks and later release.
 
+[F478](docs/qualification/evidence/F478-portable-workflow-export.json) exports
+an exact workflow revision and its dependency references. A real PostgreSQL
+round trip handed an approved processing definition back through ordinary
+draft creation with the same definition hash and a new unapproved identity.
+Destination rebinding and broader configuration export remain open.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

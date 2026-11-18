@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "F478",
+  "observed_at": "2026-11-18",
+  "base_candidate": "9a10f48",
+  "scope": "Exact authorized workflow definition export, dependency references and ordinary same-scope draft re-creation",
+  "qualification_claim": false,
+  "red": {
+    "exit_code": 1,
+    "observation": "The previous native CLI has no workflow-export command and writes no output.",
+    "log_sha256": "79908aeb415dc166736adf47256be9a83108a48556683e9b8cdf330d6cd63ce2"
+  },
+  "green": {
+    "platform": "darwin/arm64 CLI entry point with Linux arm64 PostgreSQL",
+    "go_version": "go1.27.4",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "memory_limit_bytes": 201326592,
+    "cpu_limit": 1,
+    "private_witness_directory": ".private/freightctl-f478-confirm",
+    "original_workflow_definition_sha256": "115fd7eb32eefc2eb03cb380610aaf3eb94f056ed93880bcfcf7028f7bde1c26",
+    "archive_sha256": "6f85011e30692e22080d0c94da8fdc554d5adfa5ddb2eab9ffc013e7d1520c21",
+    "archive_bytes": 1441,
+    "actual_cli_test": "TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease/portable_workflow_returns_through_ordinary_draft_approval_boundary",
+    "output_sealed_and_verified": true,
+    "processing_intake_and_output_dependency_references_exact": true,
+    "ordinary_draft_recreated_same_definition_hash_with_new_identity": true,
+    "destination_approval_authority_absent": true,
+    "changed_digest_and_other_actor_refused_without_output": true,
+    "original_processing_parent_test_passed": true,
+    "race_enabled": true,
+    "exact_task_containers_removed_verified": true,
+    "result_log_sha256": "850b235406f65af6b41cfe74fb73ae3cc8fa638302d081afbfe4caeb59e348a7"
+  },
+  "checks": {
+    "focused_dependency_order_and_version_race": "pass",
+    "focused_log_sha256": "3f1ce4e10d279625579f06951854142004e1988e381a6392fc1fb386b15f68ae",
+    "affected_tagged_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Export and rebind calendars, connection and policy definitions, identities and receipts with native and independent evidence",
+    "Qualify cross-workspace recreation, controlled cutover and original final-source checks"
+  ]
+}

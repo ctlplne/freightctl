@@ -180,6 +180,9 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 	t.Run("prepared migration calendar uses live schedule preview", func(t *testing.T) {
 		qualifyPreparedSFTPGoCalendarPreview(t, ctx, service, scope, cfg, command, requestFile)
 	})
+	t.Run("portable workflow returns through ordinary draft approval boundary", func(t *testing.T) {
+		qualifyPortableWorkflowDraft(t, ctx, service, scope, cfg, command, requestFile)
+	})
 	raw, err = command("workflow-run", "-request-file", runRequest, "-idempotency-key", "cli-processing-run")
 	var created workflow.Result
 	var r store.WorkflowRun

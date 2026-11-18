@@ -75,3 +75,28 @@ source evidence or a different destination path is a conflict. A new key
 still requires a new path. Destination policies can hold restored bytes
 for checks and separate release. Whole-workspace configuration, partner
 policies, full receipt history and complete exit remain open.
+
+## Export an exact workflow revision
+
+Record the workflow ID, version and definition hash from ordinary workflow
+status. Export under the same account that can read that revision.
+
+```sh
+umask 077
+freightctl workflow-export --tenant "$TENANT" --partner "$PARTNER" \
+  --workflow-id "$WORKFLOW_ID" --version "$VERSION" \
+  --definition-hash "$DEFINITION_SHA256" \
+  --output .private/portable-workflow.json
+jq '.draft' .private/portable-workflow.json > .private/workflow-draft.json
+```
+
+The `freightctl-portable-workflow-v1` file contains the source reference,
+observed state, an ordinary new draft request, and exact dependency
+references. These can include connection revisions, public encryption
+keys and processing policies. Inspect the new draft and rebind its
+references to authorized destination revisions when moving between
+workspaces. Then submit it through ordinary `workflow-draft`. The
+destination creates a separate draft that needs its own approval. The
+export checksum appears in the CLI receipt and the scoped preparation
+event. Calendars, connection definitions and policy contents have
+separate lifecycle and portability work.
