@@ -209,12 +209,15 @@ After a worker dies following publication, the same actor can read back the
 registered final file through the exact reviewed run and delivery. Missing
 bytes retain ambiguity. Matching bytes confirm integrity while leaving the
 original attempt and fence intact. HTTPS, CLI, MCP and the browser recovered
-the same recorded observation locally. Native Linux and interruption at the
-outbound SFTP acknowledgment boundary remain open.
+the same recorded observation locally. The stock SFTP replay also drops the
+successful hardlink reply after publication. Work stays blocked until the
+agent performs the explicit check against the read-only receiver. Native
+Linux qualification remains open.
 [F516](../qualification/evidence/F516-stock-sftp-source-agent-exchange.json) [F517](../qualification/evidence/F517-stock-collection-https-exchange.json)
 [F522](../qualification/evidence/F522-stock-sftp-mcp-exchange.json) [F523](../qualification/evidence/F523-stock-sftp-collection-worker-death.json)
 [F524](../qualification/evidence/F524-stock-sftp-browser-exchange.json)
 [F527](../qualification/evidence/F527-reviewed-onward-readback.json)
+[F531](../qualification/evidence/F531-stock-sftp-publication-reply-loss.json)
 The local FTPS pair uses a separate freightctl producer, stock HTTPS retrieval,
 an agent-owned copy and separately approved delivery to stock OpenSSH. It
 passes for explicit and implicit FTPS. The same local chain passes from a

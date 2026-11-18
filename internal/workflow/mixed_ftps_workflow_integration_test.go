@@ -50,6 +50,11 @@ func newMixedStockReceiver(t *testing.T, f *fixture) *mixedStockReceiver {
 
 func newStockSFTPPeer(t *testing.T, f *fixture, readOnly bool) *mixedStockReceiver {
 	t.Helper()
+	return startStockSFTPPeer(t, f, readOnly, nil)
+}
+
+func startStockSFTPPeer(t *testing.T, f *fixture, readOnly bool, subsystem func(directory string) string) *mixedStockReceiver {
+	t.Helper()
 	if os.Geteuid() == 0 {
 		t.Fatal("stock receiver qualification requires an unprivileged account")
 	}
@@ -104,6 +109,13 @@ func newStockSFTPPeer(t *testing.T, f *fixture, readOnly bool) *mixedStockReceiv
 	if readOnly {
 		args, operation = "-R -d", "stock-sftp-source-connection"
 	}
+	forced := "internal-sftp " + args + " " + strconv.Quote(r.directory)
+	if subsystem != nil {
+		forced = subsystem(r.directory)
+		if strings.ContainsAny(forced, "\r\n\x00") {
+			t.Fatal("invalid task SFTP fixture command")
+		}
+	}
 	config := fmt.Sprintf(`Port %s
 ListenAddress 127.0.0.1
 HostKey %s
@@ -125,9 +137,9 @@ MaxSessions 1
 MaxStartups 2
 LoginGraceTime 5
 Subsystem sftp internal-sftp
-ForceCommand internal-sftp %s %s
+ForceCommand %s
 LogLevel VERBOSE
-`, r.port, strconv.Quote(host), strconv.Quote(filepath.Join(dir, "receiver.pid")), strconv.Quote(authorized), r.user, args, strconv.Quote(r.directory))
+`, r.port, strconv.Quote(host), strconv.Quote(filepath.Join(dir, "receiver.pid")), strconv.Quote(authorized), r.user, forced)
 	configPath := filepath.Join(dir, "sshd_config")
 	if err = os.WriteFile(configPath, []byte(config), 0600); err != nil {
 		t.Fatal(err)

@@ -296,7 +296,8 @@ original reviewed run and exact delivery. Missing bytes leave the result
 uncertain. Matching bytes record integrity with the original attempt and
 fence. Stock HTTPS, CLI, MCP and sandboxed Chromium recover the same receipt.
 The browser restores a saved pending check after a dropped reply and reload.
-Native Linux and loss at the SFTP acknowledgment boundary remain due.
+Native Linux qualification remains due. F531 covers SFTP acknowledgment loss
+in the local stock peer replay.
 
 [F528](docs/qualification/evidence/F528-original-batch-and-native-ftps.json)
 records all 17 terminal first-attempt workflows at `8219fd9`. The independent
@@ -316,6 +317,13 @@ worker that returns shell status 133 before logging a control connection.
 The full ARM replay passes both modes and the required TLS 1.2 refusal.
 The new witness preserves the original sandbox and transport checks. The
 exact native x86 cause remains open.
+
+[F531](docs/qualification/evidence/F531-stock-sftp-publication-reply-loss.json)
+drops the successful OpenSSH hardlink reply after real publication. The
+delivery becomes ambiguous. Work retries make no new receiver connection.
+An explicit check under the original reviewed run reads the exact bytes from
+OpenSSH in read-only mode. It keeps the original attempt, fence and inode.
+Native Linux replay remains due.
 
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed

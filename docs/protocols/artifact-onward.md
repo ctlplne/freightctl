@@ -90,6 +90,15 @@ business processing remain unknown. The existing `delivery-reconcile`
 command still requires the original owner and connection administration.
 [F526 recovery boundary](../qualification/evidence/F526-stock-sftp-onward-recovery-boundary.json) [F527 replay](../qualification/evidence/F527-reviewed-onward-readback.json)
 
+The stock OpenSSH replay drops the successful hardlink response after the
+registered final path appears. Repeating work leaves the result ambiguous
+and creates zero additional connections. The same reviewed actor can then
+use `onward/reconcile` against the original final path. The stock receiver
+allows only reads for those later sessions. A matching file records integrity
+with the original attempt and fence. The retained stage and final file
+continue to point to the same original inode.
+[F531 publication reply loss](../qualification/evidence/F531-stock-sftp-publication-reply-loss.json)
+
 MCP returns source integrity,workflow references,run/delivery IDs,states and receipt
 hashes. It omits storage identity,namespace paths,private step labels,transport
 references,raw observations and parsed contents. Historical acceptance says

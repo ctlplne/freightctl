@@ -32,76 +32,25 @@ func stockOnwardWorkerDeath(t *testing.T, browser observeStockOnward) {
 	binary := routingKeyCLI(t)
 	f := setup(t)
 	remote := newMixedStockReceiver(t, f)
-	secretPath := filepath.Join(t.TempDir(), "agent.token")
-	if err := secure.WriteToken(secretPath); err != nil {
-		t.Fatal(err)
-	}
-	secret, err := secure.ReadSecret(secretPath, 64)
-	if err != nil {
-		t.Fatal(err)
-	}
-	proof := secure.Digest(secret.Bytes)
-	secret.Close()
-	actor := secure.NewID()
-	account := store.AccountCommand{Operation: "create", ID: actor, CredentialHash: proof,
-		Policy: &store.AccountPolicy{Label: "Onward agent", Root: "/", Permissions: []string{"read", "list", "write", "deliver", "workflow_manage", "workflow_approve", "workflow_execute"}}}
+	prepared := prepareStockOnward(t, f, remote)
+	secretPath, actor, agent := prepared.token, prepared.actor, prepared.scope
+	recovery, review := prepared.request, prepared.review
+	start, runID, id := recovery.Start, recovery.RunID, recovery.DeliveryID
 	db := f.s.Custody.DB
-	if _, err = db.ChangeAccount(f.ctx, f.scope, "stock-recovery-agent", account); err != nil {
-		t.Fatal(err)
-	}
-	agent := store.Scope{Tenant: f.scope.Tenant, Partner: f.scope.Partner, TokenHash: proof}
-	source := Reference{ID: remote.connection.ID, Version: remote.connection.Version, Hash: remote.connection.Hash}
-	assigned, err := f.s.ProvisionConnection(f.ctx, f.scope, "stock-recovery-route", ConnectionProvisionCommand{
-		Operation: "provision", Source: &source, Recipient: actor, RecipientAuthority: 1,
-	})
-	if err != nil {
-		t.Fatal("separate operator SFTP assignment", err)
-	}
-	route := readStockExchangeJSON[ConnectionProvisionReceipt](t, assigned.Resource).Connection
-	delegate := *f
-	delegate.scope = agent
-	approved := delegate.approved(t, Definition{Schema: 1, Name: "Reviewed onward worker recovery", Steps: []Step{{
-		ID: "send", Kind: "sftp.deliver", Connection: route, Filename: "onward.csv",
-	}}})
 	body := []byte("abc")
-	file, _, err := f.s.Custody.AcceptAt(f.ctx, agent, "agent-recovery-revision", int64(len(body)), secure.Digest(body), bytes.NewReader(body), custody.UploadTarget{Path: "/agent-onward.csv"})
-	if err != nil {
-		t.Fatal("agent-owned exact revision", err)
-	}
-	request := OnwardRequest{Schema: 1, Profile: OnwardProfile, Workflow: Reference{ID: approved.ID, Version: approved.Version, Hash: approved.Hash},
-		Artifact: store.ExchangeArtifact{ID: file.ID, Size: file.Size, SHA256: file.SHA256, Policy: file.Policy}}
-	review, err := f.s.PrepareOnward(f.ctx, agent, request)
-	if err != nil || remote.sessions(t) != 0 {
-		t.Fatal("onward review contacted receiver or failed", err)
-	}
-	start := OnwardStart{Request: request, ReviewHash: review.ReviewHash}
-	receiptKey := secure.NewID()
-	acceptance, err := f.s.StartOnward(f.ctx, agent, receiptKey, start)
-	if err != nil {
-		t.Fatal("exact onward queue", err)
-	}
-	run := readStockExchangeJSON[OnwardRunReceipt](t, acceptance.Resource)
-	view, err := f.s.Status(f.ctx, agent, run.ID)
-	if err != nil || len(view.Steps) != 1 || view.Steps[0].State != "queued" || remote.sessions(t) != 0 {
-		t.Fatal("onward queue changed the number of pending steps or reached the receiver", err)
-	}
-	id := view.Steps[0].DeliveryID
-	if !store.ValidID(id) {
-		t.Fatal("the approved step lacks an exact intent identity")
-	}
 	// Add a pause at the local success update for this one synthetic delivery.
 	// The ordinary worker has already linked, verified and closed the final file.
 	barrier := `CREATE FUNCTION freightctl_onward_success_pause() RETURNS trigger LANGUAGE plpgsql AS $$ BEGIN IF NEW.delivery_id='` + id + `' AND NEW.state='succeeded' THEN PERFORM pg_sleep(8); END IF; RETURN NEW; END $$;
 		CREATE TRIGGER freightctl_onward_success_pause BEFORE UPDATE ON delivery_intents FOR EACH ROW EXECUTE FUNCTION freightctl_onward_success_pause()`
-	if _, err = f.admin.Exec(f.ctx, barrier); err != nil {
+	if _, err := f.admin.Exec(f.ctx, barrier); err != nil {
 		t.Fatal(err)
 	}
 	drop := `DROP TRIGGER freightctl_onward_success_pause ON delivery_intents; DROP FUNCTION freightctl_onward_success_pause()`
 	child := exec.CommandContext(f.ctx, binary, "workflow-work", "--dsn-file", f.runtimePath, "--storage", f.storagePath,
-		"--token-file", secretPath, "--tenant", agent.Tenant, "--partner", agent.Partner, "--run-id", run.ID, "--idempotency-key", "original-onward-worker")
+		"--token-file", secretPath, "--tenant", agent.Tenant, "--partner", agent.Partner, "--run-id", runID, "--idempotency-key", "original-onward-worker")
 	var stdout, stderr bytes.Buffer
 	child.Stdout, child.Stderr = &stdout, &stderr
-	if err = child.Start(); err != nil {
+	if err := child.Start(); err != nil {
 		t.Fatal(err)
 	}
 	t.Cleanup(func() {
@@ -111,22 +60,22 @@ func stockOnwardWorkerDeath(t *testing.T, browser observeStockOnward) {
 		}
 	})
 	waitCollectionSQL(t, f, 12*time.Second, `SELECT EXISTS(SELECT 1 FROM pg_stat_activity WHERE datname=current_database() AND wait_event='PgSleep' AND query LIKE 'UPDATE delivery_intents%')`)
-	final := filepath.Join(remote.directory, id+"-onward.csv")
+	final := filepath.Join(remote.directory, id+"-"+stockOnwardFilename)
 	if wire, err := os.ReadFile(final); err != nil || !bytes.Equal(wire, body) || remote.sessions(t) != 1 {
 		t.Fatal("the real stock receiver did not expose the exact final file before the worker lost its receipt", err)
 	}
-	if err = child.Process.Kill(); err != nil {
+	if err := child.Process.Kill(); err != nil {
 		t.Fatal(err)
 	}
 	var exit *exec.ExitError
-	if err = child.Wait(); !errors.As(err, &exit) {
+	if err := child.Wait(); !errors.As(err, &exit) {
 		t.Fatal("original onward worker never died", err)
 	}
 	killed, ok := exit.Sys().(syscall.WaitStatus)
 	if !ok || killed.Signal() != syscall.SIGKILL || stdout.Len() != 0 {
 		t.Fatal("original worker emitted a receipt or exited without SIGKILL")
 	}
-	if _, err = f.admin.Exec(f.ctx, drop); err != nil {
+	if _, err := f.admin.Exec(f.ctx, drop); err != nil {
 		t.Fatal(err)
 	}
 	sender := &delivery.Service{Custody: f.s.Custody}
@@ -136,7 +85,6 @@ func stockOnwardWorkerDeath(t *testing.T, browser observeStockOnward) {
 	}
 	client := collectedExchangeStockClient(t, f, binary)
 	agentHTTP := client.curl(secretPath)
-	recovery := OnwardReconcileRequest{OnwardLookup: OnwardLookup{Start: start, ReceiptKey: receiptKey}, RunID: run.ID, DeliveryID: id}
 	const recoveryRoute = "/onward/reconcile"
 	agentHTTP(recoveryRoute, "live-lease", recovery, 409)
 	if remote.sessions(t) != 1 {
@@ -187,7 +135,7 @@ func stockOnwardWorkerDeath(t *testing.T, browser observeStockOnward) {
 	}
 	const missingKey = "observe-unconfirmed-final-name"
 	missing := readStockExchangeJSON[OnwardReconciliation](t, agentHTTP(recoveryRoute, missingKey, recovery, 200))
-	if missing.Replayed || missing.RunID != run.ID || missing.DeliveryID != id || missing.DeliveryState != "ambiguous" || missing.Observation != "unconfirmed" || remote.sessions(t) != 2 {
+	if missing.Replayed || missing.RunID != runID || missing.DeliveryID != id || missing.DeliveryState != "ambiguous" || missing.Observation != "unconfirmed" || remote.sessions(t) != 2 {
 		t.Fatal("missing receiver file did not retain uncertainty")
 	}
 	if err = os.Rename(moved, final); err != nil {
@@ -216,7 +164,7 @@ func stockOnwardWorkerDeath(t *testing.T, browser observeStockOnward) {
 	} else {
 		match, matchedKey = browser(t, f, client, secretPath, agent, review, recovery)
 	}
-	if match.Replayed || match.RunID != run.ID || match.DeliveryID != id || match.DeliveryState != "succeeded" || match.Observation != "integrity-observed" ||
+	if match.Replayed || match.RunID != runID || match.DeliveryID != id || match.DeliveryState != "succeeded" || match.Observation != "integrity-observed" ||
 		match.ReceiverPersistence != "unknown" || match.BusinessProcessing != "unknown" || remote.sessions(t) != 3 {
 		t.Fatal("exact readback did not resolve only the bound integrity outcome")
 	}
@@ -232,10 +180,10 @@ func stockOnwardWorkerDeath(t *testing.T, browser observeStockOnward) {
 		SHA256 string `json:"sha256"`
 		Fsync  bool   `json:"file_fsync_acknowledged"`
 	}
-	if json.Unmarshal(status.Observation, &observed) != nil || observed.SHA256 != file.SHA256 || observed.Fsync {
+	if json.Unmarshal(status.Observation, &observed) != nil || observed.SHA256 != start.Request.Artifact.SHA256 || observed.Fsync {
 		t.Fatal("read-only reconciliation claimed a file sync or changed the wire digest")
 	}
-	finish, err := f.s.Status(f.ctx, agent, run.ID)
+	finish, err := f.s.Status(f.ctx, agent, runID)
 	if err != nil || finish.Run.State != "succeeded" || finish.ObservedState != "succeeded" {
 		t.Fatal("reconciled observation and run projection did not commit together", err)
 	}
@@ -284,6 +232,78 @@ func stockOnwardWorkerDeath(t *testing.T, browser observeStockOnward) {
 	if err = f.admin.QueryRow(f.ctx, `SELECT (SELECT count(*) FROM delivery_receipts WHERE actor_id=$1 AND delivery_id=$2),(SELECT count(*) FROM events WHERE actor_id=$1 AND resource_id=$2 AND kind='DeliveryReconciliationObserved')`, actor, id).Scan(&receipts, &missedEvents); err != nil || receipts != 2 || missedEvents != 1 {
 		t.Fatal("observation replays duplicated or lost durable evidence", err)
 	}
-	remote.requireBytes(t, &delegate, id+"-onward.csv")
+	remote.requireBytes(t, f, id+"-"+stockOnwardFilename)
 	t.Log("stock SFTP worker died after publication; original lease expired; missing and matching observations recorded; cross-surface replays kept one attempt and fence")
+}
+
+const stockOnwardFilename = "onward.csv"
+
+type preparedStockOnward struct {
+	token   string
+	actor   string
+	scope   store.Scope
+	review  *OnwardReview
+	request OnwardReconcileRequest
+}
+
+func prepareStockOnward(t *testing.T, f *fixture, remote *mixedStockReceiver) preparedStockOnward {
+	t.Helper()
+	secretPath := filepath.Join(t.TempDir(), "agent.token")
+	if err := secure.WriteToken(secretPath); err != nil {
+		t.Fatal(err)
+	}
+	secret, err := secure.ReadSecret(secretPath, 64)
+	if err != nil {
+		t.Fatal(err)
+	}
+	proof := secure.Digest(secret.Bytes)
+	secret.Close()
+	actor := secure.NewID()
+	account := store.AccountCommand{Operation: "create", ID: actor, CredentialHash: proof,
+		Policy: &store.AccountPolicy{Label: "Onward agent", Root: "/", Permissions: []string{"read", "list", "write", "deliver", "workflow_manage", "workflow_approve", "workflow_execute"}}}
+	db := f.s.Custody.DB
+	if _, err = db.ChangeAccount(f.ctx, f.scope, "stock-recovery-agent", account); err != nil {
+		t.Fatal(err)
+	}
+	agent := store.Scope{Tenant: f.scope.Tenant, Partner: f.scope.Partner, TokenHash: proof}
+	source := Reference{ID: remote.connection.ID, Version: remote.connection.Version, Hash: remote.connection.Hash}
+	assigned, err := f.s.ProvisionConnection(f.ctx, f.scope, "stock-recovery-route", ConnectionProvisionCommand{
+		Operation: "provision", Source: &source, Recipient: actor, RecipientAuthority: 1,
+	})
+	if err != nil {
+		t.Fatal("separate operator SFTP assignment", err)
+	}
+	route := readStockExchangeJSON[ConnectionProvisionReceipt](t, assigned.Resource).Connection
+	delegate := *f
+	delegate.scope = agent
+	approved := delegate.approved(t, Definition{Schema: 1, Name: "Reviewed onward worker recovery", Steps: []Step{{
+		ID: "send", Kind: "sftp.deliver", Connection: route, Filename: stockOnwardFilename,
+	}}})
+	body := []byte("abc")
+	file, _, err := f.s.Custody.AcceptAt(f.ctx, agent, "agent-recovery-revision", int64(len(body)), secure.Digest(body), bytes.NewReader(body), custody.UploadTarget{Path: "/agent-onward.csv"})
+	if err != nil {
+		t.Fatal("agent-owned exact revision", err)
+	}
+	request := OnwardRequest{Schema: 1, Profile: OnwardProfile, Workflow: Reference{ID: approved.ID, Version: approved.Version, Hash: approved.Hash},
+		Artifact: store.ExchangeArtifact{ID: file.ID, Size: file.Size, SHA256: file.SHA256, Policy: file.Policy}}
+	review, err := f.s.PrepareOnward(f.ctx, agent, request)
+	if err != nil || remote.sessions(t) != 0 {
+		t.Fatal("onward review contacted receiver or failed", err)
+	}
+	start := OnwardStart{Request: request, ReviewHash: review.ReviewHash}
+	receiptKey := secure.NewID()
+	acceptance, err := f.s.StartOnward(f.ctx, agent, receiptKey, start)
+	if err != nil {
+		t.Fatal("exact onward queue", err)
+	}
+	run := readStockExchangeJSON[OnwardRunReceipt](t, acceptance.Resource)
+	view, err := f.s.Status(f.ctx, agent, run.ID)
+	if err != nil || len(view.Steps) != 1 || view.Steps[0].State != "queued" || remote.sessions(t) != 0 {
+		t.Fatal("onward queue changed the number of pending steps or reached the receiver", err)
+	}
+	id := view.Steps[0].DeliveryID
+	if !store.ValidID(id) {
+		t.Fatal("the approved step lacks an exact intent identity")
+	}
+	return preparedStockOnward{token: secretPath, actor: actor, scope: agent, review: review, request: OnwardReconcileRequest{OnwardLookup: OnwardLookup{Start: start, ReceiptKey: receiptKey}, RunID: run.ID, DeliveryID: id}}
 }

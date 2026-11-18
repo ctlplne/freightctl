@@ -1,0 +1,62 @@
+{
+  "schema_version": 1,
+  "id": "F531",
+  "observed_at": "2026-11-19",
+  "base_candidate": "bcdf346ad43f7ad79c1d0f216f426e93fe9da861",
+  "qualification_claim": false,
+  "scope": "Exact stock OpenSSH SFTP publication acknowledgment loss and private read-only recovery",
+  "prior_worker_death_and_recovery": "docs/qualification/evidence/F527-reviewed-onward-readback.json",
+  "local_race_replay": {
+    "environment": "macOS ARM, real PostgreSQL 16.15, stock OpenSSH 10.5p1 SSH and SFTP server and stock SFTP client, protected HTTPS, no local inference",
+    "focused_log": {
+      "sha256": "3d9552d48f6098b59e609269d8c516617f2c854851fb5ba9a177604b725fee16",
+      "bytes": 394
+    },
+    "final_replay_log": {
+      "sha256": "d1d23c68a17a91b20b95132cffcfdfe015f2f40bb575b7805e5eefb05b9dc678",
+      "bytes": 1426
+    },
+    "publication_attempts": 1,
+    "publication_fence": 1,
+    "blocked_work_and_foreign_actor_new_receiver_sessions": 0,
+    "authorized_observation_sessions": 1,
+    "same_key_replay_sessions": 0,
+    "assertions": [
+      "The same pinned stock SFTP server processed the publish hardlink and returned status OK for the exact request ID. The fixture saved only its digest and withheld that one response.",
+      "The independent final path existed and pointed to the original staging inode. The private delivery stayed ambiguous at the original attempt and fence. The same work key, a new work key and a wrong actor produced zero new receiver sessions.",
+      "The reviewed actor checked the original final path over a fresh stock SFTP session in read-only mode. Matching bytes recorded integrity with no new send or file sync claim. The original receipt replay made no connection.",
+      "An independent stock client read the exact file and confirmed the read-only daemon refused an attempted write. Both original links, the inode, mode and modification time remained intact.",
+      "The browser receiver-check replay, the stock post-publication worker death recovery and the full stock SFTP MCP collection-to-delivery path passed again."
+    ]
+  },
+  "sources": [
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "2ec804eb9de17718176b5a9e00c9b6a8f7738d0d68500df4ddc6d59c235eb8fe",
+      "bytes": 16503
+    },
+    {
+      "path": "internal/workflow/mixed_ftps_workflow_integration_test.go",
+      "sha256": "8b071ab2d28a6314a6fb7444700af46834b788b0fabd4402a20c53984cfdc445",
+      "bytes": 14322
+    },
+    {
+      "path": "internal/workflow/onward_sftp_ack_integration_test.go",
+      "sha256": "5fa5f8be775d5cdb3801e348a307f82a9a4343f6c7fceaf83c3d52ac6a6dce8c",
+      "bytes": 6770
+    },
+    {
+      "path": "internal/workflow/onward_stock_recovery_integration_test.go",
+      "sha256": "0f327d9503b9894bbb60cc491056d5e94dfec43ef3637b44e774368ac818490d",
+      "bytes": 15223
+    },
+    {
+      "path": "scripts/peers/stock-sftp-publication-reply.py",
+      "sha256": "5ef78907d0a7b7d64d676888666c759898e682d533afd3148002435db526bef4",
+      "bytes": 2688
+    }
+  ],
+  "remaining": [
+    "Replay this exact fault profile on native x86 and ARM Linux. Broader SFTP endpoint, large file, multi-host and final qualification gates remain open."
+  ]
+}
