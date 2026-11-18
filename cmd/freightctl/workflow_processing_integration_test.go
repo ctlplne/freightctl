@@ -399,6 +399,7 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 				t.Fatal("export or output registration configured destination ingress", err)
 			}
 			t.Logf("portable output policy definition %s, archive %s", restored.Policy.Hash, receipt.SHA256)
+			destinationOutput := workflow.Reference{ID: restored.Policy.ID, Version: restored.Policy.Version, Hash: restored.Policy.Hash}
 			t.Run("portable intake restores exact checks after head review", func(t *testing.T) {
 				path := filepath.Join(t.TempDir(), "intake.json")
 				sourceRef := workflow.Reference{ID: sourcePolicy.ID, Version: sourcePolicy.Version, Hash: sourcePolicy.Hash}
@@ -456,6 +457,10 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 					t.Fatal("ordinary check failed to preserve the accepted original CSV behavior", err)
 				}
 				t.Logf("portable intake policy definition %s, archive %s", restored.Hash, receipt.SHA256)
+				t.Run("rebound workspace repeats approved processing", func(t *testing.T) {
+					qualifyReboundPortableProcessing(t, ctx, service, scope, destination, cfg, destinationOutput,
+						restored.Hash, file.ID, work.Processing.FileID, destinationFlags, command, requestFile)
+				})
 			})
 		})
 	})

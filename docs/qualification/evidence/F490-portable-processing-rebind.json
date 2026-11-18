@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "F490",
+  "observed_at": "2026-11-18",
+  "candidate": "d606ed7",
+  "scope": "Cross-tenant processing workflow effect comparison after reviewed policy rebinding",
+  "qualification_claim": false,
+  "base_evidence": [
+    "docs/qualification/evidence/F478-portable-workflow-export.json",
+    "docs/qualification/evidence/F481-portable-output-policy-export.json",
+    "docs/qualification/evidence/F482-portable-intake-policy-export.json"
+  ],
+  "green": {
+    "platform": "darwin/arm64 ordinary CLI and Linux arm64 PostgreSQL with actual local custody",
+    "go_version": "go1.27.4",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "memory_limit_bytes": 201326592,
+    "cpu_limit": 1,
+    "private_witness_directory": ".private/freightctl-f490-confirm",
+    "fixture_sha256": "dae1f4cc0d71b2d66103bf47f4ce1887d5756ea31b9a5f25cefbf3cd9a5f38e1",
+    "source_archive_sha256": "25ad39773d8da05353abfd6862752d6c772292db20c755a605b88ea2a540e8d0",
+    "rebound_definition_sha256": "a69c7c2e698f9a2a204a2da71ad37ca6e1466c6c4f4460daa240b11bfc58aece",
+    "equal_released_output_sha256": "fa9c883b6ab917fe3da44767bec9c5bd20c25838dff7000a52d213a913daa5d4",
+    "separate_tenants_and_actors_in_one_postgresql_fixture": true,
+    "approved_source_export_and_exact_destination_intake_rules": true,
+    "explicit_rebind_to_new_producer_policy_with_equal_rules": true,
+    "unapproved_destination_run_refused": true,
+    "destination_approval_then_run_and_held_output": true,
+    "new_file_identity_and_exact_bound_output_check": true,
+    "separate_release_then_exact_output_bytes_and_observed_success": true,
+    "original_processing_cli_parent_and_prior_portability_cases": "pass",
+    "race_enabled": true,
+    "exact_task_container_removed_verified": true,
+    "test_log_sha256": "ccc3f954ced61cf1b39e3c2603af5c7acb763deb79589904ba2d620878288b7c"
+  },
+  "checks": {
+    "affected_tagged_vet": "pass",
+    "format": "pass",
+    "record_references": "pass"
+  },
+  "remaining": [
+    "Native Linux matrix replay, stock operator adoption, external route and schedule cutover comparisons",
+    "Independent new-install recovery with full configuration, selected artifacts, receipts and audit history"
+  ]
+}

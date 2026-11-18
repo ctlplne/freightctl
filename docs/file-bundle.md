@@ -101,6 +101,13 @@ export checksum appears in the CLI receipt and the scoped preparation
 event. Export each referenced connection, intake policy and
 producer-bound output policy revision separately.
 
+For a processing workflow, compare the restored intake definition hash
+with the workflow's source policy hash. Set the draft's output policy
+reference to the newly registered producer policy. Run a known sample
+after destination approval. Check that the output is held, release it
+through the destination's ordinary controls, and compare the released
+bytes to the original output.
+
 ## Export a schedule and compare its clock rules
 
 ```sh

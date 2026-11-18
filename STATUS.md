@@ -214,6 +214,12 @@ delivery. Stock OpenSSH transferred and independently read the payload.
 After the receiver stopped and its client key was removed, the CLI
 exported the same observation and the original completion event.
 
+[F490](docs/qualification/evidence/F490-portable-processing-rebind.json)
+joins the saved workflow, intake and producer-policy exports in a real
+PostgreSQL replay across two tenants. The destination required its own
+approval and output release. The released JSON bytes match the original
+workflow output exactly.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an
