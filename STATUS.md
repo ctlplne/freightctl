@@ -232,6 +232,13 @@ pages. The real PostgreSQL CLI replay exported four committed revisions.
 The page pinned while the run was queued stayed byte-identical after
 completion. A different actor and changed workflow hash were refused.
 
+[F493](docs/qualification/evidence/F493-portable-openpgp-public-key.json)
+exports public OpenPGP key revisions for reviewed enrollment. Two
+PostgreSQL databases replayed the signer and recipient keys under new
+IDs. The destination verified signed intake, and stock GnuPG verified
+the same stock signature with the decoded public export. The CLI now
+returns an error when key registration or signature attachment is refused.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

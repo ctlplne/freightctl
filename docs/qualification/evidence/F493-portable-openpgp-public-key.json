@@ -1,0 +1,66 @@
+{
+  "schema_version": 1,
+  "id": "F493",
+  "observed_at": "2026-11-18",
+  "base_candidate": "0d5a20c",
+  "scope": "Exact public OpenPGP key export and restored signed intake with truthful CLI refusal",
+  "qualification_claim": false,
+  "red": {
+    "unknown_export_cli_log_sha256": "79908aeb415dc166736adf47256be9a83108a48556683e9b8cdf330d6cd63ce2",
+    "original_private_registration_exit": 0,
+    "original_private_registration_stdout": "null",
+    "key_registry_rows_before_and_after_original": [1, 1],
+    "original_private_registration_observation_sha256": "93916977ab2dd9837ac2c731b527e04e55911b49642a05647782dccf0f38f77b",
+    "original_wrong_signature_exit": 0,
+    "original_wrong_signature_stdout": "null",
+    "wrong_signature_red_green_comparison_sha256": "e83de889017e6090018cee8b16ae7bcf96abc3e220a52b06fab15cf860dd424a",
+    "cause": "Case-local service errors were dropped when the common CLI return path read the outer error."
+  },
+  "green": {
+    "platform": "darwin/arm64 CLI with two Linux arm64 PostgreSQL databases and native GnuPG 2.5.24",
+    "go_version": "go1.27.4",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "gnupg_sampled_process_family_rss_budget_bytes": 134217728,
+    "gnupg_preparation_sampled_peak_rss_bytes": 56672256,
+    "gnupg_verification_sampled_peak_rss_bytes": 36306944,
+    "gnupg_preparation_metrics_sha256": "da78a441a23639cab078d91e1aa4f062c0d932f644696d35fb5356e3ccb69d97",
+    "gnupg_verification_metrics_sha256": "19fbe49a8ad4177292c457fda05528f5e60a12b2aba62361886d0bb34681c828",
+    "gnupg_verification_log_sha256": "14d1eb1f7f4f2b4b72e8a7b237f96354617615e33af28b26f9cdb8b3e723e3aa",
+    "private_witness_directory": ".private/freightctl-f493-confirm",
+    "executable_sha256": "2bde900384a0b99c85a5a09b5850e56ac6edd21809604bcd0de9b627f66f137a",
+    "fixture_sha256": "81a84d822ceec8b78beffe9fbfe44de04ab3bfe062a1826f25cf1b4137155c3e",
+    "summary_sha256": "631f11d92f3cf1783116208f8bab35ffdf940e46f1573cf12756087e28181881",
+    "operation_log_sha256": "d163c901f32fc3d603cbe32feeff851bbe008eb61d7f46941334f67fce538c8d",
+    "verification_key": {
+      "observed_source_state": "revoked",
+      "archive_sha256": "20eb238fbfdde636cb872175fc5002911600e7f26c2190500b9d6391001d1977",
+      "public_sha256": "78d583435aa47d3b9a6b6e288b3209e64f5865635e9d66d32d409d46b12ba527",
+      "definition_sha256": "0e347f6cf99673fc6abf09e52b1cfcfc6c9ff9328f091deb3603580281b0ff90"
+    },
+    "recipient_key": {
+      "observed_source_state": "active",
+      "archive_sha256": "c1ba662dde65a1e884b9ee1d05c2581c63d16791493382cfa742dfa5bc32180d",
+      "public_sha256": "5351b154e7972ac31315ceff979f59383dcefb6d76febbfcaf418324e4e15fb2",
+      "definition_sha256": "25ca9d8e09368c48a8e173f046c2eb78cfe1d9fd121bfa4086b9dddfab6dfaae"
+    },
+    "destination_signed_intake_payload_sha256": "b4eb8dba169beec0be2cf061bedfa92b204d7fc607fad8014adde7e7a90bdda9",
+    "stock_openssl_extracted_exact_public_packets_and_stock_gnupg_reported_validsig": true,
+    "fresh_destination_ids_same_packets_purposes_and_definition_hashes": true,
+    "unreviewed_and_foreign_requests_refused_without_result": true,
+    "corrected_cli_private_key_and_wrong_source_binding_exit_nonzero": true,
+    "exact_task_containers_removed_verified": true
+  },
+  "checks": {
+    "focused_openpgp_regression_with_race": "pass",
+    "focused_log_sha256": "c6e6fb52f924d63112d0152d20a77c4deacc62258850cda55e55ec5d1903189e",
+    "affected_tagged_vet": "pass",
+    "core_architecture": "pass",
+    "stock_qualification_script_syntax": "pass"
+  },
+  "remaining": [
+    "Native original full OpenPGP qualification and a complete recovered encrypted delivery",
+    "Private key custody outside this export, provider-specific references and whole-estate recovery"
+  ]
+}

@@ -16,12 +16,18 @@ import (
 
 type pgpOptions struct {
 	DSN, Token, Tenant, Partner, Storage, Input, Key, KeyID, FileID, PublicFile, SignatureFile, DataSHA, PolicyHash, DefinitionHash string
+	Output                                                                                                                          string
 	Version                                                                                                                         int
 	Revision                                                                                                                        int64
 	MaxStored                                                                                                                       int64
 }
 
 func runPGP(ctx context.Context, command string, o pgpOptions) error {
+	if command == "pgp-key-export" {
+		if err := validatePortableOutput(o.Output); err != nil {
+			return err
+		}
+	}
 	secret, err := secure.ReadSecret(o.Token, 64)
 	if err != nil {
 		return err
@@ -65,9 +71,18 @@ func runPGP(ctx context.Context, command string, o pgpOptions) error {
 			defer public.Close()
 			request.PublicKey = public.Bytes
 		}
-		result, err = service.RegisterPGPKey(ctx, scope, o.Key, request)
+		registered, err := service.RegisterPGPKey(ctx, scope, o.Key, request)
+		if err != nil {
+			return err
+		}
+		result = registered
 	case "pgp-key-status":
 		result, err = service.PGPKey(ctx, scope, o.KeyID, o.Version)
+	case "pgp-key-export":
+		ref := workflow.Reference{ID: o.KeyID, Version: o.Version, Hash: o.DefinitionHash}
+		return writePortableArtifact(ctx, o.Output, "pgp-public-key", func(staged io.Writer) (*workflow.PortableExportReceipt, error) {
+			return service.PreparePortablePGPKey(ctx, scope, ref, staged)
+		}, os.Stdout)
 	case "pgp-key-revoke":
 		result, err = service.RevokePGPKey(ctx, scope, o.KeyID, o.Version, o.Key, workflow.Decision{Hash: o.DefinitionHash, Revision: o.Revision})
 	case "check-signature":
@@ -82,7 +97,11 @@ func runPGP(ctx context.Context, command string, o pgpOptions) error {
 			return err
 		}
 		defer signature.Close()
-		result, err = service.AttachSignature(ctx, scope, o.FileID, o.Key, o.DataSHA, o.PolicyHash, o.Revision, signature.Bytes)
+		attached, err := service.AttachSignature(ctx, scope, o.FileID, o.Key, o.DataSHA, o.PolicyHash, o.Revision, signature.Bytes)
+		if err != nil {
+			return err
+		}
+		result = attached
 	}
 	if err != nil {
 		return err

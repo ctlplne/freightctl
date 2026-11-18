@@ -136,6 +136,7 @@ LogLevel VERBOSE
  for label,name in [('revoked-key','revoked-public.gpg'),('private-key','private-rejection.gpg')]:
   request={'expected_version':0,'fingerprint':fingerprints['good'],'public_key':base64.b64encode((fixture/name).read_bytes()).decode()}
   post(label+'-refused','/pgp-keys',request,400,key=label)
+ invoke('cli-private-key-refused','pgp-key-register','--request-file',write('cli-key-metadata',{'expected_version':0,'fingerprint':fingerprints['good']}),'--pgp-public-file',fixture/'private-rejection.gpg','--idempotency-key','cli-refused-key',success=False)
  wrong=key_request('good');wrong['fingerprint']=fingerprints['other'];post('wrong-primary-pin-refused','/pgp-keys',wrong,400,key='wrong-pin')
  old_header=private/'old.headers';old_header.write_bytes(b'Authorization: Bearer '+old_grants.read_bytes()+b'\n')
  other_header=private/'other.headers';other_header.write_bytes(b'Authorization: Bearer '+other.read_bytes()+b'\n')
@@ -167,6 +168,7 @@ LogLevel VERBOSE
  attach('mixed-signatures-refused',fid,c,good_sig+(fixture/'other.sig').read_bytes(),400)
  attach('private-packets-not-a-sidecar',fid,c,(fixture/'private-rejection.gpg').read_bytes(),400)
  attach('other-actor-cannot-attach',fid,c,good_sig,404,other_header)
+ invoke('cli-wrong-source-digest-refused','check-signature','--file-id',fid,'--signature-file',fixture/'good.sig','--data-sha256','0'*64,'--policy-hash',c['policy_hash'],'--expected-revision',c['revision'],'--idempotency-key','cli-refused-signature',success=False)
  attached=invoke('cli-bind-exact-detached-signature','check-signature','--file-id',fid,'--signature-file',fixture/'good.sig','--data-sha256',digest,'--policy-hash',c['policy_hash'],'--expected-revision',c['revision'],'--idempotency-key','signature')['resource']
  replay=post('signature-attachment-replay','/checks/'+fid+'/signature',good_sig,key='signature',method='PUT',extra=['--header','If-Check-Revision: '+str(c['revision']),'--header','X-Data-SHA256: '+digest,'--header','X-Policy-Hash: '+c['policy_hash']]);assert replay['replayed'] and replay['resource']==attached
  get('sidecar-is-not-a-raw-file','/files/'+attached['object_id'],expected=404)

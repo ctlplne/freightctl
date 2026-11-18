@@ -257,6 +257,16 @@ func readPGPEntity(data []byte, now time.Time) (*openpgp.Entity, *time.Time, err
 func ParsePGPPublicKey(ctx context.Context, wire []byte, expected string, now time.Time) (*PGPPublicKey, error) {
 	return parsePGPPublicKey(ctx, wire, expected, now, false)
 }
+
+// InspectStoredPGPPublicPackets checks the bounded public-only wire format.
+// Historical export can use it without conferring current key validity.
+func InspectStoredPGPPublicPackets(packets []byte) error {
+	if len(packets) < 2 || len(packets) > MaxPGPBinary {
+		return ErrPGPInput
+	}
+	return pgpFraming(packets, false)
+}
+
 func parsePGPPublicKey(ctx context.Context, wire []byte, expected string, now time.Time, recipient bool) (*PGPPublicKey, error) {
 	if err := ctx.Err(); err != nil {
 		return nil, err

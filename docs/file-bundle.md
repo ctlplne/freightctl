@@ -322,3 +322,30 @@ each page's export checksum and event IDs. A request with a gap,
 different workflow hash or uncommitted upper revision fails. Use the
 ordinary status command for live observations. For processing runs,
 use the same source custody root required by status.
+
+## Export an OpenPGP verification or encryption public key
+
+A workspace administrator with OpenPGP management permission can export
+an exact public key revision. Get the key ID, version and definition hash
+from `pgp-key-status`.
+
+```sh
+umask 077
+freightctl pgp-key-export --tenant "$TENANT" --partner "$PARTNER" \
+  --pgp-key-id "$KEY_ID" --version "$VERSION" \
+  --definition-hash "$DEFINITION_SHA256" --output .private/public-key.json
+jq -r '.destination_registration.public_key' .private/public-key.json |
+  openssl base64 -d -A > .private/public-key.gpg
+shasum -a 256 .private/public-key.gpg
+```
+
+Compare the packet checksum with `public_key_sha256` and verify the
+fingerprint independently. The archive records the key purpose,
+expiration and source lifecycle state. Review whether the destination
+should trust it, including any source retirement or revocation. Extract
+`destination_registration` into a protected request, set its
+`expected_version` explicitly, and submit it through `pgp-key-register`.
+Use zero for a new key family. Registration checks the key's current
+validity and purpose. Rebind intake policies and encryption workflows
+to the new key ID, version and definition hash. Private key custody stays
+with the signing or receiving system.

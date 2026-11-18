@@ -71,7 +71,7 @@ func TestPGPDetachedExactBytesIdentityAndTime(t *testing.T) {
 }
 func TestPGPFramingRejectsSecretsCompressionAndOversizedPackets(t *testing.T) {
 	for _, wire := range [][]byte{{0xc5, 1, 4}, {0xc7, 1, 4}, {0xc8, 1, 4}, {0xcb, 1, 4}, {0xc2, 255, 255, 255, 255, 255}, {0xc2, 224, 4}, {0x8f, 4}, {0xc2, 1, 5}} {
-		if pgpFraming(wire, true) == nil || pgpFraming(wire, false) == nil {
+		if pgpFraming(wire, true) == nil || pgpFraming(wire, false) == nil || InspectStoredPGPPublicPackets(wire) == nil {
 			t.Fatalf("unsafe packet accepted: %x", wire)
 		}
 	}
@@ -80,6 +80,9 @@ func TestPGPFramingRejectsSecretsCompressionAndOversizedPackets(t *testing.T) {
 	}
 	if _, err := pgpBinary(bytes.Repeat([]byte("x"), MaxPGPWire+1), "PGP SIGNATURE"); err == nil {
 		t.Fatal("unbounded wire accepted")
+	}
+	if InspectStoredPGPPublicPackets(bytes.Repeat([]byte("x"), MaxPGPBinary+1)) == nil {
+		t.Fatal("unbounded stored OpenPGP material accepted")
 	}
 }
 func FuzzPGPAdmission(f *testing.F) {
