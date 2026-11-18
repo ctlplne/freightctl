@@ -128,6 +128,13 @@ records. Emulated x86 inspection identifies an additional `libatomic`
 dependency. Build and exercise the full OpenPGP peer, then run fresh
 enforcing scans on native ARM and x86.
 
+[F501](docs/qualification/evidence/F501-portability-native-batch-terminal.json)
+preserves all 19 original `b7b0eb5` workflows and 43 jobs. Eleven workflows
+passed. GitHub marked two macOS jobs canceled before recording any steps.
+ARM passed all eight encrypted FTPS recovery cases inside the broader failed
+PostgreSQL suite. Its enforcing image scan blocked on the same five glibc
+advisories as x86. No original was replaced or rerun.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

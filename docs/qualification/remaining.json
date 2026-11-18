@@ -124,7 +124,8 @@
         "docs/qualification/evidence/F488-guarded-portability-native-batch.json",
         "docs/qualification/evidence/F496-native-security-runner-cancellation.json",
         "docs/qualification/evidence/F498-native-peer-glibc-replay.json",
-        "docs/qualification/evidence/F499-shell-free-node-musl-runtime.json"
+        "docs/qualification/evidence/F499-shell-free-node-musl-runtime.json",
+        "docs/qualification/evidence/F501-portability-native-batch-terminal.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -212,7 +213,8 @@
         "F488 records the verified owner-only fast-forward from b1145f2 to b7b0eb5 after all originals became terminal. The enabled hook scans all 13 outgoing commits with zero leaks. The 19 new original attempt-one workflows are linked to the exact portability candidate and their runtime results are pending.",
         "F496 preserves b7b0eb5 native source-scan metadata. Linux ARM and Windows AMD64 pass. GitHub reports the original macOS ARM job canceled with no runner, no steps and no scan output. Treat that platform as unverified. Exact DAV source/binary and XLSX producer security steps passed even though their application jobs have failed runtime steps. Full native replay and remaining original failures stay open.",
         "F498 preserves the original b7b0eb5 x86 enforcing scan with the same five unfixed glibc advisories as F483 and zero suppressed findings. The x86 PostgreSQL step was skipped after an upstream FTP engine step failure, and the macOS unit job was canceled with zero recorded steps. The official Node Alpine runtime index and both platform manifests were verified as candidate inputs.",
-        "F499 proves a shell-free ARM Node runtime from the pinned stock Alpine image with WebCrypto and complete metadata and payloads for all four selected Alpine packages. The emulated x86 stock inventory adds the libatomic package. The complete peer image, its OpenPGP interoperability, and fresh enforcing scans on both native architectures remain due."
+        "F499 proves a shell-free ARM Node runtime from the pinned stock Alpine image with WebCrypto and complete metadata and payloads for all four selected Alpine packages. The emulated x86 stock inventory adds the libatomic package.",
+        "F501 preserves all 19 original terminal workflows and 43 jobs at b7b0eb5. The ARM enforcing peer scan blocked on the same five glibc advisories as x86 with zero suppressions. The focused ARM encrypted FTPS recovery test passed all eight subcases in the otherwise failed PostgreSQL suite. The two macOS jobs canceled by GitHub and the failed or skipped original runtime gates remain unverified."
       ],
       "current_item": {
         "id": "F425",
