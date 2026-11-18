@@ -119,6 +119,10 @@ Preparing, generating or adopting a draft grants no execution authority.
 
 For diagnosis, output must select a supported recorded finding and its exact evidence aliases/next check, or abstain for insufficient evidence. Claim validation happens outside the model. Unsupported completion, a forged event or an unsafe resend recommendation is rejected. Explanations come from bounded, evidence-specific templates; they distinguish observed connection failure from possible host/network/identity causes and transport integrity from unknown business acceptance. They do not expose model reasoning. The actual immutable event references are returned as citations that the same authorized context can resolve.
 
+For new responses, required lists must be JSON arrays. Use `[]` for no
+items. Omitted, null or oversized lists are rejected, and each missing
+requirement appears at most once.
+
 ## Retry, bounds and state
 
 Each mutation requires a stable idempotency key. Generation persists its attempt selection before the request. Repeating the same key observes that attempt; it cannot silently trigger another disclosure or retry. A fresh key can retry a failed or expired attempt under current authority, up to two attempts total. Stale workers cannot record over a newer attempt. Endpoint failure is visible; a failed response is never narrated into success.

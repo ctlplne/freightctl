@@ -378,12 +378,12 @@ func validateOutput(j *store.AIJob, output string) (*ValidatedResult, error) {
 	}
 	if j.Kind == "propose" {
 		var proposal Proposal
-		if workflow.Decode([]byte(output), &proposal) != nil {
+		if workflow.Decode([]byte(output), &proposal) != nil || proposal.Order == nil || proposal.Missing == nil || len(proposal.Order) > 16 || len(proposal.Missing) > 5 {
 			return nil, ErrModelOutput
 		}
 		allowedMissing := []string{"sequence", "destination", "filename", "supported_task", "business_receipt_contract"}
-		for _, code := range proposal.Missing {
-			if !slices.Contains(allowedMissing, code) {
+		for i, code := range proposal.Missing {
+			if !slices.Contains(allowedMissing, code) || slices.Contains(proposal.Missing[:i], code) {
 				return nil, ErrModelOutput
 			}
 		}
@@ -408,7 +408,7 @@ func validateOutput(j *store.AIJob, output string) (*ValidatedResult, error) {
 		return &ValidatedResult{Proposal: &proposal}, nil
 	}
 	var diagnosis Diagnosis
-	if workflow.Decode([]byte(output), &diagnosis) != nil {
+	if workflow.Decode([]byte(output), &diagnosis) != nil || diagnosis.Evidence == nil || len(diagnosis.Evidence) > 32 {
 		return nil, ErrModelOutput
 	}
 	if diagnosis.Code == "insufficient_evidence" {
@@ -453,6 +453,11 @@ func proposedDefinition(j *store.AIJob) (workflow.Definition, error) {
 	var result ValidatedResult
 	if json.Unmarshal(j.Bindings, &b) != nil || json.Unmarshal(j.Context, &context) != nil || json.Unmarshal(j.Result, &result) != nil || result.Proposal == nil || result.Proposal.Status != "ready" {
 		return workflow.Definition{}, store.ErrState
+	}
+	// Older successful results stored an omitted missing array as null.
+	// Preserve those already recorded drafts without changing the stored result.
+	if result.Proposal.Missing == nil {
+		result.Proposal.Missing = []string{}
 	}
 	proposalBytes, _, err := canonical(result.Proposal)
 	if err != nil {

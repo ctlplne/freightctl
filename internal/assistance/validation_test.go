@@ -106,6 +106,11 @@ func TestProposalOrderKeepsTheReviewedDeliveryProtocol(t *testing.T) {
 			t.Fatalf("step %d changed its reviewed protocol, receiver or filename", i+1)
 		}
 	}
+	job.Result = json.RawMessage(`{"proposal":{"status":"ready","order":["d2","d1"],"missing":null}}`)
+	legacy, err := proposedDefinition(job)
+	if err != nil || len(legacy.Steps) != 2 || legacy.Steps[0] != def.Steps[0] || legacy.Steps[1] != def.Steps[1] {
+		t.Fatal("legacy stored successful proposal lost its exact draft", err)
+	}
 }
 
 func TestDiagnosisMustMatchExactSupportedEvidence(t *testing.T) {
@@ -129,6 +134,36 @@ func TestDiagnosisMustMatchExactSupportedEvidence(t *testing.T) {
 		t.Fatal(result, err)
 	}
 }
+
+func TestModelOutputRequiresExplicitBoundedArrays(t *testing.T) {
+	for _, tc := range []struct{ name, kind, body string }{
+		{"omitted missing", "propose", `{"status":"ready","order":["d1"]}`},
+		{"null missing", "propose", `{"status":"ready","order":["d1"],"missing":null}`},
+		{"omitted order", "propose", `{"status":"needs_input","missing":["filename"]}`},
+		{"repeated missing", "propose", `{"status":"needs_input","order":[],"missing":["filename","filename"]}`},
+		{"omitted abstention evidence", "diagnose", `{"code":"insufficient_evidence","next_check":"gather_evidence"}`},
+		{"null abstention evidence", "diagnose", `{"code":"insufficient_evidence","evidence":null,"next_check":"gather_evidence"}`},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			contextData, _, _ := canonical(Context{Schema: 1, Kind: tc.kind, Destinations: []string{"d1"}})
+			job := &store.AIJob{Kind: tc.kind, Context: contextData, Bindings: json.RawMessage(`{}`)}
+			if result, err := validateOutput(job, tc.body); result != nil || err != ErrModelOutput {
+				t.Fatal("a model decision outside the published array contract was accepted")
+			}
+		})
+	}
+	for _, tc := range []struct{ kind, body string }{
+		{"propose", `{"status":"needs_input","order":[],"missing":["filename"]}`},
+		{"diagnose", `{"code":"insufficient_evidence","evidence":[],"next_check":"gather_evidence"}`},
+	} {
+		contextData, _, _ := canonical(Context{Schema: 1, Kind: tc.kind, Destinations: []string{"d1"}})
+		job := &store.AIJob{Kind: tc.kind, Context: contextData, Bindings: json.RawMessage(`{}`)}
+		if result, err := validateOutput(job, tc.body); result == nil || err != nil {
+			t.Fatal("an explicit empty array lost its intended meaning", err)
+		}
+	}
+}
+
 func FuzzUntrustedModelOutput(f *testing.F) {
 	f.Add(`{"status":"ready","order":["d1"],"missing":[]}`)
 	f.Add(`{"approved":true,"destination":"https://outside.invalid"}`)

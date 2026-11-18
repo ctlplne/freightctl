@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "id": "F458",
+  "observed_at": "2026-11-18",
+  "base_candidate": "154224f509e5f6bc3793ecd7d4a1235fd45563db",
+  "qualification_claim": false,
+  "changed": "Enforce the required order, missing and evidence arrays and their published lengths in the ordinary model output validator. Refuse duplicate missing-requirement codes. Normalize earlier stored ready proposals with omitted missing arrays during revalidation, preserving their exact existing order, without changing historical state.",
+  "local_red": "Previously the validator accepted all six malformed decisions, including omitted and null arrays and repeated missing codes.",
+  "local_green": "All six now refuse. Explicit empty arrays and old stored proposal revalidation pass with the existing order/evidence authority proofs, tagged vet, format and two existing fuzz seeds.",
+  "source_files": [
+    {
+      "reference": "docs/assistance.md",
+      "bytes": 15607,
+      "sha256": "3c39deb8f32fad485ea9f0ea392f5ecea9e6efd35ce1e013590a698b1920da84"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 722516,
+      "sha256": "1e5148f6b18ef68b88f1f22150454df328f803229ebb1e86733798ba2ac7c6e2"
+    },
+    {
+      "reference": "internal/assistance/context.go",
+      "bytes": 17438,
+      "sha256": "a664e6dfa0158e6ff0eac94b11c3a2909bce57337afd58996feeb20233c6c9b7"
+    },
+    {
+      "reference": "internal/assistance/validation_test.go",
+      "bytes": 8522,
+      "sha256": "9ffa39c0c9e9a7f24d8a8d579fa3865937ac7a86a2a82da398e5ece4f1f30fdc"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f458-output-array-red.log",
+      "bytes": 1718,
+      "sha256": "9d5d190542f0e7edf8a57aa87916481ae6d0419254f0da8c5a09debbbded913a"
+    },
+    {
+      "reference": ".private/freightctl-f458-output-array-green.log",
+      "bytes": 1783,
+      "sha256": "78b7ce530c4425fd66c9adbe1259fdcfd0662b0857c531f9c171d465af2d2363"
+    }
+  ],
+  "owed": [
+    "Native assistance replay and full fuzz execution at final source",
+    "Private endpoint, inference and quality qualification"
+  ],
+  "inference_run": false
+}
