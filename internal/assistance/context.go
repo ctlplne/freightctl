@@ -299,6 +299,9 @@ func buildContext(ctx context.Context, t *store.Transaction, r PrepareRequest, p
 		b.Request.Requirements = text
 	}
 	c.Requirements = b.Request.Requirements
+	if c.Requirements != "" {
+		b.OperatorTextPolicy = operatorTextPolicy
+	}
 	data, _, err := canonical(c)
 	if err != nil {
 		return nil, nil, err

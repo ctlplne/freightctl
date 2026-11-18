@@ -220,6 +220,9 @@ func current(ctx context.Context, t *store.Transaction, j *store.AIJob, p *Profi
 	if json.Unmarshal(j.Bindings, &b) != nil {
 		return store.ErrState
 	}
+	if b.Request.Requirements != "" && b.OperatorTextPolicy != operatorTextPolicy {
+		return store.ErrRevision
+	}
 	c, rebuilt, err := buildContext(ctx, t, b.Request, p, false)
 	if err != nil {
 		return err

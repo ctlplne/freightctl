@@ -38,6 +38,11 @@ it reads or moves the stage. Loopback TLS tests confirm that pre-existing
 matching bytes cannot authorize a MOVE. Final-path reconciliation remains
 read-only. An independent receiver that enforces the same contract is still due.
 
+[F452](docs/qualification/evidence/F452-operator-text-disclosure.json) suppresses
+freeform AI requirements containing recognized credential fields. Older
+text-bearing approvals fail the current-policy check before endpoint contact.
+Six synthetic disclosure regressions pass. Native PostgreSQL replay is due.
+
 F442 implements direct DAV delivery schema3 through the existing custody,
 durable intent,draft/approval,worker slot,lease/fence and reconciliation paths.
 Exact pinned TLS1.3 and protected bearer/Basic references,private-stage contract,

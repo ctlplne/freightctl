@@ -29,6 +29,31 @@ func TestRedactionPrecedesPersistenceAndDisclosure(t *testing.T) {
 		t.Fatal("operator text bound ignored")
 	}
 }
+
+func TestCredentialFieldsCannotLeavePartiallyRedactedOperatorText(t *testing.T) {
+	for _, tc := range []struct {
+		name, text string
+	}{
+		{"basic authorization", "Authorization: Basic dXNlcjpwYXNz"},
+		{"folded proxy authorization", "Proxy-Authorization: Digest\r\n  username=\"example\", response=\"tiny\""},
+		{"quoted password", "send the report; password=\"two words\""},
+		{"JSON secret", `{"client_secret": "tiny synthetic secret"}`},
+		{"environment token", "EXAMPLE_ACCESS_TOKEN=tiny"},
+		{"cookie header", "Cookie: sid=tiny; session=other"},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			got, err := redact(tc.text, nil)
+			if err != nil || got != "[credential-bearing text redacted]" {
+				t.Fatal("credential field did not suppress the entire submitted text")
+			}
+		})
+	}
+	got, err := redact("Send the approved file at 07:00, then obtain its receipt.", nil)
+	if err != nil || got != "Send the approved file at 07:00, then obtain its receipt." {
+		t.Fatal("ordinary requirements lost their meaning", err)
+	}
+}
+
 func TestProposalCannotGrantAuthorityOrAddRecipients(t *testing.T) {
 	contextData, _, _ := canonical(Context{Schema: 1, Kind: "propose", Destinations: []string{"d1", "d2"}})
 	j := &store.AIJob{Kind: "propose", Context: contextData, Bindings: json.RawMessage(`{}`)}

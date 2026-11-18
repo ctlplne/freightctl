@@ -1,0 +1,75 @@
+{
+  "schema_version": 1,
+  "id": "F452",
+  "observed_at": "2026-11-18",
+  "base_candidate": "b12005f7136977b13332827f9069c31d3c3b38ea",
+  "qualification_claim": false,
+  "changed": "Recognized credential assignments and headers suppress the entire optional requirements string before durable preparation. Binding policy v2 fences prior text-bearing jobs before approval, generation or adoption. Actor-authorized historical rows stay immutable.",
+  "local_red": "The old sanitizer failed all six synthetic credential-field cases, including compound or quoted values and names inside JSON.",
+  "local_green": "Six synthetic credential fields now produce only the redaction marker. Plain workflow text remains intact. Existing redaction, proposal-authority and diagnosis-evidence tests pass.",
+  "scope": {
+    "go": "go1.27.4 darwin/arm64",
+    "static": "Affected format, tagged vet and core import boundaries pass.",
+    "runtime": "Real PostgreSQL test for original legacy approval refusal with zero HTTP contact and newly reviewed context through the synthetic responder compiles. This runtime proof has not been run locally.",
+    "inference": false,
+    "historical_exposure_assessment": "The regression uses synthetic data. Actual prior use or disclosure was not inspected."
+  },
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "bytes": 6156,
+      "sha256": "b5a115b2c5ccbf973f2a0d68c507f46bd96ea5d5857d24fc0238361c721f54e1"
+    },
+    {
+      "reference": "docs/assistance.md",
+      "bytes": 14829,
+      "sha256": "13b166fd8e272e337602f8d1fb67f2a18371f88cd29a29d32f46b540e07f4efb"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 719273,
+      "sha256": "894f76d3ee2d496911b15182a449ba4764f13bf7a0ae4252197c6102591ad449"
+    },
+    {
+      "reference": "internal/assistance/context.go",
+      "bytes": 16154,
+      "sha256": "0b31d6d12688fb44439270ea32caac8324e0aedefdc93be5822a32cf7ca04e14"
+    },
+    {
+      "reference": "internal/assistance/integration_test.go",
+      "bytes": 18407,
+      "sha256": "e7d95d495b9bbebf03b746f20fd5c2e0e9abf8dede7eff74d6663a0335f3507b"
+    },
+    {
+      "reference": "internal/assistance/service.go",
+      "bytes": 17939,
+      "sha256": "92ced87491fac9ce60cd697e2ad78a1d9da2ee2031b7f6b69449901d98249e7f"
+    },
+    {
+      "reference": "internal/assistance/types.go",
+      "bytes": 7321,
+      "sha256": "47ab7da0c7ec832f832d2e08b5948e6278ca7d26d1cede867fb641d9170e8d22"
+    },
+    {
+      "reference": "internal/assistance/validation_test.go",
+      "bytes": 4983,
+      "sha256": "2ba6952c8dc2e61a68e505af3e516922dd42663c08b7777f198f4fadde9ec53e"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f452-ai-credential-field-red.log",
+      "bytes": 1882,
+      "sha256": "b4fc4bc25ba06bad639c09764614f24d9eda31c5e64389ccc1a98397ab4442f3"
+    },
+    {
+      "reference": ".private/freightctl-f452-ai-focused.log",
+      "bytes": 1957,
+      "sha256": "560481306437a87e55ea6ba967122ebcf228a79e806c4a3eab1054cb9a546647"
+    }
+  ],
+  "owed": [
+    "Native PostgreSQL and synthetic endpoint replay through normal assistance paths",
+    "Real private model profiles and held-out evaluation with authorized external resources"
+  ]
+}

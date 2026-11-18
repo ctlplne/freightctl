@@ -58,7 +58,25 @@ All operations use the normal tenant, partner and protected token selectors. `ai
 }
 ```
 
-Replace the reference placeholders with authorized values. CLI infers `kind: propose`; HTTP `POST .../ai/jobs` requires it explicitly. An optional `requirements` string needs an administrator profile with `allow_operator_text: true`. Freeform text stays off by default. Recognizable credentials, private-key blocks, URLs and long secret-like values are scrubbed before durable context/events. Known file names become destination aliases, preserving ordering such as “second.csv then first.csv” as “d2 then d1”; transport paths, key references and other known private labels are removed. Duplicate names remain ambiguous rather than inventing a mapping.
+Replace the reference placeholders with authorized values. CLI infers
+`kind: propose`. HTTP `POST .../ai/jobs` requires it explicitly. An optional
+`requirements` string needs an administrator profile with
+`allow_operator_text: true`. Freeform text stays off by default.
+
+Recognized credential fields, such as `Authorization:`, `Cookie:` and
+`password=`, cause the whole requirements string to be replaced before it
+is saved. A credential can span lines or contain spaces and quotes. The
+redactor also scrubs recognized private keys, URLs and long secret-like values.
+Always review the exact preview because unlabeled sensitive text can escape
+detection. Keep credential values in protected references.
+
+Known file names become destination aliases, so “second.csv then first.csv”
+becomes “d2 then d1”. Transport paths, key references and other known private
+labels are removed. Duplicate names remain ambiguous.
+
+Jobs with freeform text prepared under the previous disclosure policy are
+stale. To continue, prepare new requirements with a fresh request key and
+approve the new preview. The previous job remains in authorized history.
 
 The model context contains only the reviewed text, supported operation descriptions and aliases such as `d1`. Actual connection IDs, destination names and workflow names stay in separately authorized bindings, outside the prompt. No file body, partner document, raw log, SSH key, credential value or model tool capability is retrieved by this interface. Recognizing secrets in arbitrary text is not automatic proof of its sensitivity: keep text disabled when unnecessary and inspect the exact prepared context before authorizing disclosure. Broader content/name/personal-data policies and retention controls remain required work.
 

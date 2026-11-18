@@ -96,6 +96,57 @@ func approve(t *testing.T, f *fixture, s *Service, j *store.AIJob) *store.AIJob 
 	}
 	return &approved
 }
+
+func TestAssistancePriorOperatorTextApprovalCannotContactEndpoint(t *testing.T) {
+	f := setup(t)
+	p := peer(t, `{"status":"ready","order":["d1"],"missing":[]}`)
+	s, profile := register(t, f, p, true)
+	s.Enabled = true
+
+	// Seed the actor's prior-format approval through the real journal and
+	// database transition guards. The leftover fragment is synthetic.
+	j := prepared(t, f, s, profile, "propose", "")
+	var binding Bindings
+	var context Context
+	if json.Unmarshal(j.Bindings, &binding) != nil || json.Unmarshal(j.Context, &context) != nil {
+		t.Fatal("new context and bindings unavailable")
+	}
+	binding.OperatorTextPolicy = ""
+	binding.Request.Requirements = "[redacted] synthetic-legacy-fragment"
+	context.Requirements = binding.Request.Requirements
+	j.ID = secure.NewID()
+	j.Context, j.ContextHash, _ = canonical(context)
+	j.Bindings, _, _ = canonical(binding)
+	tx, err := s.begin(f.ctx, f.scope, "ai_use", "ai_disclose")
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer tx.Tx.Rollback(f.ctx)
+	if err = tx.SaveAIJob(f.ctx, j, 0); err != nil {
+		t.Fatal(err)
+	}
+	j.State, j.Revision, j.Code = "approved", 2, "context_approved"
+	if err = tx.SaveAIJob(f.ctx, j, 1); err != nil {
+		t.Fatal(err)
+	}
+	if err = tx.Tx.Commit(f.ctx); err != nil {
+		t.Fatal(err)
+	}
+	if result, err := s.Generate(f.ctx, f.scope, j.ID, "legacy-generate"); !errors.Is(err, store.ErrRevision) || result != nil || p.Requests.Load() != 0 {
+		t.Fatal("previous text policy was allowed to contact the endpoint", err)
+	}
+	historical, err := s.Get(f.ctx, f.scope, j.ID)
+	if err != nil || historical.Current || historical.Job.Revision != 2 || historical.Job.Attempts != 0 || historical.Job.ContextHash != j.ContextHash {
+		t.Fatal("refusal changed the previously approved job", err)
+	}
+
+	fresh := approve(t, f, s, prepared(t, f, s, profile, "propose", ""))
+	generated, err := s.Generate(f.ctx, f.scope, fresh.ID, "current-generate")
+	if err != nil || generated.Job.State != "succeeded" || generated.Job.Attempts != 1 || p.Requests.Load() != 2 {
+		t.Fatal("fresh review did not follow the normal endpoint contract", err)
+	}
+}
+
 func TestAssistanceDisclosureDisabledAndDraftOnlyAdoption(t *testing.T) {
 	f := setup(t)
 	p := peer(t, `{"status":"ready","order":["d1"],"missing":[]}`)

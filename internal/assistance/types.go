@@ -86,9 +86,10 @@ type Context struct {
 	Supported    []Finding `json:"supported_findings,omitempty"`
 }
 type Bindings struct {
-	Request   PrepareRequest        `json:"request"`
-	Snapshots []Snapshot            `json:"snapshots"`
-	Evidence  map[string][]Citation `json:"evidence"`
+	Request            PrepareRequest        `json:"request"`
+	Snapshots          []Snapshot            `json:"snapshots"`
+	Evidence           map[string][]Citation `json:"evidence"`
+	OperatorTextPolicy string                `json:"operator_text_policy,omitempty"`
 }
 type Decision struct {
 	Hash     string `json:"context_hash"`
@@ -167,12 +168,14 @@ func normalizeProfile(p Profile) (Profile, error) {
 	return p, nil
 }
 
-// Redaction is a guard for recognizable secrets, not a grant to disclose text.
-// The administrator policy and exact-context approval remain mandatory.
+// Bump this version whenever a change affects which operator text can leave.
+const operatorTextPolicy = "credential-guard-v2"
+
+var credentialField = regexp.MustCompile(`(?i)\b(?:[a-z0-9]+[-_])*(?:authorization|cookie|password|passwd|secret|api[-_ ]?key|access[-_ ]?key|token)["']?\s*[:=]`)
+
+// The administrator policy and exact-context approval govern disclosure.
 var secretPatterns = []*regexp.Regexp{
-	regexp.MustCompile(`(?s)-----BEGIN [A-Z ]*PRIVATE KEY-----.*?-----END [A-Z ]*PRIVATE KEY-----`),
-	regexp.MustCompile(`(?i)\bBearer\s+[A-Za-z0-9._~+/-]+=*`),
-	regexp.MustCompile(`(?i)\b(password|passwd|secret|api[_ -]?key|token|authorization)\s*[:=]\s*[^\s,;]+`),
+	regexp.MustCompile(`(?i)\bBearer\s+["']?[A-Za-z0-9._~+/-]+=*`),
 	regexp.MustCompile(`[A-Za-z][A-Za-z0-9+.-]*://[^\s]+`),
 	regexp.MustCompile(`\b[A-Za-z0-9_+/=-]{32,}\b`),
 }
@@ -186,8 +189,14 @@ func redact(text string, privateLabels []string) (string, error) {
 			return "", ErrInput
 		}
 	}
-	if strings.Contains(text, "PRIVATE KEY") || strings.Contains(text, "-----BEGIN PGP") {
+	upper := strings.ToUpper(text)
+	if strings.Contains(upper, "PRIVATE KEY") || strings.Contains(upper, "-----BEGIN PGP") {
 		return "[private key material redacted]", nil
+	}
+	// Credential fields may have quoted, compound or multiline values.
+	// Suppress the entire input before parsing or replacing private labels.
+	if credentialField.MatchString(text) {
+		return "[credential-bearing text redacted]", nil
 	}
 	for _, label := range privateLabels {
 		if label != "" {
