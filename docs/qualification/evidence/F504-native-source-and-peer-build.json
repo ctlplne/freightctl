@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "id": "F504",
+  "observed_at": "2026-11-18",
+  "candidate": "f58dd143920290bb5537077abe12f6b9dc0fa859",
+  "qualification_claim": false,
+  "base_evidence": "docs/qualification/evidence/F502-guarded-alpine-peer-source-batch.json",
+  "observed_run_counts": {
+    "failure": 5,
+    "in_progress": 1,
+    "success": 13
+  },
+  "run_list_sha256": "97759e2ee131b78700281e7d119b0d055e99e7c4e1865c160d73bc01ebd3adf4",
+  "stock_peer_original": {
+    "id": 44340305485,
+    "attempt": 1,
+    "name": "Stock peer and browser qualification",
+    "status": "completed",
+    "conclusion": "success",
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/44340305485"
+  },
+  "original_source_scan": {
+    "run_id": 44340306213,
+    "attempt": 1,
+    "conclusion": "success",
+    "metadata_sha256": "32d06a91d7c3a87f19a26e3e3d4077d25c56a1cf08b4bb7b694a32b6c0275a63",
+    "jobs": [
+      {
+        "id": 134928126171,
+        "name": "Native vulnerability source (darwin/arm64)",
+        "enforcing_source_step": "success",
+        "url": "https://github.com/ctlplne/freightctl/actions/runs/44340306213/job/134928126171"
+      },
+      {
+        "id": 134928126629,
+        "name": "Native vulnerability source (windows/amd64)",
+        "enforcing_source_step": "success",
+        "url": "https://github.com/ctlplne/freightctl/actions/runs/44340306213/job/134928126629"
+      },
+      {
+        "id": 134928126758,
+        "name": "Native vulnerability source (linux/arm64)",
+        "enforcing_source_step": "success",
+        "url": "https://github.com/ctlplne/freightctl/actions/runs/44340306213/job/134928126758"
+      }
+    ]
+  },
+  "native_alpine_peer": {
+    "run_id": 44340305606,
+    "attempt": 1,
+    "metadata_sha256": "8aa302dd971ef3540dd25caf06c8993af71720c6017359671b4e0e5d91fe789f",
+    "jobs": [
+      {
+        "id": 134928123209,
+        "name": "Native Go and PostgreSQL (x86_64)",
+        "original_job_status": "in_progress",
+        "pinned_peer_build": "success",
+        "whole_postgresql_step": "in_progress",
+        "focused_encrypted_workflow": "pending",
+        "enforcing_image_scan": "pending",
+        "url": "https://github.com/ctlplne/freightctl/actions/runs/44340305606/job/134928123209"
+      },
+      {
+        "id": 134928123432,
+        "name": "Native Go and PostgreSQL (arm64)",
+        "original_job_status": "in_progress",
+        "pinned_peer_build": "success",
+        "whole_postgresql_step": "in_progress",
+        "focused_encrypted_workflow": "pending",
+        "enforcing_image_scan": "pending",
+        "url": "https://github.com/ctlplne/freightctl/actions/runs/44340305606/job/134928123432"
+      }
+    ]
+  },
+  "remaining": [
+    "Retain metadata until all nineteen exact original runs finish. No original was retried or replaced to recover the stock workflow observation.",
+    "Both native peer builds finished. Observe the focused encrypted workflow and the fresh enforcing image scan before making any security qualification claim.",
+    "Preserve and investigate the original nonsecurity failures at FINISH under S003. Source-scan success only covers the named native source profiles on this exact commit."
+  ]
+}

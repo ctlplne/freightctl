@@ -149,6 +149,11 @@ original workflows include the native Alpine peer build, encrypted FTPS replay
 and enforcing image scan. The active stock peer and browser workflow had no
 run for this source at the first observation.
 
+[F504](docs/qualification/evidence/F504-native-source-and-peer-build.json)
+records the original stock peer workflow after it appeared. The three native
+source scan jobs passed, including macOS ARM. Both native Linux Alpine peer
+builds passed. The encrypted workflow replay and enforcing scans remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
