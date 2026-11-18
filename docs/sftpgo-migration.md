@@ -41,9 +41,17 @@ and the export's scope when reconciling the estate inventory.
   action effects. Choose the destination source, exact workflow revision,
   effective dates, missed-run policy and execution bounds. Check for overlapping
   rows before using the ordinary [schedule preview and approval](scheduled-workflows.md).
+- In `access_records`, follow the references from users and administrators to
+  roles and groups, and from users and groups to virtual folders. Primary,
+  secondary and membership-only groups stay distinct. A managed group for an
+  administrator is its own dependency type. Missing and duplicate definitions
+  leave blocked rows. Review effective access and mount boundaries before
+  choosing new accounts and re-enrolling credentials.
 
-The native exercise covers a stock export, two disabled scheduled rules and
-their shared action. Mapping partner permissions, storage, actions and other
-triggers is still open. Complete destination adoption needs isolated comparison
-of actual file selection, schedules, byte outputs, failures and receipts,
-followed by reviewed cutover and rollback.
+The native exercises cover two stock exports with disabled scheduled rules and
+their shared action, and a disabled user with a role, primary group and two
+paths to a virtual folder. API-key and share links, effective permission and
+storage translation, action conversion, and other triggers remain open.
+Complete destination adoption needs isolated comparison of actual file
+selection, schedules, byte outputs, failures and receipts, followed by reviewed
+cutover and rollback.

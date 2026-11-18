@@ -1,0 +1,58 @@
+{
+  "schema_version": 1,
+  "id": "F466",
+  "observed_at": "2026-11-18",
+  "base_candidate": "07c2a93",
+  "base_evidence": "docs/qualification/evidence/F464-sftpgo-migration-plan.json",
+  "scope": "Native offline source access dependency report for an exact stock SFTPGo Community format-17 export",
+  "qualification_claim": false,
+  "platform": "darwin/arm64",
+  "go_version": "go1.27.4",
+  "stock_producer": {
+    "version": "2.7.6-62ae9ba3",
+    "executable_sha256": "4a00de2146fe454b09cc0170d2b825fd3bbda05357315b72f91583934c50e4de",
+    "fixture": "A separate loopback memory provider with a disabled user, one administrator, one role, one primary group, and a shared virtual folder",
+    "export_method": "GET /api/v2/dumpdata?output-data=1",
+    "export_bytes": 4498,
+    "peak_child_rss_bytes": 37421056,
+    "stopped_before_import": true,
+    "private_evidence_directory": ".private/freightctl-f466-stock",
+    "replay_driver_sha256": "4e01dde0731ef3381ea3827a2a6ab0a3b3955bcdfe66dc65bfad0ee140dc28ab"
+  },
+  "red": {
+    "source": "a5eb549",
+    "scope": "Run the previous planner on the exact same stock export, then assert five access records and four access dependencies.",
+    "assertion_exit_code": 1,
+    "observation": "The earlier CLI reports only access section counts. It omits all four record-level access edges.",
+    "report_sha256": "a9f819ae4c63154bb76c33c2f73caa548f00a8f86eb1f005ddca366162bec3d1"
+  },
+  "green": {
+    "consumer_executable_sha256": "a0fe9bba526b910fc0a3e5af70a6d25325a502f37bf2f98fce60bdafb8fa95df",
+    "source_sha256": "f1b015a172bd96411e3973b5d926353b3e16d7fdaae41dae3b9adf73ac0d2067",
+    "report_sha256": "cc3b36407a5261f392d327d9494ad4e7e0f8ab40dabf685c5598a1d14cb04074",
+    "same_source_unchanged_and_report_byte_identical_on_replay": true,
+    "pending_review_access_records": 5,
+    "disabled_source_users": 1,
+    "links": [
+      ["/groups/0/virtual_folders/0", "/folders/0"],
+      ["/users/0/role", "/roles/0"],
+      ["/users/0/groups/0", "/groups/0"],
+      ["/users/0/virtual_folders/0", "/folders/0"]
+    ],
+    "user_group_relationship": "primary",
+    "source_credentials_identifiers_and_paths_absent_from_report": true
+  },
+  "checks": {
+    "focused_race_parent_tests": 5,
+    "focused_race_cases_including_parents": 20,
+    "focused_race_log_sha256": "11454f0b2700c8f65ead6338ae37b1ec89aabacc32c8689b160b117cd22df9c7",
+    "affected_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "API-key and share dependencies, effective permission, storage and workflow translation",
+    "Typed ordinary destination adoption, isolated differential proof, controlled cutover and usable exit",
+    "Independent operator and licensed peer qualification"
+  ]
+}
