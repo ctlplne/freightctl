@@ -204,15 +204,20 @@ passes for explicit and implicit FTPS. The same local chain passes from a
 read-only stock Alpine vsftpd producer over resumed TLS 1.3 data sessions. The
 standalone listener exited with status 139 after the completed downloads. A
 stock `inetd` listener passed two complete serial journeys per mode by starting
-vsftpd per connection. Standalone stability, native Linux freightctl replay
-and derivation lineage remain owed.
-[F503](../qualification/evidence/F503-ftps-agent-stock-sftp.json) [F509](../qualification/evidence/F509-stock-ftps-producer-exchange.json) [F510](../qualification/evidence/F510-supervised-stock-ftps-producer.json)
+vsftpd per connection. The same supervised journey passed on native Linux ARM.
+The native x86 gate remains red because the probe exited without the required
+TLS 1.2 refusal alert. Standalone stability and derivation lineage remain owed.
+[F503](../qualification/evidence/F503-ftps-agent-stock-sftp.json) [F509](../qualification/evidence/F509-stock-ftps-producer-exchange.json) [F510](../qualification/evidence/F510-supervised-stock-ftps-producer.json) [F520](../qualification/evidence/F520-native-stock-ftps-first-results.json)
 
 An operator can provision and withdraw the exact SFTP route through the same
 typed HTTPS and CLI commands. The agent keeps its existing permissions, and
 each ordinary workflow approval and dispatch check still applies. The local
 replay verifies cross-surface receipt recovery and queued-work refusal before
-receiver contact. [Provisioning contract](../protocols/operator-connection-provisioning.md)
+receiver contact. In **SFTP routes**, the operator can select eligible actors,
+review exact revisions, and withdraw recorded assignments. The local browser
+recovered a committed receipt after the reply was dropped and the console
+reloaded. Native Linux browser proof and the other connection profiles remain
+open. [Provisioning contract](../protocols/operator-connection-provisioning.md) [F519](../qualification/evidence/F519-browser-operator-sftp-provision.json)
 
 The [ordinary upload descriptor](../protocols/artifact-ingress-descriptor.md)
 lets an agent's trusted host discover exact upload metadata while keeping bytes

@@ -59,3 +59,19 @@ func TestConnectionProvisionUsesOrdinaryBrowserMutationGuards(t *testing.T) {
 		}
 	}
 }
+
+func TestConnectionProvisionChoicesRefuseUnboundedPagesBeforeStorage(t *testing.T) {
+	handler := New(&custody.Service{}, nil)
+	prefix := strings.TrimSuffix(testProvisionRoute, "commands")
+	for _, choice := range []string{"sources", "recipients", "assignments"} {
+		for _, query := range []string{"?limit=not-a-number", "?limit=0", "?limit=101", "?after=not-an-id"} {
+			r := httptest.NewRequest(http.MethodGet, prefix+choice+query, nil)
+			r.Header.Set("Authorization", "Bearer "+strings.Repeat("0", 64))
+			w := httptest.NewRecorder()
+			handler.ServeHTTP(w, r)
+			if w.Code != 400 {
+				t.Fatalf("invalid %s page status %d", choice, w.Code)
+			}
+		}
+	}
+}

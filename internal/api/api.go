@@ -112,6 +112,9 @@ func NewWithBrowserLifetime(service *custody.Service, audits *audit.Service, ena
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-schedule-workflows", s.schedule("workflows"))
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collection-connections", s.collection("connections"))
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/connections/provisioning/commands", s.connectionProvisionCommand)
+	for _, choice := range []string{"sources", "recipients", "assignments"} {
+		m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/connections/provisioning/"+choice, s.connectionProvisionChoices(choice))
+	}
 	m.HandleFunc("GET /v1/tenants/{tenant}/partners/{partner}/workflow-collection-workflows", s.collection("workflows"))
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections/preview", s.collection("preview"))
 	m.HandleFunc("POST /v1/tenants/{tenant}/partners/{partner}/workflow-collections", s.collection("start"))

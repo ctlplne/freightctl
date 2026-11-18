@@ -98,6 +98,7 @@ jobs:
       - name: Downstream inspection binds the rendered run before checking controls
         run: node --test scripts/test-routing-current-run.mjs
       - name: Task-owned PostgreSQL
+        id: postgres
         run: python3 scripts/dev-db.py
       - name: Offline independent encryption peer for handoff replay
         if: matrix.journey == 'handoff-routing'
@@ -109,6 +110,7 @@ jobs:
           RUN apk add --no-cache gnupg=2.4.9-r1
           DOCKERFILE
       - name: Chromium sandbox preflight
+        id: chrome
         run: |
           node - <<'NODE'
           const { chromium } = require('./web/node_modules/playwright');
@@ -140,6 +142,15 @@ jobs:
             python3 scripts/qualify-arrivals.py --postgres-container-id "$task_pg_id" --backend-only
             python3 scripts/qualify-schedules.py --postgres-container-id "$task_pg_id"
           fi
+      - name: Operator browser assigns and withdraws the exact SFTP route
+        if: ${{ !cancelled() && matrix.journey == 'arrivals-schedules' && steps.postgres.outcome == 'success' && steps.chrome.outcome == 'success' }}
+        env:
+          FREIGHTCTL_TEST_ADMIN_FILE: ${{ github.workspace }}/.private/pg-admin.dsn
+          FREIGHTCTL_TEST_RUNTIME_FILE: ${{ github.workspace }}/.private/pg-runtime.dsn
+        run: |
+          test "$(uname -m)" = x86_64
+          sh scripts/go.sh test -p 1 -race -tags=integration,provisionbrowser -timeout=120s -count=1 \
+            -run '^TestConnectionProvisionNativeBrowserRecoversOriginalAssignment$' -v ./internal/api
       - name: Safe qualification outcomes and evidence closure
         if: always()
         run: |

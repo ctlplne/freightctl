@@ -1,0 +1,138 @@
+{
+  "schema_version": 1,
+  "id": "F519",
+  "observed_at": "2026-11-19",
+  "base_candidate": "4aa23941f3098d5bd0e1e874692fd08b7ae8a97e",
+  "qualification_claim": false,
+  "scope": "Browser review, assignment, receipt recovery and withdrawal for an exact SFTP registration",
+  "command_record": "docs/qualification/evidence/F518-operator-connection-provisioning-https.json",
+  "first_failures": [
+    {
+      "result": "The test used the wrong sign-in button label and timed out before opening the console.",
+      "test_log": {
+        "sha256": "cb50a8d8239993b269a5b66e141d20658e333415aa49adfc6f8e7bbb30df033c",
+        "bytes": 420
+      }
+    },
+    {
+      "result": "The production content security policy blocked inline accessibility test injection. The test now runs the checker through the existing browser inspection path.",
+      "test_log": {
+        "sha256": "aa20bf48a040fb4810b730a1877d184eae639c83abb70b085ad776f62a5a10e0",
+        "bytes": 476
+      },
+      "browser_log": {
+        "sha256": "504223811c5cb4c9423a2b771f0f7437f0f4ef482002a9dd7a1cc882727a8b6f",
+        "bytes": 662
+      }
+    },
+    {
+      "result": "The test recovered the committed assignment. The withdrawal status shared a cell with the event ID, so the exact status locator timed out. The status now has its own element and the test also verifies the revocation response.",
+      "test_log": {
+        "sha256": "0a2dc23367304cf068354ccbe2dbe490705cdad7eee6434835ad94797c8f85e6",
+        "bytes": 479
+      },
+      "browser_log": {
+        "sha256": "6cc9807ee8f544ce7bd28b0970f5654db5ea2ac0219976f2ec0a78250f7a813e",
+        "bytes": 725
+      }
+    }
+  ],
+  "local_race_replay": {
+    "environment": "macOS ARM, sandboxed Chromium 151.0.7922.34, protected HTTPS, real PostgreSQL 16.15 and independent stock OpenSSH",
+    "test_log": {
+      "sha256": "99c05481a7140b8df9585a7ce659d7d8b72a77124894d9eb534f6ebb123d9199",
+      "bytes": 2143
+    },
+    "browser_command_requests": 3,
+    "recorded_decisions": 2,
+    "peer_connections_from_browser_commands": 0,
+    "passing_accessibility_checks": 2,
+    "withdrawal_viewport_width_px": 390,
+    "assertions": [
+      "An operator with current root admin and connections_manage sees only their own eligible SFTP sources and authored decisions. Recipient choices stay within the same partner and require read, deliver and workflow_execute. Cursor pages are bounded.",
+      "The browser confirms exact route and recipient revisions. It reloads after the successful command response is dropped, restores the saved review under the same authority and recovers the same event and connection with the same operation key.",
+      "Withdrawal observes a successful revocation receipt and a second immutable decision. PostgreSQL retains the exact recipient ownership and enrolled SSH pins. The ordinary operator route lookup does not disclose the recipient-owned registration.",
+      "The receiving-only operator view is refused. Browser origin and CSRF checks and HTTP command validation pass. The separate stock OpenSSH collection, HTTPS read, agent-owned copy and approved onward delivery pass under race detection."
+    ]
+  },
+  "sources": [
+    {
+      "path": ".github/workflows/stock-peers.yml",
+      "sha256": "54600a6539cfc3e7e79b7201eb1f214a51312702a08aba490ee5ecfdc1e7276e",
+      "bytes": 7080
+    },
+    {
+      "path": "docs/api/operator-connection-provisioning.openapi.json",
+      "sha256": "110d06d4638fe2e99d87eb3ff0a14924e06dd295d7fb245e13f75b8c86827d15",
+      "bytes": 22082
+    },
+    {
+      "path": "internal/api/api.go",
+      "sha256": "e4f57b720a9602fb9165eb7496d019e819a76aec08b83848d89d866f76d88174",
+      "bytes": 31039
+    },
+    {
+      "path": "internal/api/connection_provision.go",
+      "sha256": "eb2cfb8d3d9672e93ecba41780e542b13dad3b9de16a7f0c1478ea432f37193a",
+      "bytes": 1524
+    },
+    {
+      "path": "internal/api/connection_provision_test.go",
+      "sha256": "91e741da1066577df20c799a462e86ff323198c0825d44f6a64027967b38b23f",
+      "bytes": 3351
+    },
+    {
+      "path": "internal/api/connection_provision_browser_integration_test.go",
+      "sha256": "8c47d1dc0b409c32ae928c7bfa60177fac5d8764ed741403cebeeff80dbe0ee6",
+      "bytes": 7402
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "9c8549fac53e531ccc807df0e5df7fc3cba03f0d8b29890e7ba75a84786c1c71",
+      "bytes": 14417
+    },
+    {
+      "path": "internal/store/connection_provision.go",
+      "sha256": "15c1b86f9fcf678367140dfe29ed08c6cd0a5111d27aee416fd66bc1807d9a84",
+      "bytes": 2454
+    },
+    {
+      "path": "internal/workflow/collection_choices.go",
+      "sha256": "039242d4d1b4099660d0efdf6ca1c470673b4878f131378d92b819ab3c6fdfc8",
+      "bytes": 3406
+    },
+    {
+      "path": "internal/workflow/connection_provision_choices.go",
+      "sha256": "73bce1a7b22726383a3d50cee410b2e89e577e56598742be64f3793e1f85a44e",
+      "bytes": 3301
+    },
+    {
+      "path": "scripts/connection-provision-browser.mjs",
+      "sha256": "838e23396c92c4ef2fb23a533f637e384f93ee53fa6f866ec6f52440697e729a",
+      "bytes": 9025
+    },
+    {
+      "path": "web/src/app.tsx",
+      "sha256": "9d40156b96824e91449afc61dcd9c2f1da9ba92b2d87e35c3b202be6a15c4816",
+      "bytes": 79614
+    },
+    {
+      "path": "web/src/connection-provisioning-types.ts",
+      "sha256": "6f96ea904086c0ee78f2bf22ab000d1cc1c17a75f721ba10665b028d7046bc88",
+      "bytes": 7191
+    },
+    {
+      "path": "web/src/connection-provisioning.tsx",
+      "sha256": "374a6737160a1d62a3941cee85fa8be15e16800d50969108b5449ab11f573600",
+      "bytes": 15268
+    },
+    {
+      "path": "web/src/style.css",
+      "sha256": "3aee0f864ec4dc39c2d6f66376668deb4927046c1dacf726d52b6612d1b89e9c",
+      "bytes": 16111
+    }
+  ],
+  "remaining": [
+    "Run the exact sandboxed browser test on the native Linux runner. Complete the remaining AX-J02 adapter pairs and recovery scenarios and the final-source gates."
+  ]
+}

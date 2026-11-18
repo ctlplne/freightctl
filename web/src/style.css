@@ -388,6 +388,24 @@ nav button[aria-current="page"] {
 .table-scroll {
   overflow-x: auto;
 }
+.connection-provisioning-form {
+  display: grid;
+  gap: 10px;
+  justify-items: start;
+  padding: 20px 24px;
+}
+.connection-provisioning-form select {
+  max-width: 100%;
+  min-height: 38px;
+}
+.connection-provisioning > p,
+.connection-provisioning > .actions {
+  margin-left: 24px;
+  margin-right: 24px;
+}
+.connection-provisioning td code {
+  overflow-wrap: anywhere;
+}
 table {
   border-collapse: collapse;
   width: 100%;

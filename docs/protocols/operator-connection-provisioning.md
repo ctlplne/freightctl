@@ -10,6 +10,17 @@ registration with the same approved transport definition and protected
 credential references. The operator remains the author of the journal record.
 The recipient's credential, root and grants stay untouched.
 
+In the browser, open **SFTP routes**, choose an eligible recipient and one of
+your active SFTP routes, then select **Review assignment**. Check the exact
+route version, definition hash and recipient authority revision before you
+confirm. If the reply is lost, reload the console under the same authority
+and submit the saved review again to recover the original receipt. To retire
+an assigned route, find it under **Your recorded assignments**, select
+**Review withdrawal**, and confirm the exact assigned route. This list shows
+your latest recorded decision for each assignment. The recipient reads and
+uses their current route through ordinary actor-private access.
+[F519 browser replay](../qualification/evidence/F519-browser-operator-sftp-provision.json)
+
 Use the HTTPS endpoint or the local `connection-provision` command with the
 same operator credential, request body, and stable idempotency key. The
 HTTPS request reads at most 4 KiB of command metadata. Keep the authorization

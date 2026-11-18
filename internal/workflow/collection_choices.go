@@ -23,7 +23,19 @@ func (s *Service) CollectionConnections(ctx context.Context, scope store.Scope, 
 		return nil, e
 	}
 	defer t.Tx.Rollback(ctx)
-	rows, e := t.Tx.Query(ctx, `SELECT c.connection_id::text,c.version,c.definition,c.definition_hash,c.state,c.revision FROM connection_revisions c WHERE c.actor_id=$1 AND c.state='active' AND ($2='' OR c.connection_id>nullif($2,'')::uuid) AND c.version=(SELECT max(v.version) FROM connection_revisions v WHERE v.actor_id=$1 AND v.connection_id=c.connection_id AND v.state='active') ORDER BY c.connection_id LIMIT $3`, t.Actor, after, limit+1)
+	page, e := listActiveConnections(ctx, t, after, limit, false)
+	if e != nil {
+		return nil, e
+	}
+	return page, t.Tx.Commit(ctx)
+}
+
+func listActiveConnections(ctx context.Context, t *store.Transaction, after string, limit int, sftpOnly bool) (*CollectionConnectionPage, error) {
+	rows, e := t.Tx.Query(ctx, `SELECT c.connection_id::text,c.version,c.definition,c.definition_hash,c.state,c.revision
+		FROM connection_revisions c WHERE c.actor_id=$1 AND c.state='active' AND ($2='' OR c.connection_id>nullif($2,'')::uuid)
+		AND (NOT $4::boolean OR c.definition->>'schema_version'='1')
+		AND c.version=(SELECT max(v.version) FROM connection_revisions v WHERE v.actor_id=$1 AND v.connection_id=c.connection_id AND v.state='active')
+		ORDER BY c.connection_id LIMIT $3`, t.Actor, after, limit+1, sftpOnly)
 	if e != nil {
 		return nil, e
 	}
@@ -47,7 +59,7 @@ func (s *Service) CollectionConnections(ctx context.Context, scope store.Scope, 
 		p.Connections = p.Connections[:limit]
 		p.Next = p.Connections[limit-1].ID
 	}
-	return p, t.Tx.Commit(ctx)
+	return p, nil
 }
 func (s *Service) CollectionWorkflows(ctx context.Context, scope store.Scope, after string, limit int) (*SchedulableWorkflowPage, error) {
 	if (after != "" && !store.ValidID(after)) || limit < 1 || limit > 100 {

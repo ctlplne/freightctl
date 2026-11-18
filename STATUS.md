@@ -231,6 +231,21 @@ typed service. The stock replay verifies the current authority check,
 cross-partner refusal, exact recipient pins, CLI recovery of the HTTP
 receipt and queued-work refusal before receiver contact.
 
+[F519](docs/qualification/evidence/F519-browser-operator-sftp-provision.json)
+adds **SFTP routes** to the operator console. Sandboxed Chromium recovered the
+original assignment after the response was dropped and the console reloaded.
+It then withdrew the exact registration at a compact viewport. PostgreSQL
+recorded two decisions across three requests. Both changes made zero peer
+connections. The separate stock OpenSSH exchange passed again. Native Linux
+browser evidence remains due.
+
+[F520](docs/qualification/evidence/F520-native-stock-ftps-first-results.json)
+records all three original workflows at `8403038`. The ARM stock FTPS producer
+passed two exchanges per TLS mode. The x86 probe ended without the required
+TLS 1.2 refusal alert, so its gate remains red. The next run captures bounded
+client and producer diagnostics. Both original native PostgreSQL jobs failed
+and both enforcing independent OpenPGP scans passed.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

@@ -13,6 +13,8 @@ import { useEffect, useRef, useState, type FormEvent } from "react";
 import { createRoot } from "react-dom/client";
 import { Api } from "./api";
 import { Accounts } from "./accounts";
+import { ConnectionProvisioning } from "./connection-provisioning";
+import { connectionProvisionAllowed } from "./connection-provisioning-types";
 import { IntakePolicyEditor } from "./intake-policy";
 import { OutputPolicies } from "./output-policies";
 import { outputPolicyAllowed } from "./output-policy-api";
@@ -165,6 +167,7 @@ function App() {
       | "checks"
       | "policy"
       | "accounts"
+      | "connections"
       | "partners"
       | "onboarding"
       | "approvals"
@@ -235,6 +238,8 @@ function App() {
     allowed("deliver") &&
     session?.identity.root_policy_digest ===
       digestBytes(new TextEncoder().encode("/"));
+  const canProvisionConnection =
+    !!session && connectionProvisionAllowed(session);
   const resetWork = () => {
     setTab("files");
     setSendSource(null);
@@ -806,6 +811,14 @@ function App() {
                 Accounts
               </button>
             )}
+            {canProvisionConnection && (
+              <button
+                aria-current={tab === "connections" ? "page" : undefined}
+                onClick={() => setTab("connections")}
+              >
+                SFTP routes
+              </button>
+            )}
             {allowed("admin") && allowed("accounts_manage") && (
               <button
                 aria-current={tab === "onboarding" ? "page" : undefined}
@@ -1001,7 +1014,9 @@ function App() {
                                                 ? "Intake policy"
                                                 : tab === "accounts"
                                                   ? "Accounts"
-                                                  : "Intake checks"}
+                                                  : tab === "connections"
+                                                    ? "SFTP routes"
+                                                    : "Intake checks"}
                 </h1>
                 <p>
                   {tab === "processing"
@@ -1036,7 +1051,9 @@ function App() {
                                                 ? "Review expected columns, processing limits and exact policy versions before activation or revocation."
                                                 : tab === "accounts"
                                                   ? "Review scoped access, credential rotation, expiry and revocation."
-                                                  : "Held files need their required checks and a separate release decision."}
+                                                  : tab === "connections"
+                                                    ? "Assign an exact registered connection to a receiving account, or withdraw a route you assigned."
+                                                    : "Held files need their required checks and a separate release decision."}
                 </p>
               </div>
               <button
@@ -1239,6 +1256,15 @@ function App() {
               )}
             {tab === "accounts" && (
               <Accounts
+                api={api}
+                session={session}
+                refresh={refresh}
+                onError={reportError}
+              />
+            )}
+            {tab === "connections" && canProvisionConnection && (
+              <ConnectionProvisioning
+                key={sendContext}
                 api={api}
                 session={session}
                 refresh={refresh}
