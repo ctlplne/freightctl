@@ -4,6 +4,7 @@ package workflow
 
 import (
 	"bytes"
+	"encoding/json"
 	"os"
 	"os/exec"
 	"path/filepath"
@@ -23,6 +24,42 @@ func TestStockSFTPCollectionToAgentOverMCPAndSeparatelyApprovedStockSFTP(t *test
 	testStockSFTPCollectionToAgent(t, true)
 }
 
+func TestStockSFTPCollectionKilledAfterSealRecoversExactExchangeSource(t *testing.T) {
+	binary := routingKeyCLI(t)
+	f := setup(t)
+	producer := newStockSFTPPeer(t, f, true)
+	source, selection := prepareCollectionTest(t, f, producer.connection, false, false)
+	body := []byte("exact stock SFTP source sealed before acceptance\n")
+	manifest, files := publishStockSFTPCollection(t, producer.directory, source.Manifest, body)
+	contacts := func() int64 { return int64(producer.sessions(t)) }
+	captured := proveCollectionAfterSealDeath(t, f, binary, selection, body, manifest, contacts, func() {
+		for name, expected := range files {
+			filename := filepath.Join(producer.directory, name)
+			data, err := os.ReadFile(filename)
+			if err != nil || !bytes.Equal(data, expected) {
+				t.Fatal("original read changed stock producer files", err)
+			}
+			if err = os.Remove(filename); err != nil {
+				t.Fatal("withdraw the exact fixture source before replacement", err)
+			}
+		}
+	})
+	input, job := captured.Inputs[0], captured.Job
+	argv := []string{"workflow-collection-exchange-source", "--dsn-file", f.runtimePath,
+		"--token-file", f.tokenPath, "--tenant", f.scope.Tenant, "--partner", f.scope.Partner,
+		"--storage", f.storagePath, "--collection-id", job.ID, "--collection-input-id", input.ID}
+	wire, err := exec.CommandContext(f.ctx, binary, argv...).Output()
+	var review CollectedExchangeSource
+	if err != nil || json.Unmarshal(wire, &review) != nil || review.Profile != CollectedExchangeSourceProfile ||
+		review.State != "source-review-only" || review.StorageVerification != "not-checked" ||
+		review.Origin.CollectionID != job.ID || review.Origin.FirstCollectionID != job.ID || review.Origin.DefinitionHash != job.Hash ||
+		review.Origin.Workflow != selection.Workflow || review.Origin.ManifestHash != *job.ManifestHash || review.Origin.ProducerBatch != manifest.Batch ||
+		review.Origin.InputID != input.ID || review.Origin.InputIdentity != input.Identity ||
+		review.Artifact.ID != input.ObjectID || review.Artifact.Size != int64(len(body)) || review.Artifact.SHA256 != secure.Digest(body) || contacts() != 1 {
+		t.Fatalf("stock SFTP recovery changed the exact exchange source; output_sha256=%s; error=%v", secure.Digest(wire), err)
+	}
+}
+
 func testStockSFTPCollectionToAgent(t *testing.T, useMCP bool) {
 	t.Helper()
 	binary := routingKeyCLI(t)
@@ -30,19 +67,7 @@ func testStockSFTPCollectionToAgent(t *testing.T, useMCP bool) {
 	producer := newStockSFTPPeer(t, f, true)
 	source, selection := prepareCollectionTest(t, f, producer.connection, false, false)
 	body := []byte("abc")
-	manifest := &CollectionManifest{Schema: 1, Batch: secure.NewID(),
-		Files: []CollectionFile{{Name: "one.csv", Size: int64(len(body)), SHA256: secure.Digest(body)}},
-	}
-	raw, _, err := digest(manifest)
-	if err != nil {
-		t.Fatal(err)
-	}
-	files := map[string][]byte{source.Manifest: raw, "one.csv": body}
-	for name, data := range files {
-		if err = os.WriteFile(filepath.Join(producer.directory, name), data, 0600); err != nil {
-			t.Fatal(err)
-		}
-	}
+	manifest, files := publishStockSFTPCollection(t, producer.directory, source.Manifest, body)
 	proveCollectionAgentOnward(t, f, selection, binary, body, "", manifest, func() int64 {
 		return int64(producer.sessions(t))
 	}, useMCP)
@@ -51,7 +76,7 @@ func testStockSFTPCollectionToAgent(t *testing.T, useMCP bool) {
 	batch := filepath.Join(t.TempDir(), "write.batch")
 	replace := filepath.Join(producer.directory, "unexpected.csv")
 	line := "put " + strconv.Quote(filepath.Join(producer.directory, "one.csv")) + " " + strconv.Quote(replace) + "\n"
-	if err = os.WriteFile(batch, []byte(line), 0600); err != nil {
+	if err := os.WriteFile(batch, []byte(line), 0600); err != nil {
 		t.Fatal(err)
 	}
 	output, err := exec.CommandContext(f.ctx, "sftp", producer.sftpArgs(batch)...).CombinedOutput()
@@ -68,4 +93,22 @@ func testStockSFTPCollectionToAgent(t *testing.T, useMCP bool) {
 			t.Fatal("source file bytes changed", err)
 		}
 	}
+}
+
+func publishStockSFTPCollection(t *testing.T, directory, manifestName string, body []byte) (*CollectionManifest, map[string][]byte) {
+	t.Helper()
+	manifest := &CollectionManifest{Schema: 1, Batch: secure.NewID(),
+		Files: []CollectionFile{{Name: "one.csv", Size: int64(len(body)), SHA256: secure.Digest(body)}},
+	}
+	raw, _, err := digest(manifest)
+	if err != nil {
+		t.Fatal(err)
+	}
+	files := map[string][]byte{manifestName: raw, "one.csv": body}
+	for name, data := range files {
+		if err := os.WriteFile(filepath.Join(directory, name), data, 0600); err != nil {
+			t.Fatal(err)
+		}
+	}
+	return manifest, files
 }

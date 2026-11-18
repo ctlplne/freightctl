@@ -260,6 +260,14 @@ retries recover the same receipts. MCP and HTTPS both refuse queued work
 after withdrawal, and the receiver sees no new connection. Native Linux
 MCP proof and the browser exchange remain due.
 
+[F523](docs/qualification/evidence/F523-stock-sftp-collection-worker-death.json)
+kills the stock SFTP collection worker after it seals the object and before
+PostgreSQL accepts it. The replacement respects the live lease, then accepts
+the same object once using the same work key. The producer files are gone by
+then, and its log shows one total authenticated session. The CLI reviews the
+original manifest, input and file revision. Both freightctl FTPS recovery
+cases pass again. Native Linux and onward-delivery death cases remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

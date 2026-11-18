@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "F523",
+  "observed_at": "2026-11-19",
+  "base_candidate": "347f208c7cdada7245d0746e6b0cc92099555277",
+  "qualification_claim": false,
+  "scope": "Actual stock SFTP collection-worker death after sealing and exact exchange-source recovery",
+  "prior_stock_sftp_record": "docs/qualification/evidence/F522-stock-sftp-mcp-exchange.json",
+  "local_race_replay": {
+    "environment": "macOS ARM, freightctl CLI child processes, real PostgreSQL 16.15, local durable storage and an independent stock OpenSSH producer on task-owned loopback",
+    "log": {
+      "sha256": "4548b6af4c22259a4c21c9588ad8f94b43ea97e44360e4bcef5350e5520a0a34",
+      "bytes": 966
+    },
+    "inference_enabled": false,
+    "process_death_signal": "SIGKILL",
+    "original_lease_seconds": 30,
+    "sql_barrier_seconds": 8,
+    "source_sessions_total": 1,
+    "takeover_attempt": 2,
+    "takeover_fence": 2,
+    "accepted_files": 1,
+    "acceptance_events": 1,
+    "assertions": [
+      "The process was observed at the exact pre-acceptance barrier with a live lease, pending input, private sealed file and matching bytes. The namespace path did not exist and the killed process emitted no receipt.",
+      "Both producer fixture files matched their original bytes and were withdrawn after process death. An early replacement using the original key was refused. The original lease expired on the unchanged database clock.",
+      "The same CLI work key then accepted the original sealed object. Repeating it recovered the same collection receipt. No additional source session occurred. PostgreSQL held one file and one acceptance event.",
+      "The public CLI source review preserved the original collection, workflow, manifest, batch, input identity and artifact ID, digest and size.",
+      "The original explicit and implicit freightctl FTPS process-death tests and the stock MCP onward exchange passed again."
+    ]
+  },
+  "sources": [
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "b9c0f10fccf34fbf9bd197ef5c557389628c5e1fcf45d1753af291868f87f0bc",
+      "bytes": 15327
+    },
+    {
+      "path": "internal/workflow/ftps_collection_recovery_integration_test.go",
+      "sha256": "571d46f7d70aea5b6fde1806c91d14d72241cd19b4fce7b84ab10e2c4d80f411",
+      "bytes": 9460
+    },
+    {
+      "path": "internal/workflow/sftp_collection_exchange_integration_test.go",
+      "sha256": "636fde8bcb1cb140ec0edc0510ea95fca5b98b72cabe95cfe362aab0a07a0fc6",
+      "bytes": 5051
+    }
+  ],
+  "remaining": [
+    "Run the exact stock SFTP worker-death replay on Linux x86 and ARM. Qualify interruption at the onward receiver boundary and the browser exchange."
+  ]
+}

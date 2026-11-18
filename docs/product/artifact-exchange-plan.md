@@ -199,9 +199,12 @@ API. The CLI agrees with the source review and recovers the original HTTP copy
 receipt. The stock MCP SDK also reviews and offers the collected artifact,
 copies it into agent custody and runs the separately approved onward delivery.
 Stock curl retrieves the bytes through the tool's authenticated HTTPS path.
-Native Linux, browser exchange and process-death recovery remain open.
+After real worker death at the SFTP seal boundary, a replacement keeps the
+original lease and recovers the exact object and manifest without another
+source session. Native Linux, browser exchange and interruption at the
+outbound receiver remain open.
 [F516](../qualification/evidence/F516-stock-sftp-source-agent-exchange.json) [F517](../qualification/evidence/F517-stock-collection-https-exchange.json)
-[F522](../qualification/evidence/F522-stock-sftp-mcp-exchange.json)
+[F522](../qualification/evidence/F522-stock-sftp-mcp-exchange.json) [F523](../qualification/evidence/F523-stock-sftp-collection-worker-death.json)
 The local FTPS pair uses a separate freightctl producer, stock HTTPS retrieval,
 an agent-owned copy and separately approved delivery to stock OpenSSH. It
 passes for explicit and implicit FTPS. The same local chain passes from a

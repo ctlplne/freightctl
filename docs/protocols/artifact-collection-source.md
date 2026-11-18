@@ -82,6 +82,17 @@ against real PostgreSQL, stock curl and separate OpenSSH peers. Native Linux
 MCP proof and the full browser exchange remain due.
 [F522 replay](../qualification/evidence/F522-stock-sftp-mcp-exchange.json)
 
+If the stock SFTP collection worker dies after sealing the bytes and before
+acceptance, keep the original collection ID, definition hash and work key.
+Inspect the collection state and wait for the recorded worker lease to expire.
+Run `workflow-collection-work` again with that same binding. The replacement
+can verify and accept the sealed object from local storage. Review the captured
+source by its original input ID, then obtain the separate offer and onward
+approvals as usual. The local replay uses an actual killed worker and withdraws
+both producer files before retrying. The replacement makes zero new producer
+connections and publishes one original object.
+[F523 replay](../qualification/evidence/F523-stock-sftp-collection-worker-death.json)
+
 The FTPS profile uses explicit AUTH TLS or implicit FTPS from a separately
 provisioned freightctl producer. A collector reads the ready manifest and pins
 each file's digest. The ordinary CLI reviews the captured, owner-only revision.
