@@ -413,7 +413,8 @@
         "docs/qualification/evidence/F490-portable-processing-rebind.json",
         "docs/qualification/evidence/F491-portable-schedule-rebind.json",
         "docs/qualification/evidence/F492-portable-workflow-run-history.json",
-        "docs/qualification/evidence/F493-portable-openpgp-public-key.json"
+        "docs/qualification/evidence/F493-portable-openpgp-public-key.json",
+        "docs/qualification/evidence/F494-encrypted-portable-recovery-replay.json"
       ],
       "failures": [],
       "limits": [

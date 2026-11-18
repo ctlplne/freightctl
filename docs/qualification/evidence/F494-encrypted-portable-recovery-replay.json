@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "F494",
+  "observed_at": "2026-11-18",
+  "candidate": "ce426a6",
+  "scope": "Real paired encrypted workflow before and after a protected move to a separate PostgreSQL database",
+  "qualification_claim": false,
+  "base_evidence": [
+    "docs/qualification/evidence/F477-portable-recovery-lineage.json",
+    "docs/qualification/evidence/F480-portable-connection-export.json",
+    "docs/qualification/evidence/F489-portable-delivery-receipt.json",
+    "docs/qualification/evidence/F493-portable-openpgp-public-key.json"
+  ],
+  "red": {
+    "observation": "The first fixture asked the key export to overwrite its source registration request. The CLI refused the collision after the source encrypted delivery had succeeded. The replay used a fresh explicit output.",
+    "operations_sha256": "e9b9196158318e8646d25080666ec632cf3f511bd68df61b50f9dcfc926a0500"
+  },
+  "green": {
+    "platform": "darwin/arm64 CLI and stock tools with Linux arm64 PostgreSQL",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "stock_openssh": "10.5p1",
+    "stock_gnupg": "2.5.24",
+    "stock_openssl": "3.6.5",
+    "private_witness_directory": ".private/freightctl-f494-confirm",
+    "executable_sha256": "2bde900384a0b99c85a5a09b5850e56ac6edd21809604bcd0de9b627f66f137a",
+    "fixture_sha256": "4bf35174043ec113730369397f669566c7f35adee97d997b536a1b14440ba741",
+    "summary_sha256": "ad70d83631eeea78a7c5a1c72c737cdcc92dcda7810bdf5bca669e4410b5d0b4",
+    "operations_sha256": "919f2905f73aa0b0bfe509a4e726a8ddf0ac466f7caed1938a63aeea4b762ab8",
+    "source_archive_sha256": "6ac0e0dbeff6ad51617711ab56c1eac991f737e212ebc6f918ec23b0f0fc32f2",
+    "workflow_archive_sha256": "9a62eb7a8d4251d83f8afb062e7b56f4b3a67a8f386103601743906937c22f18",
+    "public_key_archive_sha256": "e949f2f8c2351bb690afc24ada5e607644cb88853069c97453b99b2bcbf1e409",
+    "connection_archive_sha256": "21bb69a27054b75f431d5ec8d7d9909b7e709f84b0c9ec8e683bbf10f1922d6e",
+    "source_cipher_sha256": "8722598de0fe2544e33d09a03e89986f4e61d5e8f79d0daf6613d12e47cf1482",
+    "destination_cipher_sha256": "57e5073be2010318b041d0c71109a21e0a73dbfe25ab1564e019996f021b08e1",
+    "both_authenticated_plaintexts_sha256": "b4eb8dba169beec0be2cf061bedfa92b204d7fc607fad8014adde7e7a90bdda9",
+    "delivery_receipt_archive_sha256": "78218abf82ea5cb7d5d634cda3e2dad4bfaf26c8ac21f6777db41191768e3456",
+    "signed_destination_audit_sha256": "2e1182c56c59483088ab1ac7c6b821fabad23771d2225bc3e5a0948aa1de35c4",
+    "signed_destination_audit_event_count": 27,
+    "audit_verification_sha256": "c533ae136b2a21f162dd209fa83356abae4172e46c566f7eb7d78a514956d304",
+    "offline_correlation_fixture_sha256": "a56be399a024ec021745ea27a79b1033b75c3ab786eec77577d022a58af08b78",
+    "offline_correlation_result_sha256": "721d7342abbc64ccb6303fcfa859a97fca6757cd5e54037c911388b3312c1982",
+    "source_decrypt_metrics_sha256": "84615332277a99d093f666fa5d0fe5137adfbde6326c2267c8a8f59b13c6cab4",
+    "destination_decrypt_metrics_sha256": "6dab4f15a4c4d6533db9cdb4b6230e21d085986b699526602f397789a1a3b758",
+    "independent_stock_tar_exact_input_and_idempotent_restore": true,
+    "new_destination_workflow_connection_recipient_file_and_client_key": true,
+    "source_and_destination_refuse_unapproved_runs": true,
+    "stock_sftp_retrieved_both_ciphertexts_and_gnupg_confirmed_both_authenticated_plaintexts": true,
+    "encrypted_receipt_preserves_observation_with_receiver_stopped": true,
+    "signed_audit_links_acceptance_lineage_success_readback_and_export": true,
+    "changed_audit_signature_refused_by_stock_verifier": true,
+    "exact_task_containers_removed_verified": true
+  },
+  "remaining": [
+    "This is an assisted same-host replay with two PostgreSQL databases and one stock SSH daemon using distinct receiving paths. Independent operator adoption and multi-host recovery remain due.",
+    "The records preserve receiver integrity observation. Business acceptance and complete controlled estate cutover remain open."
+  ]
+}

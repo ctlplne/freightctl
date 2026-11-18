@@ -349,3 +349,21 @@ Use zero for a new key family. Registration checks the key's current
 validity and purpose. Rebind intake policies and encryption workflows
 to the new key ID, version and definition hash. Private key custody stays
 with the signing or receiving system.
+
+## Compare an encrypted workflow before cutover
+
+For a test delivery, use different source and destination receiving
+directories so each run has its own observable effect. Bundle the exact
+source file revision. Export its workflow, connection, and OpenPGP
+recipient. On the destination, restore the file against the bundle's
+pinned checksum, enroll a fresh SFTP client key, and review the
+recipient public key. Rebind the workflow to the newly registered
+connection and recipient before approving it.
+
+Retrieve each test ciphertext with stock SFTP. Use the receiving
+system's own GnuPG keyring to authenticate and decrypt the ciphertexts
+into a private directory, then compare both plaintexts to the selected
+source bytes. Keep the destination delivery observation and a signed
+audit export. Their event IDs connect the restored revision and its
+lineage to the workflow, the recorded receiver readback, and the
+protected delivery receipt.

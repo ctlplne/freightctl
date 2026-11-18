@@ -239,6 +239,13 @@ IDs. The destination verified signed intake, and stock GnuPG verified
 the same stock signature with the decoded public export. The CLI now
 returns an error when key registration or signature attachment is refused.
 
+[F494](docs/qualification/evidence/F494-encrypted-portable-recovery-replay.json)
+restores an encrypted SFTP workflow and exact file into a second clean
+PostgreSQL database. Stock SFTP retrieved each ciphertext and stock
+GnuPG authenticated and decrypted both to the original bytes. A
+27-event destination audit links the restore, new run, readback and
+receipt export. OpenSSL refused a changed audit signature.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an
