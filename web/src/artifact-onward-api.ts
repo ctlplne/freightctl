@@ -7,6 +7,7 @@ import {
   asOnwardReview,
   asOnwardAcceptance,
   asOnwardObservation,
+  asOnwardReconciliation,
   asOnwardRecovery,
   readOnwardRecovery,
   type OnwardRequest,
@@ -163,6 +164,31 @@ export class ArtifactOnwardApi {
       { start: pinned, receipt_key: receiptKey, run_id: runID },
       (v) => asOnwardObservation(v, pinned, runID, true),
       workKey,
+      signal,
+    );
+  }
+  async reconcile(
+    original: OnwardStart,
+    receiptKey: string,
+    runID: string,
+    deliveryID: string,
+    key: string,
+    signal?: AbortSignal,
+  ) {
+    this.key(receiptKey);
+    this.key(key);
+    if (!uuid(runID) || !uuid(deliveryID))
+      throw new ApiError("invalid_onward_contract", 400);
+    return this.post(
+      "reconcile",
+      {
+        start: asOnwardStart(original),
+        receipt_key: receiptKey,
+        run_id: runID,
+        delivery_id: deliveryID,
+      },
+      (value) => asOnwardReconciliation(value, runID, deliveryID),
+      key,
       signal,
     );
   }

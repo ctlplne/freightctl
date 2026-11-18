@@ -138,7 +138,8 @@
         "docs/qualification/evidence/F515-guarded-native-ftps-producer-harness-push.json",
         "docs/qualification/evidence/F520-native-stock-ftps-first-results.json",
         "docs/qualification/evidence/F521-guarded-sftp-console-batch.json",
-        "docs/qualification/evidence/F525-native-operator-browser-and-source-scans.json"
+        "docs/qualification/evidence/F525-native-operator-browser-and-source-scans.json",
+        "docs/qualification/evidence/F528-original-batch-and-native-ftps.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -2057,7 +2058,9 @@
         "docs/qualification/evidence/F523-stock-sftp-collection-worker-death.json",
         "docs/qualification/evidence/F524-stock-sftp-browser-exchange.json",
         "docs/qualification/evidence/F525-native-operator-browser-and-source-scans.json",
-        "docs/qualification/evidence/F526-stock-sftp-onward-recovery-boundary.json"
+        "docs/qualification/evidence/F526-stock-sftp-onward-recovery-boundary.json",
+        "docs/qualification/evidence/F527-reviewed-onward-readback.json",
+        "docs/qualification/evidence/F528-original-batch-and-native-ftps.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -2238,7 +2241,8 @@
         "F522 passes the stock SDK source review, offer, discovery, owned copy and separately approved onward delivery between independent OpenSSH peers. HTTP and CLI recover the original receipts. MCP and HTTPS refuse queued work after route withdrawal without contacting the receiver. Native Linux MCP proof remains due.",
         "F523 verifies real stock SFTP collection worker death after sealing. The original lease expires, and the replacement recovers one exact object and receipt with no new source session. The CLI reviews the original manifest, input and artifact. Native Linux and onward-response interruption remain due.",
         "F524 passes the browser exchange from collected revision through offer, scoped download and owned copy to separately approved stock SFTP. The exact browser work retry recovers the committed result with one delivery attempt. Native Linux, other browsers and loss at the onward SFTP protocol boundary remain due.",
-        "F526 kills the real onward worker after stock OpenSSH publishes and before local success. Both legacy recovery refusals preserve the original expired lease, one attempt, one fence and no receiver contact. An exact least-privilege recovery action is due."
+        "F526 kills the real onward worker after stock OpenSSH publishes and before local success. Both legacy recovery refusals preserve the original expired lease, one attempt, one fence and no receiver contact. F527 supplies the exact reviewed-run readback under ordinary agent permissions.",
+        "F527 passes private onward recovery after actual stock SFTP worker death. Missing final bytes retain ambiguity, matching bytes recover integrity, and the browser restores the same observation after reload without a send. Native Linux and loss at the SFTP acknowledgment boundary remain due."
       ],
       "current_item": {
         "id": "F425",

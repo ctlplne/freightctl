@@ -23,8 +23,9 @@ Under `/v1/tenants/{tenant}/partners/{partner}`:
 | `onward/receipts` | `{start:{request,review_hash},receipt_key}` | Recover only an already recorded exact reviewed-start receipt. Never creates or adopts a run. |
 | `onward/status` | `{start,receipt_key,run_id}` | Inspect only that exact previously accepted reviewed run;no transfer. |
 | `onward/work` | `{start,receipt_key,run_id}` plus stable `Idempotency-Key` | Work one ordinary pending intent. May perform the approved remote writes. |
+| `onward/reconcile` | `{start,receipt_key,run_id,delivery_id}` plus stable `Idempotency-Key` | Check the registered final file for one uncertain delivery and record a private observation. |
 
-The [OpenAPI subset](../api/artifact-onward.openapi.json) pins these five paths;
+The [OpenAPI subset](../api/artifact-onward.openapi.json) pins these six paths;
 full external schema conformance remains owed.
 
 An `OnwardRequest` contains `schema_version:1`,
@@ -53,15 +54,16 @@ old acceptance fact into a new action. New runs and actual work independently
 refuse stale authority,holds and revoked configuration. A credential rotation
 cannot adopt an old private command receipt.
 
-The CLI commands are `onward-preview`, `onward-start` and `onward-receipt`,using
+The CLI commands are `onward-preview`, `onward-start`, `onward-receipt` and
+`onward-reconcile`, using
 ordinary protected runtime-DSN/account/storage references and `-request-file`.
 New onward request references must be protected bounded regular files;values are
-cleared after decoding. Start uses `-idempotency-key`. Existing `workflow-work`,
+cleared after decoding. Start and reconciliation use `-idempotency-key`. Existing `workflow-work`,
 status and recovery commands operate on ordinary runs with unchanged policy,
 leases,fencing,receipt and ambiguity rules. Ordinary API/browser session mutations
 retain current same-origin CSRF protection.
 
-The current MCP catalog exposes26tools. `freightctl.prepare_onward`,
+The MCP tools `freightctl.prepare_onward`,
 `start_onward`, `onward_status` and `work_onward` separate review,staging,inspection
 and one bounded work step. Status/work require the original typed `start`,its
 `receipt_key` and exact `run_id`;work also needs its stable `request_key`. The
@@ -69,21 +71,24 @@ receipt lookup proves this run came from the narrower reviewed profile. It canno
 adopt a generic,collection or routing run. The work key fixes one ordinary pending
 intent;repeating it cannot advance to the next step.
 
-Only work can contact a registered peer. Its annotations conservatively disclose
-external and potentially destructive writes,according to the approved adapter's
-contract. It supplies no arbitrary network tool or stronger exclusive-publication
-promise. HTTP cancellation and existing10second tool deadlines can leave remote
-outcomes uncertain. Inspect actual state/receipts before recovery;do not infer
-that a lost response means nothing happened.
+Work can contact a registered peer and perform approved writes. HTTP
+cancellation and the ten-second MCP deadline can leave the transfer outcome
+uncertain. Inspect the current run and its receipts before choosing recovery.
 
-The current `delivery-reconcile` command requires the original delivery owner
-and the root `admin` and `connections_manage` grants in addition to read and
-deliver. An ordinary onward agent can own the delivery without those management
-grants. The original operator's scope cannot see the agent's delivery. The
-real worker-death replay verifies this gap at the publication boundary. The
-agent needs an exact reviewed-run reconciliation action that can check the
-receiver file without granting connection administration.
-[F526 recovery evidence](../qualification/evidence/F526-stock-sftp-onward-recovery-boundary.json)
+`freightctl.reconcile_onward` uses the same reviewed start, `receipt_key`,
+`run_id` and `delivery_id` as the HTTPS and CLI command. Pass a stable
+`request_key` in MCP. The actor needs ordinary onward grants and current
+access to the original artifact and approved route. A publishing intent
+becomes eligible after its live lease expires. An ambiguous intent is also
+eligible. The operation takes a bounded delivery stream slot and reads only
+the registered final path. Matching bytes record integrity. Missing,
+unreadable or different bytes leave the outcome uncertain. Both outcomes
+record the observation, delivery state and run projection in one transaction.
+Repeating a key returns the original result. A new check after an
+unconfirmed observation requires a new key. Receiver persistence and
+business processing remain unknown. The existing `delivery-reconcile`
+command still requires the original owner and connection administration.
+[F526 recovery boundary](../qualification/evidence/F526-stock-sftp-onward-recovery-boundary.json) [F527 replay](../qualification/evidence/F527-reviewed-onward-readback.json)
 
 MCP returns source integrity,workflow references,run/delivery IDs,states and receipt
 hashes. It omits storage identity,namespace paths,private step labels,transport
@@ -112,6 +117,14 @@ receipt lookup and current observation remain separate read operations. A lost
 response retains its original request/work key. Retrying a work key cannot move
 to another step. A successful response allows the next explicit one-step action;
 neither success nor a status label implies receiver business acceptance.
+
+For an uncertain step, select **Inspect current onward state** and then
+**Check receiver file for step**. The check can proceed once the original
+lease expires. If the response drops, select **Retry the same receiver
+check**. To recover across reload, save the review after the error, import
+it under the original authority, find the original onward receipt, verify
+the review with the server, and retry the receiver check. The saved file
+keeps the delivery ID and observation key together.
 
 The ordinary HTTPS status/work paths and MCP share one receipt-bound adoption
 helper. Their projection omits namespace/storage/transport references,raw step

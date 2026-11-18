@@ -1,0 +1,180 @@
+{
+  "schema_version": 1,
+  "id": "F527",
+  "observed_at": "2026-11-19",
+  "base_candidate": "be18379ffecaeaca14d1d5ec31793f6f983a200b",
+  "qualification_claim": false,
+  "scope": "Private least-privilege final-path readback after a real stock SFTP onward worker dies after publication",
+  "prior_gap": "docs/qualification/evidence/F526-stock-sftp-onward-recovery-boundary.json",
+  "red_regressions": [
+    {
+      "result": "The original reviewed HTTPS action returned 404 after the worker died and the original lease expired.",
+      "log": {
+        "sha256": "b4fbf9d3933e000320a1d9fab6cd5f248908c885d9e82d46aa596c591ed4fee4",
+        "bytes": 418
+      }
+    },
+    {
+      "result": "The missing-file result stayed unconfirmed with no extra receiver connection, but JSONB reformatting changed the observation digest on replay. The same ordered JSON encoding now feeds both hashes.",
+      "first_log": {
+        "sha256": "8686b609028b1fa959653f9e42747f3e8c020ccae84e29d15a06c4138858f968",
+        "bytes": 324
+      },
+      "diagnostic_log": {
+        "sha256": "27a0f2c36f4a5d1e920c673eb28e53e0f9bb0d663c29901c789e2b7afa6bc57b",
+        "bytes": 493
+      }
+    },
+    {
+      "result": "The adjoining browser work replay hit a Chromium response-body retrieval error. Both efforts now use the real pinned HTTPS response body for the retry, and the browser verifies the replay and rendered state.",
+      "log": {
+        "sha256": "b960065abaa8b8d58509fa41116f419a9dca7f9b6173be4589e4e1e7b016dd89",
+        "bytes": 1385
+      },
+      "browser_log": {
+        "sha256": "a5ff69ae8f197d167cce2c3defae38808b0b775405359377a8cc5eac011d81de",
+        "bytes": 480
+      }
+    }
+  ],
+  "local_race_replays": {
+    "environment": "macOS ARM, stock OpenSSH and stock SFTP, PostgreSQL 16.15, actual worker process and sandboxed Chromium 151.0.7922.34 on task-owned loopback",
+    "inference_enabled": false,
+    "core_log": {
+      "sha256": "6ff79196ebfd84e16894f60c1417f965e8a839254b19f602710b1ca2d75b42d8",
+      "bytes": 413
+    },
+    "final_browser_and_legacy_log": {
+      "sha256": "4d07f10e416c1eec9c61972c066c84a4ae6ddb6d390b85a482f1d7f330f23705",
+      "bytes": 2686
+    },
+    "first_publication_attempts": 1,
+    "publication_fence": 1,
+    "browser_reconcile_requests": 2,
+    "browser_work_requests": 0,
+    "browser_accessibility_checks": 2,
+    "external_browser_egress": 0,
+    "assertions": [
+      "A live publishing lease, mismatched review or run, foreign actor and other delivery all refused before peer contact. Two occupied delivery slots refused this check and made zero peer contacts. The legacy operator reconciliation refusals remain in place.",
+      "The real worker died after stock OpenSSH made the final bytes visible and before PostgreSQL recorded success. The missing final file remained ambiguous. Returning that file to its registered name allowed a new key to confirm matching bytes.",
+      "Stock HTTPS, local CLI, the stock MCP SDK and the browser recover the original observation from the same key. Reusing the key for a different valid run and intent conflicts. The preserved missing result replays without another remote read.",
+      "A successful check retained the original remote inode, mode, modification time and exact bytes. Attempt and fence remained one. The observation, delivery state and run projection committed atomically. Neither file fsync nor business processing was inferred from readback.",
+      "The browser saved the pending observation key after a dropped committed reply, restored it after reload and recovered the same result. No browser work send was issued. Legacy FTPS lost-stage and lost-rename cases, legacy approval isolation and original HTTPS/MCP/browser journeys pass again."
+    ]
+  },
+  "sources": [
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "2cf2b8eb87a775d439ac40e06966ddca529e34723e82dea87bba11df808295e4",
+      "bytes": 15917
+    },
+    {
+      "path": ".github/workflows/stock-peers.yml",
+      "sha256": "2931b174aafbd502e890ea116cb5fbea8fe7fccb885e3ecea913877635b4e6a7",
+      "bytes": 8423
+    },
+    {
+      "path": "cmd/freightctl/workflow.go",
+      "sha256": "777f31192db31be720f12cc738bfce49181a2c9da2cc2a8b648d455e8d714c9c",
+      "bytes": 6154
+    },
+    {
+      "path": "docs/api/artifact-onward.openapi.json",
+      "sha256": "0319ff217b613129fcf7bb588ea0d5e68a12846a98a9d7c8474fe9e25f89411e",
+      "bytes": 26205
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "70a50fb4dbcef7e14ad1cd8484f86e5f90b9e39852110942179856110c664b22",
+      "bytes": 138154
+    },
+    {
+      "path": "internal/api/mcp.go",
+      "sha256": "e5299b51aabfedf240b187433c45a1958691fe47eddf2029abf4ba334b055b19",
+      "bytes": 13390
+    },
+    {
+      "path": "internal/api/onward.go",
+      "sha256": "1b46ad22e190e5ee2b4ddf9b1146899086df93816e49e7294a1e3f5248dd91c7",
+      "bytes": 3349
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "0d4e37a30e2b438396edfeaf9e23e8ca4845cf996cc7aaacfd555c0cb7f76ed5",
+      "bytes": 928791
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "a73600fa5f06ef2a915c903122003fca23117d844ccbcefae8d881431e58c1b1",
+      "bytes": 14417
+    },
+    {
+      "path": "internal/delivery/reviewed_observation.go",
+      "sha256": "e79949fbc3d494e864b2d225b73bac9b50a08694706ceb987e559d4c11eedb12",
+      "bytes": 1596
+    },
+    {
+      "path": "internal/delivery/service.go",
+      "sha256": "f80483e65dab5f8cc4a2e2e2f69c3444cb76d61e42187b70644030e53922ab3b",
+      "bytes": 15247
+    },
+    {
+      "path": "internal/delivery/worker.go",
+      "sha256": "2e3222f88cba1f4956d6e28c6dfec0a70f17d8b342743b11cff147f6dd1d840a",
+      "bytes": 14170
+    },
+    {
+      "path": "internal/store/deliveries.go",
+      "sha256": "871fc8998a4af95f275c5aa5c0b73a1932b1b893488f13e633ad9aeb4c8af2a8",
+      "bytes": 6658
+    },
+    {
+      "path": "internal/workflow/artifact_onward.go",
+      "sha256": "29d4fd43f8a7f16e5fda5259cbb0ecc9d84f86b4525ae78f6ef62bc75627535d",
+      "bytes": 11361
+    },
+    {
+      "path": "internal/workflow/artifact_onward_reconcile.go",
+      "sha256": "92a089ebf0d0a1db30680538af3af8a7992ea985a7ad897db57b9060300bc8a8",
+      "bytes": 4080
+    },
+    {
+      "path": "internal/workflow/onward_reconciliation_browser_integration_test.go",
+      "sha256": "06c845124988e26f517101e176e0d3b25b18706b73147ba31cd3b6d8db3b2c80",
+      "bytes": 4218
+    },
+    {
+      "path": "internal/workflow/onward_stock_recovery_integration_test.go",
+      "sha256": "18759c062b38e514e5284087c33c80cd7fc285021049584b95dee825a2eecaf0",
+      "bytes": 14500
+    },
+    {
+      "path": "scripts/stock-onward-reconcile-browser.mjs",
+      "sha256": "150cb9c49e6e61eba1e82191b421ccbb7663aedc1b833a50b274c5e8bd7f1cfc",
+      "bytes": 7777
+    },
+    {
+      "path": "scripts/stock-sftp-exchange-browser.mjs",
+      "sha256": "d9987c87082eb4ec4c51ddb527d15fd22118d209f3107c85c287cef1a69af574",
+      "bytes": 13927
+    },
+    {
+      "path": "web/src/artifact-onward-api.ts",
+      "sha256": "78c6bd3fd165ff18c52f2d8eadbd4f6a2a91404264723645e0d4bb469cdbbd06",
+      "bytes": 5374
+    },
+    {
+      "path": "web/src/artifact-onward-types.ts",
+      "sha256": "223f505b49bdabb185a8126dbade4b5cf2f607c90b9cc858e4c1cc2c2db3a9c7",
+      "bytes": 12551
+    },
+    {
+      "path": "web/src/artifact-onward.tsx",
+      "sha256": "1f448fa0e69ceac6325f363a2c931e3c3879d0b5511ae1648b42dc522353cb28",
+      "bytes": 17570
+    }
+  ],
+  "remaining": [
+    "Collect the exact native Linux browser and ARM/x86 recovery replays. Qualify loss at the SFTP acknowledgment boundary, other adapter roles, remaining supported browsers and the complete AX and baseline gates."
+  ]
+}

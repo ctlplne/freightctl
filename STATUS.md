@@ -290,6 +290,21 @@ legacy operator command refuses the agent without management grants and
 refuses the operator's access to the agent's private intent. Both refusals
 make zero receiver connections. Independent SFTP readback matches the bytes.
 
+[F527](docs/qualification/evidence/F527-reviewed-onward-readback.json)
+lets the ordinary onward actor check the registered final file using the
+original reviewed run and exact delivery. Missing bytes leave the result
+uncertain. Matching bytes record integrity with the original attempt and
+fence. Stock HTTPS, CLI, MCP and sandboxed Chromium recover the same receipt.
+The browser restores a saved pending check after a dropped reply and reload.
+Native Linux and loss at the SFTP acknowledgment boundary remain due.
+
+[F528](docs/qualification/evidence/F528-original-batch-and-native-ftps.json)
+records all 17 terminal first-attempt workflows at `8219fd9`. The independent
+OpenPGP scans pass. The ARM stock producer completes both FTPS modes. The
+x86 TLS 1.2 probe reports unexpected EOF with zero producer connections, so
+the required refusal alert is still missing. The original native PostgreSQL,
+DAV, JSON custody and receive-browser failures remain recorded.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

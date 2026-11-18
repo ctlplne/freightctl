@@ -50,9 +50,14 @@ same-origin CSRF protection. Tool-list results are private and immediately stale
 | `close_exchange` | Record one exact sender cancellation or recipient decline using its original request hash and stable operation key. |
 | `prepare_onward`, `start_onward` | Review an owned artifact/approved ordered workflow,then atomically record ordinary intents under the exact review. |
 | `onward_status`, `work_onward` | Inspect or execute one ordinary step only with the original reviewed-start receipt and exact run binding. |
+| `reconcile_onward` | Read an uncertain delivery's exact registered final file and record the scoped observation under its original key. |
 
-The current implementation is `exchange-tools-v20` with44 tools. The original43
-catalog entries keep their schemas,annotations and behavior. `namespace_receipt`
+The current implementation is `exchange-tools-v21` with 45 tools. The prior
+44 entries keep their schemas, annotations and behavior. `reconcile_onward`
+can contact the approved receiver to read exact bytes and can update the local
+journal. Its annotations reflect both effects. [Onward recovery](artifact-onward.md)
+
+`namespace_receipt`
 adds one read-only,non-destructive,idempotent,closed-world tool with a strict
 historical output schema. Annotations describe effects;the server still checks
 current identity,tenant,partner,read/list/original operation grants,mount,

@@ -83,7 +83,7 @@ func TestMCPMediaOriginAndHeaderAmbiguityRefuseBeforeDatabase(t *testing.T) {
 
 func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing.T) {
 	var tools []*mcp.Tool
-	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 44 {
+	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 45 {
 		t.Fatal("missing fixed tool catalog", err)
 	}
 	raw, err := os.ReadFile("../../web/tests/fixtures/artifact-exchange.json")
@@ -100,8 +100,11 @@ func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing
 	}
 	seen := map[string]bool{}
 	for _, tool := range tools {
-		if seen[tool.Name] || tool.Annotations == nil || tool.Annotations.OpenWorldHint == nil || *tool.Annotations.OpenWorldHint != (tool.Name == "freightctl.work_onward") {
+		if seen[tool.Name] || tool.Annotations == nil || tool.Annotations.OpenWorldHint == nil || *tool.Annotations.OpenWorldHint != (tool.Name == "freightctl.work_onward" || tool.Name == "freightctl.reconcile_onward") {
 			t.Fatal("unsafe/duplicate tool metadata")
+		}
+		if tool.Name == "freightctl.reconcile_onward" && (tool.Annotations.ReadOnlyHint || tool.Annotations.DestructiveHint == nil || *tool.Annotations.DestructiveHint || !tool.Annotations.IdempotentHint) {
+			t.Fatal("receiver check must disclose the local journal update and keep the remote observation non-destructive")
 		}
 		seen[tool.Name] = true
 		wire, _ := json.Marshal(tool.InputSchema)
@@ -154,10 +157,13 @@ func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing
 				args["review_hash"] = fixture.Hash
 				args["request_key"] = "original-key"
 			}
-		case "freightctl.onward_status", "freightctl.work_onward":
+		case "freightctl.onward_status", "freightctl.work_onward", "freightctl.reconcile_onward":
 			args = map[string]any{"run_id": "55555555-5555-4555-8555-555555555555"}
-			if tool.Name == "freightctl.work_onward" {
+			if tool.Name != "freightctl.onward_status" {
 				args["request_key"] = "original-key"
+			}
+			if tool.Name == "freightctl.reconcile_onward" {
+				args["delivery_id"] = "44444444-4444-4444-8444-444444444444"
 			}
 			args["receipt_key"] = "original-start-key"
 			args["start"] = map[string]any{"review_hash": fixture.Hash, "request": map[string]any{"schema_version": 1, "profile": "ordered-workflow-onward-v1", "workflow": map[string]any{"id": "44444444-4444-4444-8444-444444444444", "version": 1, "hash": fixture.Hash}, "artifact": map[string]any{"file_revision_id": "55555555-5555-4555-8555-555555555555", "size_bytes": 8, "sha256": fixture.Hash, "acceptance_policy": "integrity-only-v1"}}}

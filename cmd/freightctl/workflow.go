@@ -35,7 +35,7 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 	}
 	defer db.Pool.Close()
 	custodyService := &custody.Service{DB: db, MaxFile: maxFile, MaxStored: maxStored}
-	requiredStorage := command == "workflow-run" || command == "workflow-work" || command == "onward-preview" || command == "onward-start"
+	requiredStorage := command == "workflow-run" || command == "workflow-work" || command == "onward-preview" || command == "onward-start" || command == "onward-reconcile"
 	inspectStorage := command == "workflow-run-status" || command == "workflow-run-history-export" || command == "workflow-refresh" || command == "workflow-cancel" || command == "workflow-validate" || command == "workflow-run-preview"
 	if requiredStorage || (inspectStorage && storage != "") {
 		disk, err := custody.OpenExisting(storage)
@@ -50,7 +50,7 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 
 	service := &workflow.Service{Custody: custodyService, Processor: &checks.Service{Custody: custodyService}}
 	decode := func(v any) error {
-		if command == "onward-preview" || command == "onward-start" || command == "onward-receipt" || command == "connection-provision" {
+		if command == "onward-preview" || command == "onward-start" || command == "onward-receipt" || command == "onward-reconcile" || command == "connection-provision" {
 			request, err := secure.ReadSecret(input, 32<<10)
 			if err != nil {
 				return errors.New("workflow request must be a protected bounded regular file")
@@ -84,6 +84,12 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 			return err
 		}
 		result, err = service.OnwardReceipt(ctx, scope, request)
+	case "onward-reconcile":
+		var request workflow.OnwardReconcileRequest
+		if err = decode(&request); err != nil {
+			return err
+		}
+		result, err = service.ReconcileOnward(ctx, scope, key, request)
 	case "onward-preview":
 		var request workflow.OnwardRequest
 		if err = decode(&request); err != nil {

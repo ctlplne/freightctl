@@ -227,8 +227,7 @@ func authorizeOnwardReceipt(ctx context.Context, t *store.Transaction, start Onw
 // exact reviewed-onward command, so a generic/collection/routing run cannot be
 // smuggled into the narrower agent execution profile.
 func (s *Service) OnwardReceipt(ctx context.Context, scope store.Scope, lookup OnwardLookup) (*Result, error) {
-	start := lookup.Start
-	if s.Custody.MaxFile < 0 || validateOnwardRequest(start.Request, 1<<63-1) != nil || !hashPattern.MatchString(start.ReviewHash) || !keyPattern.MatchString(lookup.ReceiptKey) {
+	if !s.validOnwardLookup(lookup) {
 		return nil, ErrInput
 	}
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)
@@ -238,25 +237,36 @@ func (s *Service) OnwardReceipt(ctx context.Context, scope store.Scope, lookup O
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
-	_, meaning, err := digest(struct {
-		Kind  string      `json:"kind"`
-		Start OnwardStart `json:"start"`
-	}{"reviewed-onward-run-v1", start})
+	prior, _, err := readOnwardReceipt(ctx, t, lookup)
 	if err != nil {
-		return nil, err
-	}
-	prior, err := t.WorkflowReplay(ctx, lookup.ReceiptKey, meaning)
-	if err != nil {
-		return nil, err
-	}
-	if prior == nil {
-		return nil, store.ErrNotFound
-	}
-	if _, err = authorizeOnwardReceipt(ctx, t, start, prior); err != nil {
 		return nil, err
 	}
 	if err = t.Reauthorize(ctx); err != nil {
 		return nil, err
 	}
 	return &Result{Resource: prior, Replayed: true}, t.Tx.Commit(ctx)
+}
+
+func (s *Service) validOnwardLookup(lookup OnwardLookup) bool {
+	return s.Custody.MaxFile >= 0 && validateOnwardRequest(lookup.Start.Request, 1<<63-1) == nil &&
+		hashPattern.MatchString(lookup.Start.ReviewHash) && keyPattern.MatchString(lookup.ReceiptKey)
+}
+
+func readOnwardReceipt(ctx context.Context, t *store.Transaction, lookup OnwardLookup) (json.RawMessage, *store.WorkflowRun, error) {
+	_, meaning, err := digest(struct {
+		Kind  string      `json:"kind"`
+		Start OnwardStart `json:"start"`
+	}{"reviewed-onward-run-v1", lookup.Start})
+	if err != nil {
+		return nil, nil, err
+	}
+	prior, err := t.WorkflowReplay(ctx, lookup.ReceiptKey, meaning)
+	if err != nil {
+		return nil, nil, err
+	}
+	if prior == nil {
+		return nil, nil, store.ErrNotFound
+	}
+	run, err := authorizeOnwardReceipt(ctx, t, lookup.Start, prior)
+	return prior, run, err
 }

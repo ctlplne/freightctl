@@ -26,6 +26,9 @@ type Delivery struct {
 	Observation    json.RawMessage `json:"observation"`
 }
 
+const deliveryCapacityNamespace int32 = 721815035
+const deliveryCapacity int32 = 2
+
 // DeliveryWorkerSlot caps this initial database-wide worker profile at two
 // streams across processes. A retained session lock disappears on process death.
 func (s *Store) DeliveryWorkerSlot(ctx context.Context) (func() error, func(), error) {
@@ -33,9 +36,9 @@ func (s *Store) DeliveryWorkerSlot(ctx context.Context) (func() error, func(), e
 	if err != nil {
 		return nil, nil, err
 	}
-	for slot := int32(0); slot < 2; slot++ {
+	for slot := int32(0); slot < deliveryCapacity; slot++ {
 		var locked bool
-		if err = conn.QueryRow(ctx, `SELECT pg_try_advisory_lock(721815035,$1)`, slot).Scan(&locked); err != nil {
+		if err = conn.QueryRow(ctx, `SELECT pg_try_advisory_lock($1,$2)`, deliveryCapacityNamespace, slot).Scan(&locked); err != nil {
 			conn.Release()
 			return nil, nil, err
 		}
@@ -44,7 +47,7 @@ func (s *Store) DeliveryWorkerSlot(ctx context.Context) (func() error, func(), e
 			release := func() {
 				cleanup, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 				defer cancel()
-				if _, err := conn.Exec(cleanup, `SELECT pg_advisory_unlock(721815035,$1)`, slot); err != nil {
+				if _, err := conn.Exec(cleanup, `SELECT pg_advisory_unlock($1,$2)`, deliveryCapacityNamespace, slot); err != nil {
 					_ = conn.Conn().Close(cleanup)
 				}
 				conn.Release()
@@ -54,6 +57,21 @@ func (s *Store) DeliveryWorkerSlot(ctx context.Context) (func() error, func(), e
 	}
 	conn.Release()
 	return nil, nil, ErrLimit
+}
+
+// DeliveryObservationSlot uses the sender's stream budget with an automatic
+// transaction release, without acquiring a second pooled connection.
+func (t *Transaction) DeliveryObservationSlot(ctx context.Context) error {
+	for slot := int32(0); slot < deliveryCapacity; slot++ {
+		var locked bool
+		if err := t.Tx.QueryRow(ctx, `SELECT pg_try_advisory_xact_lock($1,$2)`, deliveryCapacityNamespace, slot).Scan(&locked); err != nil {
+			return err
+		}
+		if locked {
+			return nil
+		}
+	}
+	return ErrLimit
 }
 
 func (t *Transaction) Delivery(ctx context.Context, id string, lock bool) (*Delivery, error) {

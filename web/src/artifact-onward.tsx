@@ -9,6 +9,7 @@ import {
   type OnwardRecovery,
   type OnwardAcceptance,
   type OnwardObservation,
+  type OnwardReconciliation,
 } from "./artifact-onward-types";
 import { offerRecoveryMaximum } from "./artifact-recovery";
 
@@ -30,7 +31,10 @@ export function ArtifactOnward({
     [hash, setHash] = useState("");
   const [saved, setSaved] = useState<OnwardRecovery | null>(null),
     [accepted, setAccepted] = useState<OnwardAcceptance | null>(null),
-    [observed, setObserved] = useState<OnwardObservation | null>(null);
+    [observed, setObserved] = useState<OnwardObservation | null>(null),
+    [reconciliation, setReconciliation] = useState<OnwardReconciliation | null>(
+      null,
+    );
   const [busy, setBusy] = useState(false),
     [uncertain, setUncertain] = useState(false),
     [imported, setImported] = useState(false);
@@ -45,6 +49,7 @@ export function ArtifactOnward({
       setSaved(null);
       setAccepted(null);
       setObserved(null);
+      setReconciliation(null);
       setBusy(false);
       setUncertain(false);
       setImported(false);
@@ -93,6 +98,7 @@ export function ArtifactOnward({
       review_hash: saved.review.review_hash,
     };
   }
+  const pendingObservation = saved?.reconciliation;
   async function prepare(e: FormEvent) {
     e.preventDefault();
     if (saved || busy || !uuid(fileID) || !uuid(workflowID)) return;
@@ -130,6 +136,7 @@ export function ArtifactOnward({
         );
         setAccepted(null);
         setObserved(null);
+        setReconciliation(null);
         setUncertain(false);
         setImported(false);
       }
@@ -156,7 +163,7 @@ export function ArtifactOnward({
       if (current()) {
         setAccepted(receipt);
         setSaved({ ...saved, expected_run_id: receipt.run_id });
-        setUncertain(!!saved.work_key);
+        setUncertain(!!saved.work_key || !!saved.reconciliation);
       }
     });
   }
@@ -175,7 +182,15 @@ export function ArtifactOnward({
   }
   async function work() {
     const original = start();
-    if (!saved || !original || !accepted || busy || imported) return;
+    if (
+      !saved ||
+      !original ||
+      !accepted ||
+      busy ||
+      imported ||
+      saved.reconciliation
+    )
+      return;
     const key = saved.work_key || operationKey(),
       pending = { ...saved, work_key: key };
     setSaved(pending);
@@ -193,6 +208,35 @@ export function ArtifactOnward({
         const { work_key: _, ...settled } = pending;
         setSaved(settled);
         setUncertain(false);
+      }
+    });
+  }
+  async function reconcile(deliveryID: string) {
+    const original = start();
+    if (!saved || !original || !accepted || busy || imported) return;
+    const attempt = saved.reconciliation ?? {
+      delivery_id: deliveryID,
+      request_key: operationKey(),
+    };
+    if (attempt.delivery_id !== deliveryID) return;
+    const pending = { ...saved, reconciliation: attempt };
+    setSaved(pending);
+    setUncertain(true);
+    await action(async (signal, current) => {
+      const result = await client.reconcile(
+        original,
+        saved.request_key,
+        accepted.run_id,
+        deliveryID,
+        attempt.request_key,
+        signal,
+      );
+      if (current()) {
+        setReconciliation(result);
+        setObserved(null);
+        const { reconciliation: _, ...settled } = pending;
+        setSaved(settled);
+        setUncertain(!!settled.work_key);
       }
     });
   }
@@ -233,6 +277,7 @@ export function ArtifactOnward({
         setSaved(value);
         setAccepted(null);
         setObserved(null);
+        setReconciliation(null);
         setUncertain(true);
         setImported(true);
       }
@@ -407,11 +452,22 @@ export function ArtifactOnward({
                 approved remote writes. The server rechecks live authority,
                 checks and approvals before effects.
               </p>
-              <button disabled={busy || imported} onClick={() => void work()}>
+              <button
+                disabled={busy || imported || !!saved.reconciliation}
+                onClick={() => void work()}
+              >
                 {saved.work_key
                   ? "Retry the same onward work step"
                   : "Perform one onward work step"}
               </button>
+              {pendingObservation && (
+                <button
+                  disabled={busy || imported}
+                  onClick={() => void reconcile(pendingObservation.delivery_id)}
+                >
+                  Retry the same receiver check
+                </button>
+              )}
             </section>
           )}
           {observed && (
@@ -427,6 +483,20 @@ export function ArtifactOnward({
                     Step {s.ordinal}: {s.state}. Delivery{" "}
                     <code>{s.delivery_id}</code>. Observation SHA256{" "}
                     <code>{s.observation_sha256}</code>.
+                    {(s.state === "publishing" || s.state === "ambiguous") && (
+                      <div>
+                        <p>
+                          This check reads the approved receiver file. If the
+                          original worker lease is live, wait for it to expire.
+                        </p>
+                        <button
+                          disabled={busy || imported || !!saved.reconciliation}
+                          onClick={() => void reconcile(s.delivery_id)}
+                        >
+                          Check receiver file for step {s.ordinal}
+                        </button>
+                      </div>
+                    )}
                   </li>
                 ))}
               </ol>
@@ -434,6 +504,23 @@ export function ArtifactOnward({
                 Reason SHA256: <code>{observed.reason_sha256}</code>. A
                 successful integrity receipt does not prove receiver business
                 acceptance.
+              </p>
+            </section>
+          )}
+          {reconciliation && (
+            <section aria-label="Recorded receiver check" role="status">
+              <h2>Recorded receiver check</h2>
+              <p>
+                {reconciliation.observation === "integrity-observed"
+                  ? "The receiver file matched the approved bytes."
+                  : "The receiver file could not be confirmed. Delivery remains uncertain."}
+              </p>
+              <p>
+                Delivery <code>{reconciliation.delivery_id}</code>. Observation
+                SHA256 <code>{reconciliation.observation_sha256}</code>.
+              </p>
+              <p>
+                Receiver persistence and business processing remain unknown.
               </p>
             </section>
           )}

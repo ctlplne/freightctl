@@ -207,6 +207,14 @@ jobs:
         run: |
           sh scripts/go.sh test -tags=integration -timeout=120s -count=1 -p 1 -race -v \
             -run '^TestStockSFTPCollectionKilledAfterSealRecoversExactExchangeSource$' ./internal/workflow
+      - name: Stock SFTP onward read-only recovery after a published file loses its worker
+        if: ${{ !cancelled() && steps.postgres.outcome == 'success' && steps.stock_clients.outcome == 'success' }}
+        env:
+          FREIGHTCTL_TEST_ADMIN_FILE: ${{ github.workspace }}/.private/pg-admin.dsn
+          FREIGHTCTL_TEST_RUNTIME_FILE: ${{ github.workspace }}/.private/pg-runtime.dsn
+        run: |
+          sh scripts/go.sh test -tags=integration -timeout=120s -count=1 -p 1 -race -v \
+            -run '^TestStockSFTPOnwardWorkerDeathKeepsExactActorBoundary$' ./internal/workflow
       - name: Independent stock FTPS producer through HTTPS agent custody to stock SFTP
         if: ${{ !cancelled() && steps.postgres.outcome == 'success' && steps.stock_clients.outcome == 'success' }}
         env:

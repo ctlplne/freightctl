@@ -297,6 +297,91 @@
           }
         ]
       }
+    },
+    "/v1/tenants/{tenant}/partners/{partner}/onward/reconcile": {
+      "parameters": [
+        {
+          "in": "path",
+          "name": "tenant",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        },
+        {
+          "in": "path",
+          "name": "partner",
+          "required": true,
+          "schema": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      ],
+      "post": {
+        "operationId": "reconcileOnward",
+        "parameters": [
+          {
+            "in": "header",
+            "name": "Idempotency-Key",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "maxLength": 128,
+              "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OnwardReconcileRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Original matching or unconfirmed receiver observation. Current delivery/run status is a separate read.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OnwardReconciliation"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid typed command or observation key."
+          },
+          "401": {
+            "description": "Missing or stale authentication."
+          },
+          "403": {
+            "description": "Current permission refused."
+          },
+          "404": {
+            "description": "The original reviewed receipt or delivery is outside the authenticated run."
+          },
+          "409": {
+            "description": "Live lease, invalid state, changed revision or conflicting operation key."
+          },
+          "413": {
+            "description": "The bounded delivery stream budget is occupied."
+          }
+        },
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserCookie": []
+          }
+        ],
+        "description": "Observes the registered final path for one uncertain delivery in the exact private reviewed run. The operation can update local evidence. It never opens a sending lease or writes receiver bytes."
+      }
     }
   },
   "components": {
@@ -801,6 +886,99 @@
             "$ref": "#/components/schemas/ID"
           }
         }
+      },
+      "OnwardReconcileRequest": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "start",
+          "receipt_key",
+          "run_id",
+          "delivery_id"
+        ],
+        "properties": {
+          "start": {
+            "$ref": "#/components/schemas/OnwardStart"
+          },
+          "receipt_key": {
+            "type": "string",
+            "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+          },
+          "run_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "delivery_id": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      },
+      "OnwardReconciliation": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "run_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "delivery_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "observation": {
+            "enum": [
+              "unconfirmed",
+              "integrity-observed"
+            ]
+          },
+          "observation_sha256": {
+            "$ref": "#/components/schemas/SHA256"
+          },
+          "delivery_state": {
+            "enum": [
+              "ambiguous",
+              "succeeded"
+            ]
+          },
+          "replayed": {
+            "type": "boolean"
+          },
+          "receiver_persistence": {
+            "const": "unknown"
+          },
+          "business_processing": {
+            "const": "unknown"
+          }
+        },
+        "required": [
+          "run_id",
+          "delivery_id",
+          "observation",
+          "observation_sha256",
+          "delivery_state",
+          "replayed",
+          "receiver_persistence",
+          "business_processing"
+        ],
+        "oneOf": [
+          {
+            "properties": {
+              "observation": {
+                "const": "unconfirmed"
+              },
+              "delivery_state": {
+                "const": "ambiguous"
+              }
+            }
+          },
+          {
+            "properties": {
+              "observation": {
+                "const": "integrity-observed"
+              },
+              "delivery_state": {
+                "const": "succeeded"
+              }
+            }
+          }
+        ]
       }
     }
   }

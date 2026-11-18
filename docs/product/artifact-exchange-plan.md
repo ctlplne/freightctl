@@ -205,11 +205,16 @@ source session. Sandboxed Chromium follows the same collected file from the
 source review through offer, download, owned copy and separately approved
 onward delivery. The first work reply is dropped. The same browser work key
 recovers its receipt, and the independent OpenSSH receiver sees one transfer.
-Native Linux and interruption at the outbound SFTP protocol boundary remain
-open.
+After a worker dies following publication, the same actor can read back the
+registered final file through the exact reviewed run and delivery. Missing
+bytes retain ambiguity. Matching bytes confirm integrity while leaving the
+original attempt and fence intact. HTTPS, CLI, MCP and the browser recovered
+the same recorded observation locally. Native Linux and interruption at the
+outbound SFTP acknowledgment boundary remain open.
 [F516](../qualification/evidence/F516-stock-sftp-source-agent-exchange.json) [F517](../qualification/evidence/F517-stock-collection-https-exchange.json)
 [F522](../qualification/evidence/F522-stock-sftp-mcp-exchange.json) [F523](../qualification/evidence/F523-stock-sftp-collection-worker-death.json)
 [F524](../qualification/evidence/F524-stock-sftp-browser-exchange.json)
+[F527](../qualification/evidence/F527-reviewed-onward-readback.json)
 The local FTPS pair uses a separate freightctl producer, stock HTTPS retrieval,
 an agent-owned copy and separately approved delivery to stock OpenSSH. It
 passes for explicit and implicit FTPS. The same local chain passes from a
@@ -218,8 +223,11 @@ standalone listener exited with status 139 after the completed downloads. A
 stock `inetd` listener passed two complete serial journeys per mode by starting
 vsftpd per connection. The same supervised journey passed on native Linux ARM.
 The native x86 gate remains red because the probe exited without the required
-TLS 1.2 refusal alert. Standalone stability and derivation lineage remain owed.
+TLS 1.2 refusal alert. The later x86 diagnosis reports unexpected EOF and zero
+producer control connections. Standalone stability and derivation lineage
+remain owed.
 [F503](../qualification/evidence/F503-ftps-agent-stock-sftp.json) [F509](../qualification/evidence/F509-stock-ftps-producer-exchange.json) [F510](../qualification/evidence/F510-supervised-stock-ftps-producer.json) [F520](../qualification/evidence/F520-native-stock-ftps-first-results.json)
+[F528](../qualification/evidence/F528-original-batch-and-native-ftps.json)
 
 An operator can provision and withdraw the exact SFTP route through the same
 typed HTTPS and CLI commands. The agent keeps its existing permissions, and

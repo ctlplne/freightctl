@@ -175,35 +175,40 @@ func (s *Service) begin(ctx context.Context, scope store.Scope, id string, lock 
 	if err != nil {
 		return nil, nil, nil, err
 	}
-	fail := func(err error) (*store.Transaction, *store.Delivery, *Definition, error) {
+	d, spec, err := scopedDelivery(ctx, t, id, lock)
+	if err != nil {
 		t.Tx.Rollback(ctx)
 		return nil, nil, nil, err
 	}
-	if err = require(t, false); err != nil {
-		return fail(err)
+	return t, d, spec, nil
+}
+
+func scopedDelivery(ctx context.Context, t *store.Transaction, id string, lock bool) (*store.Delivery, *Definition, error) {
+	if err := require(t, false); err != nil {
+		return nil, nil, err
 	}
 	d, err := t.Delivery(ctx, id, lock)
 	if err != nil {
-		return fail(err)
+		return nil, nil, err
 	}
 	spec, err := storedDefinition(d)
 	if err != nil {
-		return fail(err)
+		return nil, nil, err
 	}
 	if spec.Root != t.Root || spec.Authority != t.AuthorityRevision {
-		return fail(store.ErrUnauthorized)
+		return nil, nil, store.ErrUnauthorized
 	}
 	if err = t.FileAccessible(ctx, d.FileID); err != nil {
-		return fail(err)
+		return nil, nil, err
 	}
 	file, err := t.File(ctx, d.FileID)
 	if err != nil {
-		return fail(err)
+		return nil, nil, err
 	}
 	if *file != spec.Source {
-		return fail(store.ErrState)
+		return nil, nil, store.ErrState
 	}
-	return t, d, spec, nil
+	return d, spec, nil
 }
 
 func requestDestination(r Request) (secure.SSHDestination, *FTPSDefinition, error) {

@@ -56,6 +56,16 @@ export interface OnwardObservation {
   replayed?: boolean;
   selected_delivery_id?: string;
 }
+export interface OnwardReconciliation {
+  run_id: string;
+  delivery_id: string;
+  observation: "unconfirmed" | "integrity-observed";
+  observation_sha256: string;
+  delivery_state: "ambiguous" | "succeeded";
+  replayed: boolean;
+  receiver_persistence: "unknown";
+  business_processing: "unknown";
+}
 export interface OnwardRecovery {
   schema_version: 1;
   profile: "freightctl-onward-recovery-v1";
@@ -71,6 +81,7 @@ export interface OnwardRecovery {
   request_key: string;
   expected_run_id?: string;
   work_key?: string;
+  reconciliation?: { delivery_id: string; request_key: string };
 }
 function refuse(): never {
   throw new ApiError("invalid_onward_contract", 400);
@@ -328,6 +339,45 @@ export function asOnwardObservation(
   }
   return result;
 }
+export function asOnwardReconciliation(
+  v: unknown,
+  runID: string,
+  deliveryID: string,
+): OnwardReconciliation {
+  const o = exact(v, [
+    "run_id",
+    "delivery_id",
+    "observation",
+    "observation_sha256",
+    "delivery_state",
+    "replayed",
+    "receiver_persistence",
+    "business_processing",
+  ]);
+  const state = o.delivery_state;
+  const observation =
+    state === "succeeded" ? "integrity-observed" : "unconfirmed";
+  if (
+    id(o.run_id) !== id(runID) ||
+    id(o.delivery_id) !== id(deliveryID) ||
+    (state !== "ambiguous" && state !== "succeeded") ||
+    o.observation !== observation ||
+    typeof o.replayed !== "boolean" ||
+    o.receiver_persistence !== "unknown" ||
+    o.business_processing !== "unknown"
+  )
+    refuse();
+  return {
+    run_id: runID,
+    delivery_id: deliveryID,
+    delivery_state: state,
+    observation,
+    observation_sha256: hash(o.observation_sha256),
+    replayed: o.replayed,
+    receiver_persistence: "unknown",
+    business_processing: "unknown",
+  };
+}
 export function asOnwardRecovery(
   v: unknown,
   session: Session,
@@ -343,7 +393,7 @@ export function asOnwardRecovery(
         "review",
         "request_key",
       ],
-      ["expected_run_id", "work_key"],
+      ["expected_run_id", "work_key", "reconciliation"],
     ),
     i = session.identity;
   const url = new URL(origin);
@@ -393,6 +443,14 @@ export function asOnwardRecovery(
   if (o.work_key !== undefined) {
     if (!result.expected_run_id) refuse();
     result.work_key = id(o.work_key);
+  }
+  if (o.reconciliation !== undefined) {
+    if (!result.expected_run_id) refuse();
+    const pending = exact(o.reconciliation, ["delivery_id", "request_key"]);
+    result.reconciliation = {
+      delivery_id: id(pending.delivery_id),
+      request_key: id(pending.request_key),
+    };
   }
   return result;
 }

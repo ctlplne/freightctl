@@ -333,59 +333,18 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
-	if err = require(t, true); err != nil {
+	if err = s.reconcile(ctx, t, d, spec, true); err != nil {
 		return nil, err
 	}
-	if err = t.CheckExecutionObservationBinding(ctx, spec.Binding); err != nil {
-		return nil, err
-	}
-	if err = s.storage(spec); err != nil {
-		return nil, err
-	}
-	if spec.Encryption != nil {
-		key, err := t.EncryptionKey(ctx, *spec.Encryption)
-		if err != nil {
-			return nil, err
-		}
-		artifact, err := t.DeliveryCiphertext(ctx, id)
-		if err != nil {
-			return nil, err
-		}
-		if artifact.DefinitionHash != d.DefinitionHash || artifact.DeliveryID != d.ID || artifact.Proof.PrimaryFingerprint != key.Fingerprint || artifact.Proof.EncryptionFingerprint != key.Recipient.Fingerprint {
-			return nil, store.ErrState
-		}
-		spec, err = encryptedDefinition(spec, artifact)
-		if err != nil {
-			return nil, err
-		}
-	}
-	now, err := t.DatabaseTime(ctx)
-	if err != nil {
-		return nil, err
-	}
-	if d.State == "succeeded" {
-		return d, t.Tx.Commit(ctx)
-	}
-	if d.State != "ambiguous" && !(d.State == "publishing" && d.LeaseUntil != nil && !d.LeaseUntil.After(now)) {
-		return nil, store.ErrState
-	}
-	if d.State == "publishing" {
-		previous := d.Revision
-		d.Revision++
-		d.State = "ambiguous"
-		clearLease(d)
-		d.Observation = observation("worker_lost_during_publication")
-		if err = t.SaveDelivery(ctx, d, previous); err != nil {
-			return nil, err
-		}
-	}
-	// Hold the intent row only during the bounded observation. Authority is checked
-	// again for every read without opening another transaction on the same row.
+	return d, t.Tx.Commit(ctx)
+}
+
+func (s *Service) reconcile(ctx context.Context, t *store.Transaction, d *store.Delivery, spec *Definition, management bool) error {
 	check := func() error {
 		if err := t.Reauthorize(ctx); err != nil {
 			return err
 		}
-		if err := require(t, true); err != nil {
+		if err := require(t, management); err != nil {
 			return err
 		}
 		if err := t.CheckExecutionObservationBinding(ctx, spec.Binding); err != nil {
@@ -400,6 +359,54 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 			}
 		}
 		return s.storage(spec)
+	}
+	if err := check(); err != nil {
+		return err
+	}
+	if spec.Encryption != nil {
+		key, err := t.EncryptionKey(ctx, *spec.Encryption)
+		if err != nil {
+			return err
+		}
+		artifact, err := t.DeliveryCiphertext(ctx, d.ID)
+		if err != nil {
+			return err
+		}
+		if artifact.DefinitionHash != d.DefinitionHash || artifact.DeliveryID != d.ID || artifact.Proof.PrimaryFingerprint != key.Fingerprint || artifact.Proof.EncryptionFingerprint != key.Recipient.Fingerprint {
+			return store.ErrState
+		}
+		spec, err = encryptedDefinition(spec, artifact)
+		if err != nil {
+			return err
+		}
+	}
+	now, err := t.DatabaseTime(ctx)
+	if err != nil {
+		return err
+	}
+	if d.State == "succeeded" {
+		return nil
+	}
+	if d.State != "ambiguous" && !(d.State == "publishing" && d.LeaseUntil != nil && !d.LeaseUntil.After(now)) {
+		return store.ErrState
+	}
+	if !management {
+		if err = t.DeliveryObservationSlot(ctx); err != nil {
+			return err
+		}
+	}
+	if d.State == "publishing" {
+		previous := d.Revision
+		d.Revision++
+		d.State = "ambiguous"
+		clearLease(d)
+		d.Observation = observation("worker_lost_during_publication")
+		if err = t.SaveDelivery(ctx, d, previous); err != nil {
+			return err
+		}
+	}
+	if err = check(); err != nil {
+		return err
 	}
 	if spec.DAV != nil {
 		err = observeDAV(ctx, d, spec, check)
@@ -419,16 +426,16 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 	}
 	if err != nil { // Observation failure is itself retained, without inventing a receipt.
 		if err = check(); err != nil {
-			return nil, err
+			return err
 		}
 		if _, err = t.Append(ctx, "DeliveryReconciliationObserved", d.ID, map[string]any{"definition_hash": d.DefinitionHash, "state": d.State, "code": "remote_postcondition_not_confirmed", "fence": d.Fence}); err != nil {
-			return nil, err
+			return err
 		}
 		// The previous publishing->ambiguous transition, if any, still commits.
-		return d, t.Tx.Commit(ctx)
+		return nil
 	}
 	if err = check(); err != nil {
-		return nil, err
+		return err
 	}
 	previous := d.Revision
 	d.Revision++
@@ -440,8 +447,5 @@ func (s *Service) Reconcile(ctx context.Context, scope store.Scope, id string) (
 	if spec.FTPS != nil {
 		d.Observation = ftpsReceipt(d, spec, true)
 	}
-	if err = t.SaveDelivery(ctx, d, previous); err != nil {
-		return nil, err
-	}
-	return d, t.Tx.Commit(ctx)
+	return t.SaveDelivery(ctx, d, previous)
 }

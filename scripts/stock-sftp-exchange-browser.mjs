@@ -293,7 +293,7 @@ try {
 
   summary.phase = "work-lost-response";
   const workURL = fixture.prefix + "/onward/work";
-  let first, original;
+  let first, original, recovered;
   await to.route(
     workURL,
     guardBrowserCommandRoute(
@@ -308,7 +308,18 @@ try {
         summary.work_requests++;
         if (summary.work_requests === 2) {
           assert.deepEqual(command, original);
-          return route.continue();
+          const replay = await fetchPinnedBrowserRequest(
+            request,
+            origin,
+            certificate,
+          );
+          assert.equal(replay.status, 200);
+          recovered = JSON.parse(replay.body);
+          return route.fulfill({
+            status: replay.status,
+            contentType: "application/json",
+            body: replay.body,
+          });
         }
         assert.equal(summary.work_requests, 1);
         assert.ok(command.key);
@@ -338,9 +349,9 @@ try {
   assert.ok(first);
 
   summary.phase = "same-work-receipt";
-  const recovered = await reply(to, "/onward/work", "POST", 200, () =>
-    button(onward, "Retry the same onward work step").click(),
-  );
+  await button(onward, "Retry the same onward work step").click();
+  const observation = region(to, "Current onward observation");
+  await observation.getByText(/Observed state: succeeded/).waitFor();
   if (routeError) throw routeError;
   assert.deepEqual(recovered, { ...first, replayed: true });
   assert.equal(recovered.run_id, summary.run);
@@ -348,8 +359,6 @@ try {
   assert.equal(recovered.receiver_persistence, "unknown");
   assert.equal(recovered.business_processing, "unknown");
   assert.equal(await receiverSessions(), 1);
-  const observation = region(to, "Current onward observation");
-  await observation.getByText(/Observed state: succeeded/).waitFor();
   await to.getByRole("alert").waitFor({ state: "hidden" });
   await accessibility(to, observation);
   summary.delivery = recovered.selected_delivery_id;

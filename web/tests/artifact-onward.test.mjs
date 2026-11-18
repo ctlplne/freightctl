@@ -100,6 +100,73 @@ function observation() {
   };
 }
 
+test("receiver check binds the exact delivery, review and original observation key", async () => {
+  const t = transport(),
+    client = new a.ArtifactOnwardApi(t.api),
+    start = original();
+  const result = {
+    run_id: id(8),
+    delivery_id: id(13),
+    delivery_state: "ambiguous",
+    observation: "unconfirmed",
+    observation_sha256: "a".repeat(64),
+    replayed: false,
+    receiver_persistence: "unknown",
+    business_processing: "unknown",
+  };
+  t.response(result);
+  assert.deepEqual(
+    await client.reconcile(start, id(11), id(8), id(13), id(14)),
+    result,
+  );
+  assert.ok(t.calls[0].path.endsWith("/onward/reconcile"));
+  assert.deepEqual(JSON.parse(t.calls[0].options.body), {
+    start,
+    receipt_key: id(11),
+    run_id: id(8),
+    delivery_id: id(13),
+  });
+  assert.equal(t.calls[0].options.headers["Idempotency-Key"], id(14));
+  for (const invalid of [
+    { delivery_id: id(99) },
+    { run_id: id(99) },
+    { delivery_state: "succeeded" },
+    { observation: "integrity-observed" },
+    { business_processing: "accepted" },
+    { destination: "https://unapproved.invalid" },
+  ]) {
+    t.response({ ...result, ...invalid });
+    await assert.rejects(() =>
+      client.reconcile(start, id(11), id(8), id(13), id(14)),
+    );
+  }
+  const saved = {
+    ...recovery(),
+    reconciliation: { delivery_id: id(13), request_key: id(14) },
+  };
+  assert.deepEqual(
+    p.asOnwardRecovery(saved, session(), saved.server_origin),
+    saved,
+  );
+  assert.throws(() =>
+    p.asOnwardRecovery(
+      { ...saved, expected_run_id: undefined },
+      session(),
+      saved.server_origin,
+    ),
+  );
+  assert.throws(() =>
+    p.asOnwardRecovery(
+      {
+        ...saved,
+        reconciliation: { ...saved.reconciliation, address: "unapproved" },
+      },
+      session(),
+      saved.server_origin,
+    ),
+  );
+});
+
 test("browser verifies actual Go receipt fingerprint without converting historical acceptance to present success", () => {
   assert.equal(
     createHash("sha256").update(JSON.stringify(fixture.binding)).digest("hex"),

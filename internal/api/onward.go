@@ -69,6 +69,11 @@ func (s *Server) onward(w http.ResponseWriter, r *http.Request) {
 		if err = workflowInput(w, r, &request); err == nil {
 			result, err = service.OnwardReceipt(r.Context(), identity, request)
 		}
+	} else if r.Pattern == "POST /v1/tenants/{tenant}/partners/{partner}/onward/reconcile" {
+		var request workflow.OnwardReconcileRequest
+		if err = workflowInput(w, r, &request); err == nil {
+			result, err = service.ReconcileOnward(r.Context(), identity, r.Header.Get("Idempotency-Key"), request)
+		}
 	} else if r.Pattern == "POST /v1/tenants/{tenant}/partners/{partner}/onward/status" || r.Pattern == "POST /v1/tenants/{tenant}/partners/{partner}/onward/work" {
 		var request onwardRunAction
 		if err = workflowInput(w, r, &request); err == nil {
