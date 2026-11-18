@@ -93,6 +93,12 @@ the stock replay for two bound credentials, an unbound user-wide key, and
 a private share. The planner identifies exact source owners, keeps the
 unbound credential unsupported, and omits credential and share values.
 
+[F468](docs/qualification/evidence/F468-sftpgo-calendar-preparation.json)
+prepares an ordinary schedule preview request from one exact stock calendar
+row and an operator's destination choices. It passes the real calendar
+compiler and refuses a changed source digest. Live preview and adoption
+against an enrolled destination remain due.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

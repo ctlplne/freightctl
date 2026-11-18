@@ -97,7 +97,10 @@ var schedulePattern = regexp.MustCompile(`^[A-Za-z0-9._*?-]{1,128}$`)
 func scheduleRegex(pattern string) string {
 	return "^" + strings.NewReplacer(".", "[.]", "*", ".*", "?", ".").Replace(pattern) + "$"
 }
-func normalizeScheduleSelection(x ScheduleSelection) (ScheduleSelection, error) {
+
+// NormalizeScheduleSelection checks fields that can be validated before looking
+// up the current workflow, authority revision or custody state.
+func NormalizeScheduleSelection(x ScheduleSelection) (ScheduleSelection, error) {
 	x.Name = norm.NFC.String(x.Name)
 	if !utf8.ValidString(x.Name) || len(x.Name) < 1 || len(x.Name) > 256 || x.ExpectedAuthority < 1 || !store.ValidID(x.Workflow.ID) || x.Workflow.Version < 1 || !hashPattern.MatchString(x.Workflow.Hash) || !validScheduleSource(x.Source) || x.CatchUp < 1 || x.CatchUp > 100 || x.MaxActive < 1 || x.MaxActive > 64 || x.MaxFiles < 1 || x.MaxFiles > 64 || x.Deadline < 1 || x.Deadline > 604800 || x.Grace < 1 || x.Grace > 3600 || x.Grace > x.Deadline || (x.Missed != "skip" && x.Missed != "latest" && x.Missed != "all") {
 		return x, ErrInput
@@ -169,7 +172,7 @@ func scheduleDirectory(ctx context.Context, t *store.Transaction, directory stri
 	return t.EntryMode(entry, 5)
 }
 func (s *Service) schedulePreview(ctx context.Context, t *store.Transaction, x ScheduleSelection) (*SchedulePreview, error) {
-	x, e := normalizeScheduleSelection(x)
+	x, e := NormalizeScheduleSelection(x)
 	if e != nil {
 		return nil, e
 	}
@@ -283,7 +286,7 @@ func scheduleDefinition(s *store.Schedule) (*ScheduleDefinition, *calendar.Plan,
 	} else if d.Source.Kind == ProcessingScheduleSource {
 		return nil, nil, store.ErrIsolation
 	}
-	if _, e = normalizeScheduleSelection(x); e != nil || d.Source.Regex != expectedRegex {
+	if _, e = NormalizeScheduleSelection(x); e != nil || d.Source.Regex != expectedRegex {
 		return nil, nil, store.ErrIsolation
 	}
 	p, e := calendar.Compile(d.Calendar)
@@ -296,7 +299,7 @@ func (s *Service) DraftSchedule(ctx context.Context, scope store.Scope, key stri
 	if !keyPattern.MatchString(key) || !hashPattern.MatchString(x.Hash) || (x.ID == "" && x.ExpectedVersion != 0) || (x.ID != "" && (!store.ValidID(x.ID) || x.ExpectedVersion < 1)) {
 		return nil, ErrInput
 	}
-	if _, e := normalizeScheduleSelection(x.Selection); e != nil {
+	if _, e := NormalizeScheduleSelection(x.Selection); e != nil {
 		return nil, e
 	}
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)

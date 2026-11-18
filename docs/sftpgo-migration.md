@@ -40,7 +40,7 @@ and the export's scope when reconciling the estate inventory.
 - The planner marks fragments `needs_input`. Review all rule filters and
   action effects. Choose the destination source, exact workflow revision,
   effective dates, missed-run policy and execution bounds. Check for overlapping
-  rows before using the ordinary [schedule preview and approval](scheduled-workflows.md).
+  rows before ordinary schedule review.
 - In `access_records`, follow the references from users and administrators to
   roles and groups, and from users and groups to virtual folders. Primary,
   secondary and membership-only groups stay distinct. A managed group for an
@@ -53,6 +53,34 @@ and the export's scope when reconciling the estate inventory.
   account mapping. For shares, review the owner, read/write scope, selected
   paths, expiry, passphrase and access limits in the protected export before
   issuing replacement access.
+
+## Prepare one schedule for ordinary review
+
+Create a protected mapping file with `source_sha256` from the report,
+`source_schedule` set to the exact schedule row's JSON pointer, and
+`selection` containing the first draft of an ordinary schedule preview
+request. Specify the destination workflow ID, version and hash, the source
+directory and file selection, the current authority revision, the time
+window, and the execution and missed-run bounds. Inside `selection.calendar`,
+provide `starts_at`, `ends_at`, `gap_policy` and `fold_policy`. Leave
+`time_zone`, `local_times`, `weekdays` and `holidays` empty so the
+source calendar determines those fields.
+
+```sh
+umask 077
+freightctl migration-prepare-sftpgo-calendar \
+  --source-file .private/sftpgo-dump.json \
+  --request-file .private/calendar-mapping.json \
+  > .private/prepared-calendar.json
+jq '.selection' .private/prepared-calendar.json > .private/schedule-preview.json
+```
+
+The preparer checks the exact dump fingerprint, schedule pointer and the
+ordinary request shape. The result records the source rule's original state
+and disposition, even when the chosen row is the supported part of a larger
+rule. Use the selection through [ordinary schedule preview and approval](scheduled-workflows.md)
+with the intended tenant and partner. That flow verifies the current
+destination, workflow, authority, approval and custody state.
 
 Stock export exercises cover disabled scheduled rules and their shared action,
 a disabled user with a role, primary group and folder references, scoped

@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "F468",
+  "observed_at": "2026-11-18",
+  "base_candidate": "0fbd3fb",
+  "base_evidence": "docs/qualification/evidence/F464-sftpgo-migration-plan.json",
+  "scope": "Native offline preparation of one ordinary schedule preview input bound to the exact stock export and selected source row",
+  "qualification_claim": false,
+  "platform": "darwin/arm64",
+  "go_version": "go1.27.4",
+  "red": {
+    "command": "freightctl migration-prepare-sftpgo-calendar --source-file <protected stock dump> --request-file <protected operator mapping>",
+    "exit_code": 1,
+    "observation": "The previous executable rejects the source-file flag.",
+    "log_sha256": "bcfaf17815f2f4a7e8d017e32fffd172c93e3d7898203222b2f614286e7a2ecc"
+  },
+  "native_cli": {
+    "stock_format": 17,
+    "source_sha256": "d62de485c9249125bd3e569e000b835ac56d42d5d64e6b1a46a65b4cfc23fd0d",
+    "operator_mapping_sha256": "ed5b3d64ded67a86f1d8718597f3563696e556e42649e7d2d8a297ca8dc3895a",
+    "executable_sha256": "e07895636768c1300d7e55ec111212c513eedb830944531204893a102465d738",
+    "output_sha256": "e56afd9875bd205870ff4bbc8f718861bdcc6d63b7338d668750174d0c7d12ec",
+    "source_state": "disabled",
+    "normalized_calendar": {
+      "time_zone": "UTC",
+      "local_times": ["07:00:00"],
+      "weekdays": [2]
+    },
+    "same_source_and_mapping_unchanged": true,
+    "byte_identical_cli_replay": true,
+    "operator_destination_workflow_source_and_authority_preserved": true,
+    "modified_dump_refused_before_output": true
+  },
+  "checks": {
+    "ordinary_workflow_decoder": "pass",
+    "ordinary_schedule_selection_validator": "pass",
+    "ordinary_calendar_snapshot_compile_and_four_january_occurrences": "pass",
+    "first_fixture_occurrence": "2027-01-05T07:00:00Z",
+    "last_fixture_occurrence": "2027-01-26T07:00:00Z",
+    "focused_race_case_count_including_parent": 8,
+    "focused_race_log_sha256": "3869bb07e78b90851050e84c84e36e761a97b010a49ee88a84cc22c8a4a22c98",
+    "affected_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Live current-authority preview with a real enrolled workflow, followed by review and comparative execution",
+    "Proven effect translations, independent comparisons, cutover, rollback and exit"
+  ]
+}
