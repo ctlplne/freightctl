@@ -126,7 +126,8 @@
         "docs/qualification/evidence/F498-native-peer-glibc-replay.json",
         "docs/qualification/evidence/F499-shell-free-node-musl-runtime.json",
         "docs/qualification/evidence/F500-stock-alpine-openpgp-peer.json",
-        "docs/qualification/evidence/F501-portability-native-batch-terminal.json"
+        "docs/qualification/evidence/F501-portability-native-batch-terminal.json",
+        "docs/qualification/evidence/F502-guarded-alpine-peer-source-batch.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -216,7 +217,8 @@
         "F498 preserves the original b7b0eb5 x86 enforcing scan with the same five unfixed glibc advisories as F483 and zero suppressed findings. The x86 PostgreSQL step was skipped after an upstream FTP engine step failure, and the macOS unit job was canceled with zero recorded steps. The official Node Alpine runtime index and both platform manifests were verified as candidate inputs.",
         "F499 proves a shell-free ARM Node runtime from the pinned stock Alpine image with WebCrypto and complete metadata and payloads for all four selected Alpine packages. The emulated x86 stock inventory adds the libatomic package.",
         "F500 assembles the complete shell-free OpenPGP.js peer with the stock Alpine Node executable and exact architecture-specific package records. All eight original encrypted FTPS cases pass locally with race detection, real PostgreSQL, and a native ARM Linux peer. The emulated x86 runtime probe passes. The exact native Linux builds, workflows, and fresh enforcing scans remain due.",
-        "F501 preserves all 19 original terminal workflows and 43 jobs at b7b0eb5. The ARM enforcing peer scan blocked on the same five glibc advisories as x86 with zero suppressions. The focused ARM encrypted FTPS recovery test passed all eight subcases in the otherwise failed PostgreSQL suite. The two macOS jobs canceled by GitHub and the failed or skipped original runtime gates remain unverified."
+        "F501 preserves all 19 original terminal workflows and 43 jobs at b7b0eb5. The ARM enforcing peer scan blocked on the same five glibc advisories as x86 with zero suppressions. The focused ARM encrypted FTPS recovery test passed all eight subcases in the otherwise failed PostgreSQL suite. The two macOS jobs canceled by GitHub and the failed or skipped original runtime gates remain unverified.",
+        "F502 fast-forwards the existing main from b7b0eb5 to f58dd14 after every original became terminal. All 14 outgoing commits use the owner as author and committer and passed the enabled Gitleaks hook with zero leaks. The 18 observed attempt-one workflows are linked. The active stock peer and browser workflow had no run for this source at the first observation."
       ],
       "current_item": {
         "id": "F425",

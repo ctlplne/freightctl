@@ -142,6 +142,13 @@ ARM passed all eight encrypted FTPS recovery cases inside the broader failed
 PostgreSQL suite. Its enforcing image scan blocked on the same five glibc
 advisories as x86. No original was replaced or rerun.
 
+[F502](docs/qualification/evidence/F502-guarded-alpine-peer-source-batch.json)
+records the fast-forward to `f58dd14` after all preceding originals finished.
+Gitleaks found zero leaks across all 14 outgoing owner commits. The 18 observed
+original workflows include the native Alpine peer build, encrypted FTPS replay
+and enforcing image scan. The active stock peer and browser workflow had no
+run for this source at the first observation.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
