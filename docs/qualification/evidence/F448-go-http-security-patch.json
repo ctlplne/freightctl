@@ -1,0 +1,292 @@
+{
+  "schema_version": 1,
+  "id": "F448",
+  "observed_at": "2026-11-18",
+  "base_candidate": "473954eb22a3ab384632890e61f5698102d6de31",
+  "qualification_claim": false,
+  "changed": "Pin the official Go 1.27.4 compiler on freightctl build and CI paths. Exact package, binary and peer identity guards require the patched SDK. The checked-in FTP engine module metadata retains its upstream hash and freightctl compiles it with the patched SDK.",
+  "original_failure": {
+    "evidence": "docs/qualification/evidence/F447-native-push.json",
+    "candidate": "010a3a2b4e6efe57c15be1814f1f93fa53363982",
+    "affected_toolchain": "go1.27.3",
+    "finding": "GO-2026-6859",
+    "official_advisory": "https://pkg.go.dev/vuln/GO-2026-6859",
+    "release_notes": "https://go.dev/doc/devel/release#go1.27.4"
+  },
+  "local_red": "The previous native package inventory refused the actual required version go1.27.4 in its input fixture.",
+  "local_green": [
+    "Native go1.27.4 darwin/arm64 SDK and actual freightctl CLI build identity",
+    "Patched inventory accepts go1.27.4 and refuses the affected go1.27.3 and unqualified version suffix",
+    "Selected inventory, reproducibility, Windows filesystem and stock rclone contracts",
+    "Affected Go vet and three tagged DAV contracts on macOS ARM64",
+    "Actionlint across changed workflow definitions and unchanged upstream FTP engine identity"
+  ],
+  "source_scan": {
+    "system": "darwin",
+    "architecture": "arm64",
+    "compiler": "go1.27.4",
+    "scanner": "govulncheck@v1.9.0",
+    "database": "https://vuln.go.dev",
+    "database_last_modified": "2026-11-11T02:51:11Z",
+    "scope": "Default source configuration ./... on the actual host",
+    "enforcing_converter_exit": 0,
+    "synthetic_converter_exits": {
+      "called": 3,
+      "module_only": 0,
+      "clean": 0,
+      "truncated": 1
+    },
+    "reachable_findings": [],
+    "module_only_findings": [
+      "GO-2026-5932"
+    ]
+  },
+  "source_files": [
+    {
+      "reference": ".github/workflows/artifact-exchange.yml",
+      "bytes": 3297,
+      "sha256": "7794e9721a0febaf456617c062b3301f9e964262b1444a08afb387648e2baef9"
+    },
+    {
+      "reference": ".github/workflows/core-checks.yml",
+      "bytes": 4711,
+      "sha256": "3f6a816911c57923eb623f7a98b4678c01d7e0bd2cadf5020f50290b2e12f72b"
+    },
+    {
+      "reference": ".github/workflows/dav-application.yml",
+      "bytes": 3432,
+      "sha256": "6838d74d788eeb5beabe6f8dcb0ea0a2150b1153aadd3ef80193ef5166dd2f9d"
+    },
+    {
+      "reference": ".github/workflows/document-containers.yml",
+      "bytes": 3878,
+      "sha256": "b9397a7635ce8b9e263424548b38c7eeb01de28f54b1558c4cb913a4187b17e9"
+    },
+    {
+      "reference": ".github/workflows/first-run.yml",
+      "bytes": 2969,
+      "sha256": "b2c5b7d27ed92394261a0367945874c1f4c8d37e8a278beb50c046a982faf728"
+    },
+    {
+      "reference": ".github/workflows/ftps-browser.yml",
+      "bytes": 5768,
+      "sha256": "6749c4dd7d05772f6ce32fc100d1ac8b979463891334deb0eb5f84b7a7fab16f"
+    },
+    {
+      "reference": ".github/workflows/ftps-client.yml",
+      "bytes": 3916,
+      "sha256": "950d680ad2eacd35cf927197940b7a48394955e71b37f729f574288344097b1d"
+    },
+    {
+      "reference": ".github/workflows/ftps-dispatch.yml",
+      "bytes": 6416,
+      "sha256": "06689dbe196b7593027153fc6424260bee42e009d884198985f29886a745438d"
+    },
+    {
+      "reference": ".github/workflows/ftps-workflows.yml",
+      "bytes": 9056,
+      "sha256": "dbc0072c2c971f5761ae4888bc23d88507351aeb059771d2981683c15e06ec59"
+    },
+    {
+      "reference": ".github/workflows/ftps.yml",
+      "bytes": 5030,
+      "sha256": "efc7841a45631293c3dd04c922d369e9f37ce40440fa702f1ec3e9a25a7454b2"
+    },
+    {
+      "reference": ".github/workflows/full-foundation.yml",
+      "bytes": 1468,
+      "sha256": "122da93848d3ca49bd6edd2a5f373ab8ce6440d892648c0c6156fc83b1df7307"
+    },
+    {
+      "reference": ".github/workflows/http-downloads.yml",
+      "bytes": 2358,
+      "sha256": "60e6200a2b0f8c59aa630ead7572ac5ad323329a16c7ec49808ce85670e2aff2"
+    },
+    {
+      "reference": ".github/workflows/json-intake.yml",
+      "bytes": 7949,
+      "sha256": "ca41693fe799bb6bd31cb18f78352618727aef1b38c494a6714b78529b207665"
+    },
+    {
+      "reference": ".github/workflows/native-linux.yml",
+      "bytes": 12858,
+      "sha256": "321ceee09c21fa1f1c4fb60582a6819c9491a5b2fdd5c490313926f67dfab9fb"
+    },
+    {
+      "reference": ".github/workflows/native-platforms.yml",
+      "bytes": 3064,
+      "sha256": "18d3f90c0d504bfaf309470b36df39a494987a7ec309cccce5ba4ca35be14997"
+    },
+    {
+      "reference": ".github/workflows/native-vulnerabilities.yml",
+      "bytes": 4470,
+      "sha256": "58a74643cf15578fe865671e086719361ecace691b12996c2cf7d2c3da580ce9"
+    },
+    {
+      "reference": ".github/workflows/reproducible-builds.yml",
+      "bytes": 3637,
+      "sha256": "a2102b3748abd8164b84a85b5b58246d037edb3b387e8614d661c25d602a2182"
+    },
+    {
+      "reference": ".github/workflows/scp.yml",
+      "bytes": 2525,
+      "sha256": "ed20c9a5d7062a93ccb3d96a2a9addd4bd28db8607f249bdea9da3ad8d18c78c"
+    },
+    {
+      "reference": ".github/workflows/stock-peers.yml",
+      "bytes": 6373,
+      "sha256": "89050950e745fb816e1ba7f912095bfb081708bfd5ca85fb0b056e35ad0f464d"
+    },
+    {
+      "reference": ".github/workflows/tus.yml",
+      "bytes": 2673,
+      "sha256": "307454bb4d6c8031c6dcfb8b68713328d95e8abf0ba2f6273368aab116bbbd7f"
+    },
+    {
+      "reference": "STATUS.md",
+      "bytes": 5465,
+      "sha256": "c989375c6c4f17d7a05392f9e364d42bcb6ef804568c64fde71967510715d4ca"
+    },
+    {
+      "reference": "docs/architecture/0001-foundation.md",
+      "bytes": 4746,
+      "sha256": "382cdc97b8b8a6d94cde1d85a9322dbf7d30c5380e7953c112ab4bbfc8fdb748"
+    },
+    {
+      "reference": "docs/architecture/0016-ftps-channel-binding.md",
+      "bytes": 5478,
+      "sha256": "ff3ba7da6637c187d47621e7f128b19cce071a2f86483339b50a0e5c5fced498"
+    },
+    {
+      "reference": "docs/development.md",
+      "bytes": 44890,
+      "sha256": "cfb4e0b9452ddbc152598c62ad595a4b3fb3af89b7ce5b783cdbc0025c0b65a7"
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "bytes": 40193,
+      "sha256": "e4008562d99321ad31d856e5e006e7dd4bda9a3d8901103614753921b6835593"
+    },
+    {
+      "reference": "docs/protocols/xlsx-records.md",
+      "bytes": 7256,
+      "sha256": "0cea1fb05fe0df42dd4b8abbac838203e53350f5cb97729fad6e41e44690543a"
+    },
+    {
+      "reference": "docs/qualification/ci.md",
+      "bytes": 23668,
+      "sha256": "7b2de320583c974d9b3d2e0386cd7876ab3948740a9e58e2a783b6011702a269"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 717126,
+      "sha256": "7f53cf73e9a74d06561d1df915ed5b5f116f8c323fe7f4fc1dd6f72f512628d9"
+    },
+    {
+      "reference": "go.mod",
+      "bytes": 1139,
+      "sha256": "9aacd8ce0ba9374d710ba43016bb28344f5b5ffc58ad40a64952e889e2fb620e"
+    },
+    {
+      "reference": "internal/api/dav_delivery_integration_test.go",
+      "bytes": 13811,
+      "sha256": "a6f29940d00e20f12200193d339f3a2a3a56631e80eacd7222874db7a0fde512"
+    },
+    {
+      "reference": "internal/api/dav_stock_peer_integration_test.go",
+      "bytes": 4617,
+      "sha256": "a74a502413de25988805b0bda9b509025d8c5a71e0e5cad57715cc959113c00c"
+    },
+    {
+      "reference": "scripts/core_go_packages.py",
+      "bytes": 8126,
+      "sha256": "dda45634c28d5f12ab6bfcafcfb7774d4ebbf93f8722a88779037b7b0155ab28"
+    },
+    {
+      "reference": "scripts/go.sh",
+      "bytes": 191,
+      "sha256": "6724ce73cd4c3465b9ad425bbcbcb9a51f1dafd71ee0de36d390054da2b27e1a"
+    },
+    {
+      "reference": "scripts/peers/windowsfs/main_windows.go",
+      "bytes": 10274,
+      "sha256": "96c7062a261bd99d3ecb1c6ef6856f08ad56ff6f0ed6ca73e2c4f967560386ae"
+    },
+    {
+      "reference": "scripts/qualify-repro-builds.py",
+      "bytes": 20771,
+      "sha256": "111a9ff229b044c89a7945807dbd3b65a5bf9adc919048cf6dcce9a279de8b7f"
+    },
+    {
+      "reference": "scripts/qualify-windows-fs.py",
+      "bytes": 10341,
+      "sha256": "f95576a3769d6af85adb7ffa6033c86ed8b1ce6c368fb4c1c80c89ff55a7f247"
+    },
+    {
+      "reference": "scripts/rclone_peer.py",
+      "bytes": 2717,
+      "sha256": "7f34284a532873c79386fcde32b4db34d88b6f110b8818caec52be0ec6e55513"
+    },
+    {
+      "reference": "scripts/test-core-component-inventory.py",
+      "bytes": 9128,
+      "sha256": "cd215414580be806025c5f9b0499fc4d447801d6eeb0ee3724d7537dc581449d"
+    },
+    {
+      "reference": "scripts/test-core-go-packages.py",
+      "bytes": 6930,
+      "sha256": "ca5270c0f3a46f1220446487b3ef33ff15e4a69dc1a98b6c77764af736fa183b"
+    },
+    {
+      "reference": "scripts/test-govulncheck-gate.py",
+      "bytes": 3805,
+      "sha256": "6412f963868585a1b8d9a2b53230b928e96e13f4ffd4b66b3568a04758e50fb5"
+    },
+    {
+      "reference": "scripts/test-windows-fs-probe.py",
+      "bytes": 10157,
+      "sha256": "d7de5468d4a6e8c7417aa71a776afb6adf9896146b430311111a5cc54ba68c44"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f448-inventory-red.log",
+      "bytes": 767,
+      "sha256": "6ba2cc601c324ba110e340d88765983325761e0cb06ff682b0dccf9e3c9f24eb"
+    },
+    {
+      "reference": ".private/freightctl-f448-pins.log",
+      "bytes": 2067,
+      "sha256": "07923a7843e0cc36dc810a1f342b790e5caaa42fcf5f4f940a01c0fae9c6bd22"
+    },
+    {
+      "reference": ".private/freightctl-f448-focused.log",
+      "bytes": 4292,
+      "sha256": "bc0df36b27cf1d9bc38665004db5cb1c6e8237aa3d7dd3c33334b7f1bab335cf"
+    },
+    {
+      "reference": ".private/freightctl-f448-converter.log",
+      "bytes": 323,
+      "sha256": "e8cb77766d080d8cccffbc07e360fb2fba6a9c3300cb0a7e626a3f08941684d6"
+    },
+    {
+      "reference": ".private/freightctl-f448-govulncheck.json",
+      "bytes": 705671,
+      "sha256": "99c4383b6e0be09f6bfa9f1dbc6a615374eaa8a91353d8738a11112b369c4994"
+    },
+    {
+      "reference": ".private/freightctl-f448-govulncheck-converter.log",
+      "bytes": 3183,
+      "sha256": "7bf9d450eb1a75ae1f9cf9579b524dba5da0c342e2587896e4c1f38d4a7efcf0"
+    },
+    {
+      "reference": ".private/freightctl-f448-darwin-arm64",
+      "bytes": 35259010,
+      "sha256": "5f3cceab4c162fc0a15e2a8dec3a1b4db028ddd1ff0214b70c2a241c7e6cdaf9"
+    }
+  ],
+  "owed": [
+    "Original native source configurations, stock peer source and binary checks, exact release and reproducibility checks",
+    "Independent condition-enforcing DAV receiver, remaining original runtime failures and final GOAL/AX qualification"
+  ]
+}

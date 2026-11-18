@@ -6,7 +6,7 @@ VERSION = 'v1.76.0'
 REVISION = 'e982ff36668f5130d94b4f70409babb3d964df42'
 SUM = 'h1:Gabl7KmhxyOXyMtFNA/s6wZ3LZ/2x0NP7xZLNEW3Guo='
 MOD_SUM = 'h1:PoNZIA6Rv+01jY+WxLTz08i/QBEPz/6L5s1aD24Z5tc='
-GO_VERSION = 'go1.27.3'
+GO_VERSION = 'go1.27.4'
 
 
 def validate_module(value):

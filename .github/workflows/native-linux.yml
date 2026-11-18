@@ -114,7 +114,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
         with:
-          go-version: "1.27.3"
+          go-version: "1.27.4"
           cache: false
       - name: Verify native runner architecture
         run: |
@@ -194,7 +194,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
         with:
-          go-version: "1.27.3"
+          go-version: "1.27.4"
           cache: false
       - name: Seed actual PostgreSQL through first-run commands
         run: |
@@ -235,7 +235,7 @@ jobs:
           persist-credentials: false
       - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
         with:
-          go-version: "1.27.3"
+          go-version: "1.27.4"
           cache: false
       - name: Bounded parser and authority fuzz checks on native x86_64
         run: |
@@ -245,7 +245,7 @@ jobs:
           from pathlib import Path
           call=lambda *args: subprocess.check_output(['sh','scripts/go.sh',*args],text=True).strip()
           native=json.loads(call('env','-json','GOVERSION','GOOS','GOARCH'))
-          assert native==dict(GOVERSION='go1.27.3',GOOS='linux',GOARCH='amd64')
+          assert native==dict(GOVERSION='go1.27.4',GOOS='linux',GOARCH='amd64')
           source=Path(call('env','GOROOT'))/'src/internal/fuzz/fuzz.go'
           body=source.read_bytes()
           assert b'err == ctx.Err() || err == fuzzCtx.Err() || isInterruptError(err)' in body

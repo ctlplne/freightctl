@@ -20,7 +20,7 @@ The receiving adapter now uses an auditable MIT-licensed pinned copy under `thir
 
 Native ARM service and public CLI journeys exercise both TLS modes, passive/active sockets, opaque bytes, text mode, append/REST, namespace operations and interruption/foreign-ticket refusals against actual PostgreSQL/storage. They use an explicitly resumed Python TLS client stand-in. The Mac's curl/LibreSSL pairing remains refused because it does not resume the control ticket for data. The native GitHub stock-client and full engine gates remain pending. Receiving rows are implementing; sending rows remain planned. No whole FTPS row or customer journey is qualified.
 
-Compiler follow-up,2026-11-07(F387): the current application/build/CI pin is
-Go1.27.3. The original Go1.26.10 decision and qualified evidence above remain
-historical. The new official SDK includes the Go75804 fuzz coordinator fix;
-all affected native/runtime and final-source qualification remains owed.
+Compiler follow-up, 2026-11-07 (F387). The application, build and CI pin moved
+to Go 1.27.3 for the Go75804 fuzz coordinator fix. The original Go 1.26.10
+decision and qualified evidence above remain historical. See the
+[foundation decision](0001-foundation.md) for the current compiler pin.

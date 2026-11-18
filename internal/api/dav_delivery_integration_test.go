@@ -68,7 +68,7 @@ func TestDAVDeliveryNativeStockReceiverCLIIndependentApprovalAndExactBytes(t *te
 	root := filepath.Dir(filepath.Dir(peer.PrivateDirectory))
 	binary := filepath.Join(root, ".private", "freightctl-dav-delivery-native")
 	info, err := buildinfo.ReadFile(binary)
-	if err != nil || info.GoVersion != "go1.27.3" || info.Path != "github.com/ctlplne/freightctl/cmd/freightctl" {
+	if err != nil || info.GoVersion != "go1.27.4" || info.Path != "github.com/ctlplne/freightctl/cmd/freightctl" {
 		t.Fatal("actual native CLI build information differs")
 	}
 	settings := map[string]string{}

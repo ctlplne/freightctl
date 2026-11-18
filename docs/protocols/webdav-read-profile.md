@@ -422,7 +422,7 @@ Protocol references: [RFC4918](https://www.rfc-editor.org/rfc/rfc4918.html),
 
 The native `dav-application.yml` workflow prepares stock rclone1.76.0 on actual
 Linux ARM64 and x86_64 runners. This profile is prepared,not yet qualified.
-It builds the unmodified upstream module with Go1.27.3 and its complete default
+It builds the unmodified upstream module with Go1.27.4 and its complete default
 backend set. The pinned Go module/go.mod sums and upstream tag commit must
 match;the actual binary's native build information,dependency inventory and
 SHA256 are checked. Complete default source and actual binary vulnerability

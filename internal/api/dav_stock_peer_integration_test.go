@@ -62,7 +62,7 @@ func loadNativeDAVStockPeer(t *testing.T) nativeDAVStockPeer {
 			Exit int    `json:"exit_code"`
 		} `json:"steps"`
 	}
-	if json.Unmarshal(manifestRaw.Bytes, &manifest) != nil || manifest.Profile != "stock-rclone-webdav-v1" || manifest.State != "accepted-for-protocol-proof" || manifest.ProtocolQualified || manifest.Candidate != commit || manifest.Architecture != runtime.GOARCH || manifest.Module != "github.com/rclone/rclone" || manifest.Version != "v1.76.0" || manifest.Revision != "e982ff36668f5130d94b4f70409babb3d964df42" || manifest.ModuleSum != "h1:Gabl7KmhxyOXyMtFNA/s6wZ3LZ/2x0NP7xZLNEW3Guo=" || manifest.GoModSum != "h1:PoNZIA6Rv+01jY+WxLTz08i/QBEPz/6L5s1aD24Z5tc=" || manifest.GoVersion != "go1.27.3" {
+	if json.Unmarshal(manifestRaw.Bytes, &manifest) != nil || manifest.Profile != "stock-rclone-webdav-v1" || manifest.State != "accepted-for-protocol-proof" || manifest.ProtocolQualified || manifest.Candidate != commit || manifest.Architecture != runtime.GOARCH || manifest.Module != "github.com/rclone/rclone" || manifest.Version != "v1.76.0" || manifest.Revision != "e982ff36668f5130d94b4f70409babb3d964df42" || manifest.ModuleSum != "h1:Gabl7KmhxyOXyMtFNA/s6wZ3LZ/2x0NP7xZLNEW3Guo=" || manifest.GoModSum != "h1:PoNZIA6Rv+01jY+WxLTz08i/QBEPz/6L5s1aD24Z5tc=" || manifest.GoVersion != "go1.27.4" {
 		t.Fatal("stock application identity or evidence scope differs")
 	}
 	expectedSteps := []string{"native-toolchain", "verified-module", "stock-build", "binary-inventory", "complete-module-inventory", "verified-module-cache", "scanner-install", "scanner-converter-contract", "source-scan", "source-findings-gate", "binary-scan", "binary-findings-gate", "stock-version"}

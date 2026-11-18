@@ -24,8 +24,13 @@ code is unchanged;native replay remains owed. Rclone delivery remains unqualifie
 F447 records the confirmed owner-only push to `010a3a2` and fifteen original
 attempt1 workflows. New security gates block on reachable GO-2026-6859 in the
 Go1.27.3 HTTP stack;Go1.27.4 contains the fix. The x/crypto OpenPGP notice is
-module-only,not called. Original failures are preserved;compiler repair takes
-priority. Runtime and final-source qualification remain owed.
+module-only,not called. The original failures are preserved.
+
+[F448](docs/qualification/evidence/F448-go-http-security-patch.json) pins Go
+1.27.4 for freightctl builds and CI. The native macOS ARM build and live
+`govulncheck` source scan pass with zero reachable findings. The converter
+still fails on a reachable test finding. Original Linux, Windows, macOS and
+stock rclone security gates require replay on the patched source.
 
 F442 implements direct DAV delivery schema3 through the existing custody,
 durable intent,draft/approval,worker slot,lease/fence and reconciliation paths.

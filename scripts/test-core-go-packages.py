@@ -32,7 +32,7 @@ def fixture(root, info):
 
 
 def info():
-    return dict(GoVersion='go1.27.3', Path='example.test/freightctl/cmd/freightctl',
+    return dict(GoVersion='go1.27.4', Path='example.test/freightctl/cmd/freightctl',
         Main={'Path':'example.test/freightctl'}, Deps=[{'Path':'example.test/dependency', 'Version':'v1.0.0'}])
 
 
@@ -66,7 +66,7 @@ class GoPackageContracts(unittest.TestCase):
         gate.reopen(result, self.root)
 
     def test_previous_or_unqualified_toolchain_inventory_is_not_current_evidence(self):
-        for version in ('go1.26.10', 'go1.27.2', 'go1.27.3+unqualified'):
+        for version in ('go1.26.10', 'go1.27.2', 'go1.27.3', 'go1.27.4+unqualified'):
             wrong = copy.deepcopy(self.info)
             wrong['GoVersion'] = version
             with self.assertRaises(ValueError):
