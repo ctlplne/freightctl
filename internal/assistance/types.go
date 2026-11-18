@@ -170,7 +170,7 @@ func normalizeProfile(p Profile) (Profile, error) {
 }
 
 // Bump this version whenever a change affects which operator text can leave.
-const operatorTextPolicy = "credential-guard-v3"
+const operatorTextPolicy = "credential-guard-v4"
 
 var credentialField = regexp.MustCompile(`(?i)\b(?:[a-z0-9]+[-_])*(?:authorization|cookie|password|passwd|secret|api[-_ ]?key|access[-_ ]?key|token)["']?\s*[:=]`)
 
@@ -181,7 +181,7 @@ var secretPatterns = []*regexp.Regexp{
 	regexp.MustCompile(`\b[A-Za-z0-9_+/=-]{32,}\b`),
 }
 
-func redact(text string, privateLabels []string) (string, error) {
+func redact(text string, privateLabels map[string]string) (string, error) {
 	if len(text) > 4096 || !utf8.ValidString(text) {
 		return "", ErrInput
 	}
@@ -199,13 +199,57 @@ func redact(text string, privateLabels []string) (string, error) {
 	if credentialField.MatchString(text) {
 		return "[credential-bearing text redacted]", nil
 	}
-	for _, label := range privateLabels {
-		if label != "" {
-			text = strings.ReplaceAll(text, label, "[label redacted]")
+	// Find both sets on the original text. Replacing a generic match first can
+	// split an exact path into a private prefix and a masked suffix. Replacing a
+	// label first can interrupt a longer bearer token and leave its tail behind.
+	type span struct {
+		end   int
+		value string
+	}
+	spans := make([]span, len(text))
+	for label, replacement := range privateLabels {
+		if label == "" {
+			continue
+		}
+		for offset := 0; offset+len(label) <= len(text); {
+			n := strings.Index(text[offset:], label)
+			if n < 0 {
+				break
+			}
+			start := offset + n
+			end := start + len(label)
+			if end > spans[start].end {
+				spans[start] = span{end, replacement}
+			}
+			offset = start + 1
 		}
 	}
 	for _, pattern := range secretPatterns {
-		text = pattern.ReplaceAllString(text, "[redacted]")
+		for _, match := range pattern.FindAllStringIndex(text, -1) {
+			if start, end := match[0], match[1]; end > spans[start].end {
+				spans[start] = span{end, "[redacted]"}
+			}
+		}
 	}
-	return strings.TrimSpace(text), nil
+	var output strings.Builder
+	written := 0
+	for start := 0; start < len(text); {
+		match := spans[start]
+		if match.end == 0 {
+			start++
+			continue
+		}
+		// Keep exact label aliases for a fully contained generic match.
+		// For a partial overlap, cover both ranges with a single safe marker.
+		for next := start + 1; next < match.end; next++ {
+			if spans[next].end > match.end {
+				match = span{spans[next].end, "[redacted]"}
+			}
+		}
+		output.WriteString(text[written:start])
+		output.WriteString(match.value)
+		written, start = match.end, match.end
+	}
+	output.WriteString(text[written:])
+	return strings.TrimSpace(output.String()), nil
 }

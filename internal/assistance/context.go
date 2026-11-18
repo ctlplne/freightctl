@@ -5,9 +5,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"slices"
-	"sort"
 	"strconv"
-	"strings"
 
 	"github.com/ctlplne/freightctl/internal/delivery"
 	"github.com/ctlplne/freightctl/internal/store"
@@ -260,12 +258,6 @@ func buildContext(ctx context.Context, t *store.Transaction, r PrepareRequest, p
 		return nil, nil, ErrInput
 	}
 	if initial {
-		// Scrub recognizable secrets first, then replace known resource labels in
-		// one pass so aliases themselves are never reinterpreted as private labels.
-		text, err := redact(r.Requirements, nil)
-		if err != nil {
-			return nil, nil, err
-		}
 		replacements := map[string]string{}
 		for _, label := range labels {
 			if label != "" {
@@ -281,22 +273,9 @@ func buildContext(ctx context.Context, t *store.Transaction, r PrepareRequest, p
 				replacements[destination.Filename] = "d" + strconv.Itoa(i+1)
 			}
 		}
-		keys := make([]string, 0, len(replacements))
-		for key := range replacements {
-			keys = append(keys, key)
-		}
-		sort.Slice(keys, func(i, j int) bool {
-			if len(keys[i]) == len(keys[j]) {
-				return keys[i] < keys[j]
-			}
-			return len(keys[i]) > len(keys[j])
-		})
-		pairs := []string{}
-		for _, key := range keys {
-			pairs = append(pairs, key, replacements[key])
-		}
-		if len(pairs) > 0 {
-			text = strings.NewReplacer(pairs...).Replace(text)
+		text, err := redact(r.Requirements, replacements)
+		if err != nil {
+			return nil, nil, err
 		}
 		b.Request.Requirements = text
 	}

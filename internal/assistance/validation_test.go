@@ -18,7 +18,7 @@ func TestRedactionPrecedesPersistenceAndDisclosure(t *testing.T) {
 		{"send sensitive.csv to /private/partner", "sensitive.csv"},
 	}
 	for _, c := range cases {
-		output, err := redact(c.Input, []string{"sensitive.csv", "/private/partner"})
+		output, err := redact(c.Input, map[string]string{"sensitive.csv": "[label redacted]", "/private/partner": "[label redacted]"})
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -28,6 +28,26 @@ func TestRedactionPrecedesPersistenceAndDisclosure(t *testing.T) {
 	}
 	if _, err := redact(strings.Repeat("x", 4097), nil); err == nil {
 		t.Fatal("operator text bound ignored")
+	}
+}
+
+func TestRedactKeepsFullPrivateLabelAndGenericTokenCoverage(t *testing.T) {
+	path := "/private/TestFixtureForLongProtectedCredentialPaths/001/protected-ref"
+	labels := map[string]string{
+		path: "[label redacted]", "first.csv": "d1", "second.csv": "d2",
+		"owner": "[label redacted]", "receiver.example": "[label redacted]",
+	}
+	for _, tc := range []struct{ input, want string }{
+		{"Send second.csv then first.csv. References " + path, "Send d2 then d1. References [label redacted]"},
+		{"Use " + path + "-adjacent-fragment.", "Use [redacted]."},
+		{"Use Bearer owner-following-secret-fragment to sign in.", "Use [redacted] to sign in."},
+		{"Use https://receiver.example/private-credential.", "Use [redacted]"},
+		{"password: owner something else", "[credential-bearing text redacted]"},
+	} {
+		got, err := redact(tc.input, labels)
+		if err != nil || got != tc.want {
+			t.Fatalf("literal and generic privacy masks disagree: %q (%v)", got, err)
+		}
 	}
 }
 

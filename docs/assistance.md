@@ -72,7 +72,10 @@ detection. Keep credential values in protected references.
 
 Known file names become destination aliases, so “second.csv then first.csv”
 becomes “d2 then d1”. Transport paths, key references and other known private
-labels are removed. Duplicate names remain ambiguous.
+labels are removed. The filter finds literal labels and generic credential
+patterns in the original text. If their ranges overlap, it covers the complete
+range so neither a piece of a path nor the tail of a token survives.
+Duplicate names remain ambiguous.
 
 Jobs with freeform text prepared under an older disclosure policy are
 stale. To continue, prepare new requirements with a fresh request key and

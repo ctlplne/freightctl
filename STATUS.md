@@ -80,6 +80,12 @@ suites fail the mixed-delivery preview privacy assertion before endpoint
 contact. The prior approval refusal passes. Both peer-image scans still
 block on the two unfixed Debian glibc advisories.
 
+[F474](docs/qualification/evidence/F474-overlapping-operator-text-redaction.json)
+repairs the mixed-delivery disclosure failure. It masks overlapping private
+paths and credential patterns as a single range. The original real
+PostgreSQL test and both prior-policy refusal cases pass locally against a
+synthetic responder. Native Linux replay remains due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
@@ -100,8 +106,7 @@ unbound credential unsupported, and omits credential and share values.
 [F468](docs/qualification/evidence/F468-sftpgo-calendar-preparation.json)
 prepares an ordinary schedule preview request from one exact stock calendar
 row and an operator's destination choices. It passes the real calendar
-compiler and refuses a changed source digest. Live preview and adoption
-against an enrolled destination remain due. [F469](docs/qualification/evidence/F469-migration-live-preview-test.json)
+compiler and refuses a changed source digest. [F469](docs/qualification/evidence/F469-migration-live-preview-test.json)
 adds the real PostgreSQL preview check to the existing processing CLI journey.
 [F473](docs/qualification/evidence/F473-migration-live-preview-pass.json)
 records the focused local pass against PostgreSQL 16.15 with actual custody.

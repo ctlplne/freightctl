@@ -1,0 +1,53 @@
+{
+  "schema_version": 1,
+  "id": "F474",
+  "observed_at": "2026-11-18",
+  "base_candidate": "e5be5a1",
+  "base_evidence": "docs/qualification/evidence/F470-terminal-native-and-disclosure-red.json",
+  "scope": "Exact mixed-protocol drafting disclosure boundary and prior policy replay",
+  "qualification_claim": false,
+  "original_native": {
+    "candidate": "2d10f84ce1ff5c8bdd1ea551f1cb35153fe28410",
+    "jobs": [134778547899, 134778549372],
+    "test": "TestAssistancePreparesAndAdoptsMixedDeliveryAsDraftOnly",
+    "failed_before_generate": true,
+    "assertion_line": 196
+  },
+  "red": {
+    "scope": "Same test on local PostgreSQL 16.15 with the unchanged deterministic synthetic endpoint",
+    "exit_code": 1,
+    "observation": "The generic token matcher splits a known long private path before literal matching can cover its original boundary.",
+    "log_sha256": "1acc10a6d7eb9754364fc5b0df1646152e6fceba4eb53f8121e3623784a3a06d"
+  },
+  "repair": {
+    "policy": "credential-guard-v4",
+    "mechanism": "Find literal labels and generic credential spans on the same original bytes. Merge intersecting regions before emission. Contained spans preserve safe exact aliases, while a region that crosses their boundary uses a generic mask.",
+    "whole_credential_field_suppression_preserved": true,
+    "old_operator_text_approvals_require_new_preparation_and_review": true
+  },
+  "green": {
+    "scope": "Focused integration, real PostgreSQL and ordinary workflow adoption",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "local_memory_limit_bytes": 201326592,
+    "local_cpu_limit": 1,
+    "synthetic_loopback_responder": true,
+    "race_enabled": true,
+    "exit_code": 0,
+    "original_mixed_delivery_as_draft_only": "pass",
+    "unversioned_and_v3_approval_zero_contact": "pass",
+    "disclosure_disabled_and_original_adoption_recovery": "pass",
+    "temporary_task_containers_removed_verified": true,
+    "log_sha256": "b54fc7d638239d04e55636583c79002ac5f41245a84aff5bc1aaacee76c167e3"
+  },
+  "checks": {
+    "focused_privacy_regressions_with_race": "pass",
+    "focused_log_sha256": "71b2cddcc8f2aa4e447fad6b4ab67d7631f5fd3e9bc0e66122f845d336619019",
+    "affected_tagged_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Native Linux replay of both original platform assertions.",
+    "Private model endpoint and real inference qualification."
+  ]
+}

@@ -373,7 +373,8 @@
         "docs/qualification/evidence/F199-processing-calendar-browser-profile.json",
         "docs/qualification/evidence/F200-browser-proposals-terminal-ci.json",
         "docs/qualification/evidence/F201-finish-original-failure-repairs.json",
-        "docs/qualification/evidence/F209-runtime-credential-read-fence.json"
+        "docs/qualification/evidence/F209-runtime-credential-read-fence.json",
+        "docs/qualification/evidence/F474-overlapping-operator-text-redaction.json"
       ]
     },
     {
