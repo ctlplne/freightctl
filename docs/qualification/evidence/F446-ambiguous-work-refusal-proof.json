@@ -1,0 +1,111 @@
+{
+  "schema_version": 1,
+  "id": "F446",
+  "observed_at": "2026-11-18",
+  "base_candidate": "a6c18d6d1eedf8661fa9ca0f192b9bc07bcbe014",
+  "candidate_binding": "This commit and exact source hashes below",
+  "qualification_claim": false,
+  "changed": "Correct inaccurate nil-error-only new DAV repeat-work proof. Require actual unchanged-state ErrState refusal,nil result,all complete event/intent/receipt/file/ciphertext projection hashes and exact receiver hash/activity unchanged. Keep lost-MOVE,original publishing-before-byte,one attempt/fence and honest read-only reconciliation assertions. Production code unchanged.",
+  "original_failures": {
+    "candidate": "f29cb0d08cb16518f7c88be943d18fd492fea68d",
+    "run_id": 42438391711,
+    "jobs": [
+      128602125041,
+      128602125251
+    ],
+    "attempt": 1,
+    "assertion": "ambiguous publication automatically restarted operation does not match the current resource state",
+    "preserved_evidence": "docs/qualification/evidence/F445-resume-native-terminal.json"
+  },
+  "red_green": [
+    {
+      "reference": ".private/freightctl-f446-refusal-red.log",
+      "exit_code": 1,
+      "proof": "Extracted original nil-error predicate rejects exact safe refusal"
+    },
+    {
+      "reference": ".private/freightctl-f446-refusal-green.log",
+      "exit_code": 0,
+      "proof": "Exact refusal plus negative event/intent/receiver/activity/missing-evidence/other-error/unexpected-result checks"
+    },
+    {
+      "reference": ".private/freightctl-f446-native-compile.log",
+      "exit_code": 0,
+      "proof": "Tagged actual native proof compile only"
+    },
+    {
+      "reference": ".private/freightctl-f446-vet.log",
+      "exit_code": 0,
+      "proof": "Affected tagged API vet"
+    },
+    {
+      "reference": ".private/freightctl-f446-architecture.log",
+      "exit_code": 0,
+      "proof": "Architecture boundaries"
+    }
+  ],
+  "source_files": [
+    {
+      "reference": "internal/api/dav_recovery_evidence_test.go",
+      "bytes": 1945,
+      "sha256": "3e0dd5b51e24814c0e2f8419d0c15d743eddab96f7166a9d038e4fac04e7bb15"
+    },
+    {
+      "reference": "internal/api/dav_delivery_recovery_integration_test.go",
+      "bytes": 7635,
+      "sha256": "7fd788a8bd592855969c302811b1b912f1567278c13de301390f403dacb627dd"
+    },
+    {
+      "reference": "STATUS.md",
+      "bytes": 4802,
+      "sha256": "ad4bdd3eba3cb90a140f8124cf5957bf092bfb2e855d99da94d8fdcf21284bf9"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 715866,
+      "sha256": "976b2eb427d140a6d8e271a8e417b417a2721e94ca0ef29498b7c2ca29b760e5"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f446-architecture.log",
+      "bytes": 64,
+      "sha256": "44043ddf38340256d0fdf0cc7753487198ffe334541eb7c299b428aab9d9ef19"
+    },
+    {
+      "reference": ".private/freightctl-f446-native-compile.log",
+      "bytes": 73,
+      "sha256": "aa40edb1631c44e41a36f2e44746a0011b9dc7274c4935a8a76de26538c9323a"
+    },
+    {
+      "reference": ".private/freightctl-f446-production-preservation.json",
+      "bytes": 555,
+      "sha256": "f234f36f923559f829750098caa010ca8567f16b792d3f6770ecd185be200761"
+    },
+    {
+      "reference": ".private/freightctl-f446-refusal-green.log",
+      "bytes": 55,
+      "sha256": "b130430e479fc58a7e604ce39639c0e383601b304cb1b0ada92adccb446e9e00"
+    },
+    {
+      "reference": ".private/freightctl-f446-refusal-red.log",
+      "bytes": 259,
+      "sha256": "faba0e8d16054b96da2654ced28846a685035c1df66b2873cc96e50947b9e687"
+    },
+    {
+      "reference": ".private/freightctl-f446-vet.log",
+      "bytes": 0,
+      "sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    }
+  ],
+  "production_worker_changed": false,
+  "original_cancelled_or_rerun": false,
+  "security_assertions_weakened": false,
+  "local_heavy_runtime_started": false,
+  "owed": [
+    "Actual original native ARM/x86 lost-reply/repeat-refusal/read-only reconciliation replay",
+    "Rclone incompatible exclusive-stage contract and all deferred failures remain open",
+    "All mandatory actual final-source baseline/AX/security/readiness gates"
+  ],
+  "overall_goal_complete": false
+}

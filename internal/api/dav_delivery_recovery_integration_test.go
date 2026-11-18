@@ -135,9 +135,35 @@ func TestDAVDeliveryNativeLostMoveReplyReconcilesReadOnly(t *testing.T) {
 	if err != nil || worked.State != "ambiguous" || worked.Attempts != 1 || worked.Fence != 1 {
 		t.Fatal("lost actual MOVE reply did not preserve one ambiguous attempt", err)
 	}
+	snapshot := func() davRecoveryEvidence {
+		t.Helper()
+		tx, err := consumer.DB.Begin(t.Context(), scope)
+		if err != nil {
+			t.Fatal(err)
+		}
+		defer tx.Tx.Rollback(t.Context())
+		var metadata []byte
+		if err = tx.Tx.QueryRow(t.Context(), `SELECT jsonb_build_object(
+'intents',(SELECT coalesce(jsonb_agg(to_jsonb(d) ORDER BY delivery_id),'[]'::jsonb) FROM delivery_intents d),
+'events',(SELECT coalesce(jsonb_agg(to_jsonb(e) ORDER BY happened_at,event_id),'[]'::jsonb) FROM events e),
+'delivery_receipts',(SELECT coalesce(jsonb_agg(to_jsonb(r) ORDER BY actor_id,request_key),'[]'::jsonb) FROM delivery_receipts r),
+'workflow_receipts',(SELECT coalesce(jsonb_agg(to_jsonb(r) ORDER BY actor_id,request_key),'[]'::jsonb) FROM workflow_receipts r),
+'files',(SELECT coalesce(jsonb_agg(to_jsonb(f) ORDER BY file_id),'[]'::jsonb) FROM files f),
+'ciphertexts',(SELECT coalesce(jsonb_agg(to_jsonb(c) ORDER BY delivery_id),'[]'::jsonb) FROM delivery_ciphertexts c))`).Scan(&metadata); err != nil {
+			t.Fatal(err)
+		}
+		mu.Lock()
+		defer mu.Unlock()
+		receiver, err := json.Marshal(files)
+		if err != nil {
+			t.Fatal(err)
+		}
+		return davRecoveryEvidence{MetadataHash: secure.Digest(metadata), ReceiverHash: secure.Digest(receiver), Writes: writes, Reads: reads}
+	}
+	beforeRepeat := snapshot()
 	again, err := sender.Work(t.Context(), scope, worked.ID)
-	if err != nil || again.State != "ambiguous" || again.Attempts != 1 || again.Fence != 1 {
-		t.Fatal("ambiguous publication automatically restarted", err)
+	if !davAmbiguousRepeatWasRefused(again, err, beforeRepeat, snapshot()) {
+		t.Fatal("ambiguous repeat lacked exact ErrState refusal or changed complete metadata/receiver state/activity")
 	}
 	reconciled, err := sender.Reconcile(t.Context(), scope, worked.ID)
 	if err != nil || reconciled.State != "succeeded" || reconciled.Attempts != 1 || reconciled.Fence != 1 {

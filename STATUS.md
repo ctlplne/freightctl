@@ -16,6 +16,11 @@ all conditions;correct the recovery proof around unchanged database/network
 state and qualify an independent condition-enforcing receiver. Older discovery,
 receive/local-browser failures and all final-source outcomes remain owed.
 
+F446 corrects the new lost-reply proof to require exact ErrState refusal and
+unchanged complete metadata,receiver bytes and read/write counts. Focused old-
+predicate red→green and affected static/compile checks pass. Production worker
+code is unchanged;native replay remains owed. Rclone delivery remains unqualified.
+
 F442 implements direct DAV delivery schema3 through the existing custody,
 durable intent,draft/approval,worker slot,lease/fence and reconciliation paths.
 Exact pinned TLS1.3 and protected bearer/Basic references,private-stage contract,
