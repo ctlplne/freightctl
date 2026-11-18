@@ -1,0 +1,45 @@
+{
+  "schema_version": 1,
+  "id": "F496",
+  "observed_at": "2026-11-18",
+  "candidate": "b7b0eb5483d5d5fae6017be6d202436d0049edbb",
+  "base_evidence": "docs/qualification/evidence/F488-guarded-portability-native-batch.json",
+  "scope": "Original native source security matrix and classification of completed workflow failures",
+  "qualification_claim": false,
+  "native_source_vulnerability_workflow": {
+    "run_id": 44322162859,
+    "attempt": 1,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/44322162859",
+    "conclusion": "failure",
+    "windows_amd64": {"job_id": 134863685255, "conclusion": "success"},
+    "linux_arm64": {"job_id": 134863685394, "conclusion": "success"},
+    "darwin_arm64": {
+      "job_id": 134863684893,
+      "conclusion": "cancelled",
+      "runner_assigned_in_job_record": false,
+      "recorded_step_count": 0,
+      "completed_at": "2026-11-18T15:05:51Z",
+      "security_scan": "unverified",
+      "job_metadata_sha256": "711f51018b33b388337bf46914f3d8e7efffef242bc23a6d2cf34db8e5fef644"
+    },
+    "matrix_metadata_sha256": "fe14473e80ec54c7bd7974378f7f902c4b40ba881178582a17e7773c8750145a"
+  },
+  "original_batch_snapshot": {
+    "terminal_success": 10,
+    "terminal_failure": 6,
+    "queued": 2,
+    "in_progress": 1,
+    "metadata_sha256": "d182e57d9c5dea25f7f67744a94e6015ae961ec73b92415bafb9ad4d9b1a1ff9"
+  },
+  "other_failures_at_observation": [
+    {"run_id": 44322162953, "scope": "independent DAV and direct custody runtime", "named_security_steps": "pass", "job_metadata_sha256": "152a29843ca4c159d29b211253fc3d95919965c16cde32b3e40dae5d2d1f4017"},
+    {"run_id": 44322162822, "scope": "JSON CLI and intake runtime", "named_security_steps": "pass", "job_metadata_sha256": "a48ced70702b92037886a7dc1ef9ff16ed9461fa343fca2953594c434b3b7492"},
+    {"run_id": 44322162847, "scope": "stock FTPS receiver runtime", "job_metadata_sha256": "245b9951f6188888b63fab1554fcfbff1e67d72a201f59094f693586e6e7b403"},
+    {"run_id": 44322162947, "scope": "browser and FTPS operator runtime", "job_metadata_sha256": "c54e220df4b2ec8c5b924a6cc94cdfcd4255442b163732fb05e5621955afdd61"},
+    {"run_id": 44322163074, "scope": "receive browser runtime", "job_metadata_sha256": "70a84c4f274d85b85a48f09889beff4b0b2ad19fba608566007bf36018d86507"}
+  ],
+  "remaining": [
+    "Preserve the original macOS runner cancellation and obtain an actual native macOS scan in a later authorized batch.",
+    "Wait for the remaining originals, triage new security results, and retain the failed runtime gates for final replay."
+  ]
+}

@@ -110,6 +110,11 @@ records the guarded fast-forward to `b7b0eb5`. All 13 outgoing commits
 use the owner identity. The pre-push Gitleaks check found zero leaks.
 Nineteen original workflows are now tracking the portability candidate.
 
+[F496](docs/qualification/evidence/F496-native-security-runner-cancellation.json)
+records the native source-scan matrix at `b7b0eb5`. Windows and Linux ARM
+passed. GitHub marked the macOS ARM job canceled with no assigned runner
+and no recorded steps. The macOS scan remains unverified.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
