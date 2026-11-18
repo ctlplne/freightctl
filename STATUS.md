@@ -225,6 +225,12 @@ work. HTTP and CLI source review agree. The CLI recovers the HTTP copy receipt
 after the receive view closes. Repeated HTTP commands keep the original
 receipts, and the revoked route refuses queued work before peer contact.
 
+[F518](docs/qualification/evidence/F518-operator-connection-provisioning-https.json)
+adds the operator's HTTPS provision and revoke command over the existing
+typed service. The stock replay verifies the current authority check,
+cross-partner refusal, exact recipient pins, CLI recovery of the HTTP
+receipt and queued-work refusal before receiver contact.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

@@ -1,0 +1,365 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "freightctl operator connection provisioning",
+    "version": "1"
+  },
+  "paths": {
+    "/v1/tenants/{tenant}/partners/{partner}/connections/provisioning/commands": {
+      "post": {
+        "operationId": "manageOperatorProvisionedConnection",
+        "summary": "Assign or withdraw an exact registered SFTP route for an existing actor",
+        "description": "Requires current root admin and connections_manage in the same partner. Only the ordinary approved connection reference and recipient are supplied. The command returns no transport secrets and makes no peer contact. Cookie-authenticated requests require the exact same origin and a valid CSRF token.",
+        "security": [
+          {
+            "bearerAuth": []
+          },
+          {
+            "browserSession": [],
+            "csrfToken": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "tenant",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          },
+          {
+            "name": "partner",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "$ref": "#/components/schemas/ID"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+            }
+          },
+          {
+            "name": "Origin",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Required for cookie-authenticated mutations."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Reads at most 4 KiB of command metadata.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "oneOf": [
+                  {
+                    "$ref": "#/components/schemas/Provision"
+                  },
+                  {
+                    "$ref": "#/components/schemas/Revoke"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Recorded command result or original receipt replay",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Result"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid typed command or missing operation key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Ordinary authentication is required",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "The operator lacks current management authority or browser request protection",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "The source, recipient or original provision is unavailable within the current scope",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "The key meaning, exact revision, recipient authority or current state conflicts",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          },
+          "503": {
+            "description": "The command cannot proceed with current service or storage capacity",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      },
+      "browserSession": {
+        "type": "apiKey",
+        "in": "cookie",
+        "name": "__Host-freightctl-session"
+      },
+      "csrfToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-CSRF-Token"
+      }
+    },
+    "schemas": {
+      "ID": {
+        "type": "string",
+        "format": "uuid",
+        "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+      },
+      "Hash": {
+        "type": "string",
+        "pattern": "^[0-9a-f]{64}$"
+      },
+      "Reference": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version",
+          "hash"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "version": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 2147483647
+          },
+          "hash": {
+            "$ref": "#/components/schemas/Hash"
+          }
+        }
+      },
+      "AssignedReference": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "id",
+          "version",
+          "hash"
+        ],
+        "properties": {
+          "id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "version": {
+            "const": 1
+          },
+          "hash": {
+            "$ref": "#/components/schemas/Hash"
+          }
+        }
+      },
+      "Provision": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "operation",
+          "recipient_actor_id",
+          "recipient_authority_revision",
+          "source"
+        ],
+        "properties": {
+          "operation": {
+            "const": "provision"
+          },
+          "recipient_actor_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "recipient_authority_revision": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "source": {
+            "$ref": "#/components/schemas/Reference"
+          }
+        }
+      },
+      "Revoke": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "operation",
+          "connection",
+          "provision_event_id"
+        ],
+        "properties": {
+          "operation": {
+            "const": "revoke"
+          },
+          "connection": {
+            "$ref": "#/components/schemas/AssignedReference"
+          },
+          "provision_event_id": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      },
+      "Receipt": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "profile",
+          "operation",
+          "operator_actor_id",
+          "operator_authority_revision",
+          "recipient_actor_id",
+          "recipient_authority_revision",
+          "source",
+          "connection",
+          "state",
+          "revision",
+          "event_id"
+        ],
+        "properties": {
+          "profile": {
+            "const": "operator-provisioned-connection-v1"
+          },
+          "operation": {
+            "enum": [
+              "provision",
+              "revoke"
+            ]
+          },
+          "operator_actor_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "operator_authority_revision": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "recipient_actor_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "recipient_authority_revision": {
+            "type": "integer",
+            "format": "int64",
+            "minimum": 1
+          },
+          "source": {
+            "$ref": "#/components/schemas/Reference"
+          },
+          "connection": {
+            "$ref": "#/components/schemas/AssignedReference"
+          },
+          "state": {
+            "enum": [
+              "active",
+              "revoked"
+            ]
+          },
+          "revision": {
+            "type": "integer",
+            "enum": [
+              1,
+              2
+            ]
+          },
+          "event_id": {
+            "$ref": "#/components/schemas/ID"
+          },
+          "provision_event_id": {
+            "$ref": "#/components/schemas/ID"
+          }
+        }
+      },
+      "Result": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "resource",
+          "replayed"
+        ],
+        "properties": {
+          "resource": {
+            "$ref": "#/components/schemas/Receipt"
+          },
+          "replayed": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "error"
+        ],
+        "properties": {
+          "error": {
+            "type": "string"
+          }
+        }
+      }
+    }
+  }
+}

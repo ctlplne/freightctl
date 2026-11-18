@@ -10,15 +10,27 @@ registration with the same approved transport definition and protected
 credential references. The operator remains the author of the journal record.
 The recipient's credential, root and grants stay untouched.
 
-Use the local management command `connection-provision` with an ordinary
-operator token, a protected request file, and a stable idempotency key. The
-request uses one of these shapes.
+Use the HTTPS endpoint or the local `connection-provision` command with the
+same operator credential, request body, and stable idempotency key. The
+HTTPS request reads at most 4 KiB of command metadata. Keep the authorization
+header in a protected file and verify the server certificate.
+[OpenAPI contract](../api/operator-connection-provisioning.openapi.json)
+
+```sh
+curl --cacert ./ca.pem --header @./operator.headers \
+  --header 'Content-Type: application/json' \
+  --header 'Idempotency-Key: provision-sftp-20261118' \
+  --data-binary @./provision.json \
+  "$FREIGHTCTL_HTTPS_ORIGIN/v1/tenants/$TENANT/partners/$PARTNER/connections/provisioning/commands"
+```
 
 ```sh
 freightctl connection-provision --dsn-file ./pg-runtime.dsn \
   --token-file ./operator.token --tenant "$TENANT" --partner "$PARTNER" \
   --request-file ./provision.json --idempotency-key provision-sftp-20261118
 ```
+
+Prepare one of the following command bodies.
 
 ```json
 {
@@ -52,6 +64,12 @@ uses ordinary actor-private connection lookup and the existing workflow
 approval, dispatch policy, and worker guards. No peer contact occurs while
 provisioning. Live revocation fences future work through the same registered
 connection checks used for ordinary sending.
+
+HTTP returns the same typed result and `replayed` field as the CLI. The local
+stock replay recovers an HTTP provision receipt through the CLI, reads the
+assigned route only as its recipient, and verifies that HTTP revocation stops
+queued work before the receiver is contacted.
+[F518 replay](../qualification/evidence/F518-operator-connection-provisioning-https.json)
 
 This command requires schema 67. Its projector uses a dedicated non-login
 role with forced tenant and partner row security. The ordinary runtime keeps

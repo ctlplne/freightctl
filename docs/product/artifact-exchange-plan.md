@@ -208,10 +208,11 @@ vsftpd per connection. Standalone stability, native Linux freightctl replay
 and derivation lineage remain owed.
 [F503](../qualification/evidence/F503-ftps-agent-stock-sftp.json) [F509](../qualification/evidence/F509-stock-ftps-producer-exchange.json) [F510](../qualification/evidence/F510-supervised-stock-ftps-producer.json)
 
-An operator can now provision the exact SFTP route directly for the agent. The
-agent keeps its existing permissions, and each ordinary workflow approval and
-dispatch check still applies. The local replay verifies that withdrawing the
-route blocks queued work before it contacts the receiver. [Provisioning contract](../protocols/operator-connection-provisioning.md)
+An operator can provision and withdraw the exact SFTP route through the same
+typed HTTPS and CLI commands. The agent keeps its existing permissions, and
+each ordinary workflow approval and dispatch check still applies. The local
+replay verifies cross-surface receipt recovery and queued-work refusal before
+receiver contact. [Provisioning contract](../protocols/operator-connection-provisioning.md)
 
 The [ordinary upload descriptor](../protocols/artifact-ingress-descriptor.md)
 lets an agent's trusted host discover exact upload metadata while keeping bytes

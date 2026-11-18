@@ -10,13 +10,14 @@ import (
 	"os/exec"
 	"path/filepath"
 	"slices"
+	"strconv"
 	"testing"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
-func provisionStockRoute(t *testing.T, f *fixture, binary string, agent store.Scope, actor string, stock *mixedStockReceiver) (ConnectionProvisionReceipt, func(string, ConnectionProvisionCommand) (ConnectionProvisionReceipt, Result)) {
+func provisionStockRoute(t *testing.T, f *fixture, binary string, operatorHTTP, agentHTTP stockExchangeRequest, agent store.Scope, actor string, stock *mixedStockReceiver) (ConnectionProvisionReceipt, func(string, ConnectionProvisionCommand) (ConnectionProvisionReceipt, Result)) {
 	t.Helper()
 	db := f.s.Custody.DB
 	original, err := db.Identity(f.ctx, agent)
@@ -25,13 +26,13 @@ func provisionStockRoute(t *testing.T, f *fixture, binary string, agent store.Sc
 	}
 	source := Reference{ID: stock.connection.ID, Version: stock.connection.Version, Hash: stock.connection.Hash}
 	command := ConnectionProvisionCommand{Operation: "provision", Recipient: actor, RecipientAuthority: original.AuthorityRevision, Source: &source}
-	if _, err = f.s.ProvisionConnection(f.ctx, agent, "recipient-cannot-provision", command); !errors.Is(err, store.ErrForbidden) {
-		t.Fatal("recipient could provision a route", err)
-	}
+	const route = "/connections/provisioning/commands"
+	agentHTTP(route, "recipient-cannot-provision", command, 403)
 	stale := command
 	stale.RecipientAuthority--
-	if _, err = f.s.ProvisionConnection(f.ctx, f.scope, "stale-recipient-provision", stale); !errors.Is(err, store.ErrRevision) {
-		t.Fatal("operator provision rebound stale recipient authority", err)
+	refused := readStockExchangeJSON[map[string]string](t, operatorHTTP(route, "stale-recipient-provision", stale, 409))
+	if refused["error"] != "revision_conflict" {
+		t.Fatal("operator provision lost the stale recipient refusal")
 	}
 	foreign := store.Scope{Tenant: f.scope.Tenant, Partner: secure.NewID()}
 	foreignToken := filepath.Join(t.TempDir(), "other-partner.token")
@@ -53,10 +54,18 @@ func provisionStockRoute(t *testing.T, f *fixture, binary string, agent store.Sc
 	}
 	outside := command
 	outside.Recipient, outside.RecipientAuthority = other.Actor, other.AuthorityRevision
-	if _, err = f.s.ProvisionConnection(f.ctx, f.scope, "foreign-recipient-provision", outside); !errors.Is(err, store.ErrNotFound) {
-		t.Fatal("operator provision crossed partner scope", err)
-	}
+	operatorHTTP(route, "foreign-recipient-provision", outside, 404)
 	control := func(key string, cmd ConnectionProvisionCommand) (ConnectionProvisionReceipt, Result) {
+		t.Helper()
+		raw := operatorHTTP(route, key, cmd, 200)
+		result := readStockExchangeJSON[Result](t, raw)
+		provision := readStockExchangeJSON[ConnectionProvisionReceipt](t, result.Resource)
+		if provision.Profile != operatorConnectionProfile || bytes.Contains(raw, []byte(stock.client)) {
+			t.Fatal("operator HTTPS provision changed its profile or disclosed a private reference")
+		}
+		return provision, result
+	}
+	cli := func(key string, cmd ConnectionProvisionCommand) (ConnectionProvisionReceipt, Result) {
 		t.Helper()
 		raw, err := json.Marshal(cmd)
 		if err != nil {
@@ -83,12 +92,14 @@ func provisionStockRoute(t *testing.T, f *fixture, binary string, agent store.Sc
 		t.Fatal("provision changed identity, authority or approved destination", err)
 	}
 	requireProvisionProjectionGuards(t, f, agent, first)
-	replayed, saved := control("provision-agent-route", command)
-	if !saved.Replayed || replayed != first {
-		t.Fatal("provision retry changed the registered connection or journal event")
+	cliReplay, saved := cli("provision-agent-route", command)
+	replayed, httpSaved := control("provision-agent-route", command)
+	if !saved.Replayed || !httpSaved.Replayed || cliReplay != first || replayed != first {
+		t.Fatal("CLI or HTTPS provision retry changed the registration or journal event")
 	}
-	if _, err = f.s.ProvisionConnection(f.ctx, f.scope, "provision-agent-route", stale); !errors.Is(err, store.ErrConflict) {
-		t.Fatal("connection provisioning key was rebound", err)
+	conflict := readStockExchangeJSON[map[string]string](t, operatorHTTP(route, "provision-agent-route", stale, 409))
+	if conflict["error"] != "idempotency_conflict" {
+		t.Fatal("connection provisioning key was rebound")
 	}
 	var recordedBy, owner string
 	err = f.admin.QueryRow(f.ctx, `SELECT e.actor_id::text,c.actor_id::text FROM events e JOIN connection_revisions c
@@ -98,15 +109,12 @@ func provisionStockRoute(t *testing.T, f *fixture, binary string, agent store.Sc
 	if err != nil || recordedBy != manager.Actor || owner != actor {
 		t.Fatal("projection impersonated the agent or lost its operator event", err)
 	}
-	if _, err = f.s.Connection(f.ctx, agent, source.ID, source.Version); !errors.Is(err, store.ErrNotFound) {
-		t.Fatal("agent read the operator's original connection", err)
-	}
-	if _, err = f.s.Connection(f.ctx, f.scope, first.Connection.ID, 1); !errors.Is(err, store.ErrNotFound) {
-		t.Fatal("operator gained general read access to recipient-owned connections", err)
-	}
-	view, err := f.s.Connection(f.ctx, agent, first.Connection.ID, 1)
-	if err != nil || view.Hash != source.Hash || view.HostFingerprint != stock.connection.HostFingerprint || view.KeyFingerprint != stock.connection.KeyFingerprint || view.Directory != stock.connection.Directory {
-		t.Fatal("recipient connection did not preserve exact pins", err)
+	agentHTTP("/connections/"+source.ID+"/"+strconv.Itoa(source.Version), "", nil, 404)
+	assignedRoute := "/connections/" + first.Connection.ID + "/1"
+	operatorHTTP(assignedRoute, "", nil, 404)
+	view := readStockExchangeJSON[ConnectionView](t, agentHTTP(assignedRoute, "", nil, 200))
+	if view.ID != first.Connection.ID || view.State != "active" || view.Hash != source.Hash || view.HostFingerprint != stock.connection.HostFingerprint || view.KeyFingerprint != stock.connection.KeyFingerprint || view.Directory != stock.connection.Directory {
+		t.Fatal("recipient connection did not preserve exact pins")
 	}
 	return first, control
 }

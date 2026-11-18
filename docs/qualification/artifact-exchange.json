@@ -513,7 +513,8 @@
         "docs/qualification/evidence/F510-supervised-stock-ftps-producer.json",
         "docs/qualification/evidence/F513-native-stock-ftps-producer-harness.json",
         "docs/qualification/evidence/F516-stock-sftp-source-agent-exchange.json",
-        "docs/qualification/evidence/F517-stock-collection-https-exchange.json"
+        "docs/qualification/evidence/F517-stock-collection-https-exchange.json",
+        "docs/qualification/evidence/F518-operator-connection-provisioning-https.json"
       ]
     },
     {

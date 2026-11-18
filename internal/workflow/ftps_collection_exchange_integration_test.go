@@ -225,7 +225,7 @@ func proveCollectionAgentOnward(t *testing.T, f *fixture, selection CollectionSe
 	agentFixture := *f
 	agentFixture.scope = agent
 	stock := newMixedStockReceiver(t, f)
-	provisioned, control := provisionStockRoute(t, f, binary, agent, account.ID, stock)
+	provisioned, control := provisionStockRoute(t, f, binary, sender, curl, agent, account.ID, stock)
 	ownedReplay := copyArtifact()
 	if !ownedReplay.Replayed || ownedReplay.Artifact != owned.Artifact || ownedReplay.EventID != owned.EventID {
 		t.Fatal("recovering owned copy reopened or replaced the original view")
@@ -233,6 +233,7 @@ func proveCollectionAgentOnward(t *testing.T, f *fixture, selection CollectionSe
 	queued := requireAgentStockOnward(t, &agentFixture, curl, stock, provisioned.Connection, source.Artifact, owned.Artifact)
 	beforeRevoke := stock.sessions(t)
 	revoke := ConnectionProvisionCommand{Operation: "revoke", Connection: &provisioned.Connection, ProvisionEvent: provisioned.EventID}
+	curl("/connections/provisioning/commands", "recipient-cannot-revoke-provision", revoke, 403)
 	revoked, first := control("revoke-agent-route", revoke)
 	if first.Replayed || revoked.State != "revoked" || revoked.Revision != 2 || revoked.Connection != provisioned.Connection || revoked.ProvisionEvent != provisioned.EventID {
 		t.Fatal("operator revoke did not preserve the original route binding")

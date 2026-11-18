@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "id": "F518",
+  "observed_at": "2026-11-19",
+  "base_candidate": "bc7c1bc7263fcef5a4f313176da95db7db5bc177",
+  "qualification_claim": false,
+  "scope": "Ordinary authenticated HTTPS operator commands for provisioning and revoking an exact registered SFTP route",
+  "cli_and_schema_record": "docs/qualification/evidence/F505-operator-connection-provisioning.json",
+  "prior_https_journey": "docs/qualification/evidence/F517-stock-collection-https-exchange.json",
+  "contract": {
+    "route": "POST /v1/tenants/{tenant}/partners/{partner}/connections/provisioning/commands",
+    "schema_required": 67,
+    "request_max_bytes": 4096,
+    "local_openapi": "docs/api/operator-connection-provisioning.openapi.json",
+    "service": "workflow.Service.ProvisionConnection",
+    "authority": "Current root admin and connections_manage with an existing exact active SFTP source reference and an exact eligible same-partner recipient."
+  },
+  "first_failure": {
+    "result": "The router returned 405 before the endpoint was installed.",
+    "test_log": {
+      "sha256": "30b5f3ab4645c9513fdc5f8fe3c5a6cec1205460df52d860bce6663d7a8e9913",
+      "bytes": 1857
+    }
+  },
+  "targeted_race_tests": {
+    "scope": "Authentication, missing operation key, duplicate or aliased fields, invented credential selectors, body bounds, browser origin and CSRF guards.",
+    "test_log": {
+      "sha256": "7823ca5421e854783774751a948fa9c182540ea29f8ab365a4150f4b13683fe6",
+      "bytes": 1626
+    }
+  },
+  "real_https_and_cli": {
+    "environment": "Go 1.27.4 darwin/arm64 with race detection, real PostgreSQL 16.15, Apple curl 8.7.1 and stock OpenSSH 10.5p1 on task-owned loopback",
+    "inference_enabled": false,
+    "stock_sftp_focused_log": {
+      "sha256": "6a9170716b72768f25c6dda037d7923ac80263a7426b2483ad209deef882e8cf",
+      "bytes": 217
+    },
+    "original_journeys_log": {
+      "sha256": "fa79485d8100ec8e6d0de47854b22d72ccb91506c61996ee002f12ee71286954",
+      "bytes": 1753
+    },
+    "freightctl_ftps_modes": 2,
+    "freightctl_ftps_collection_subcases": 4,
+    "supervised_stock_ftps": {
+      "summary": {
+        "sha256": "7263f21d6250ba660ec0955ffc3464cb26ab2bcb15b22784cc6542391e859487",
+        "bytes": 2989
+      },
+      "mode_counts": {
+        "explicit": 2,
+        "implicit": 2
+      }
+    },
+    "assertions": [
+      "A recipient without administration cannot provision or revoke a route. Stale recipient authority and unrelated partner actors are refused.",
+      "An HTTP provision creates one exact registration with the assigned actor as owner and the operator as event author. The recipient authority revision and SSH pins match the approved source.",
+      "HTTP and CLI both recover the original provision receipt. Changed meaning under the same key is refused. An unauthorized raw projection and a standalone event cannot bypass its receipt.",
+      "HTTP reads keep the original and assigned connection actor-private. The assigned recipient sees the exact pinned route.",
+      "The stock receiver independently reads back the approved owned bytes. HTTP revocation preserves its own receipt and fences the already queued run before any new receiver session."
+    ]
+  },
+  "static": [
+    "Tagged Go vet",
+    "gofmt",
+    "OpenAPI path, statuses and local references",
+    "qualification records",
+    "git diff --check"
+  ],
+  "sources": [
+    {
+      "path": "internal/api/api.go",
+      "sha256": "dec80f1a898adec1f1fa1968df15a95ed12eb17ba1b17a84b681753ea895e497",
+      "bytes": 30828
+    },
+    {
+      "path": "internal/api/connection_provision.go",
+      "sha256": "ff60c10d98c61c67ab8930e82cd57fec5f68e592d314566727dea59245d4cdab",
+      "bytes": 766
+    },
+    {
+      "path": "internal/api/connection_provision_test.go",
+      "sha256": "93b15eca17c17872b6bc547adb81ed27c192731c221ad58eb612ca0b336ad12a",
+      "bytes": 2693
+    },
+    {
+      "path": "internal/workflow/connection_provision_integration_test.go",
+      "sha256": "64d6b4f5be084c083b7ade7680ce7be3e88aee237dcf79826b2babbdd3605078",
+      "bytes": 7810
+    },
+    {
+      "path": "internal/workflow/ftps_collection_exchange_integration_test.go",
+      "sha256": "9e827192f71f877fe7246edb6a8c4214d59e4be40d378addfaf0d1fd1c73041b",
+      "bytes": 25016
+    },
+    {
+      "path": "docs/api/operator-connection-provisioning.openapi.json",
+      "sha256": "28ea5886a5c02b02cc09cdce26fc743ef8d1f6c8629726dfb10984b9b3b1a142",
+      "bytes": 9708
+    }
+  ],
+  "remaining": [
+    "Native Linux qualification and browser operator UI proof remain open. Additional connection profiles, process-death recovery and the full product gates stay open."
+  ]
+}
