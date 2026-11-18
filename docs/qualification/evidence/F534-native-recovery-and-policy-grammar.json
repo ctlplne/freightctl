@@ -1,0 +1,109 @@
+{
+  "schema_version": 1,
+  "id": "F534",
+  "observed_at": "2026-11-19",
+  "base_candidate": "32cabd1c5f87be8fd1e22e6d21391c97e8d9f796",
+  "qualification_claim": false,
+  "scope": "Original native SFTP worker-death recovery and exact policy-schema inventory correction",
+  "original_candidate": "2c19ff2c83c0c13765a14f011dae28f0d8d7f515",
+  "native_recovery": {
+    "run_id": 44391841916,
+    "attempt": 1,
+    "runner_os": "Ubuntu 24.04",
+    "test": "TestStockSFTPOnwardWorkerDeathKeepsExactActorBoundary",
+    "race": true,
+    "local_predecessor": "docs/qualification/evidence/F527-reviewed-onward-readback.json",
+    "claims": "The original stock OpenSSH worker-death journey passed on each architecture with real PostgreSQL. Read-only recovery preserved one publication attempt and fence. Both enclosing jobs failed and their broad integration steps were skipped.",
+    "jobs": [
+      {
+        "architecture": "arm64",
+        "job_id": 135111286868,
+        "job_conclusion": "failure",
+        "worker_death_step": 17,
+        "worker_death_conclusion": "success",
+        "worker_death_test_seconds": 35.04,
+        "worker_death_log": {
+          "sha256": "1d092b79f697b8c7ffb9b33dbaab522270d0e9f985082b860a4ff08654c41e0e",
+          "bytes": 3134
+        },
+        "combined_integrity_and_unit_step": {
+          "sha256": "00910237730d67ecedbe6196837a7736552fe40353e42c76f252a3bf694e0ed7",
+          "bytes": 11188
+        }
+      },
+      {
+        "architecture": "x86_64",
+        "job_id": 135111287016,
+        "job_conclusion": "failure",
+        "worker_death_step": 17,
+        "worker_death_conclusion": "success",
+        "worker_death_test_seconds": 34.15,
+        "worker_death_log": {
+          "sha256": "3e910683d36a665d10f8181b6438fd7a7fb6720951dad3c30e6705c386d31fc7",
+          "bytes": 3149
+        },
+        "combined_integrity_and_unit_step": {
+          "sha256": "51154dd007c3e36ecb29c14eb03512dbd533abdc286d9b4864d4f8942b53187d",
+          "bytes": 11005
+        }
+      }
+    ]
+  },
+  "policy_schema": {
+    "original_run_id": 44391841699,
+    "original_attempt": 1,
+    "original_job_id": 135111284298,
+    "original_failed_step": 6,
+    "original_failure_log": {
+      "sha256": "e247b13b597aa0b2497a15b78598e0526ca0e0d2c3c4200e426a4ca80290f89e",
+      "bytes": 5319
+    },
+    "original_security_steps": {
+      "Go vulnerability reachability": "success",
+      "Committed source and history secret scan": "success"
+    },
+    "observation": "The original catalog already contains nine acceptance_policy fields. Go and ECMAScript compared each field with the full 62-case custody grammar and then failed the old expected count of eight. The original core and both Linux job logs recorded that count failure in Go.",
+    "local_race_red": {
+      "sha256": "10281bdc27db5f922852b3b30a778fb82f9413f4d5bdca50ad5a2db66cf7e7d7",
+      "bytes": 1267
+    },
+    "local_race_green": {
+      "sha256": "66c0ba3e31cb0d3f4bece239dc972e20adc52e3bcd653fe0f83bb019e2b0c0ea",
+      "bytes": 1178
+    },
+    "ecmascript_replay": "pass with all nine fields and 62 cases"
+  },
+  "sources": [
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "commit": "2c19ff2c83c0c13765a14f011dae28f0d8d7f515",
+      "sha256": "2cf2b8eb87a775d439ac40e06966ddca529e34723e82dea87bba11df808295e4",
+      "bytes": 15917
+    },
+    {
+      "path": "internal/workflow/onward_stock_recovery_integration_test.go",
+      "commit": "2c19ff2c83c0c13765a14f011dae28f0d8d7f515",
+      "sha256": "18759c062b38e514e5284087c33c80cd7fc285021049584b95dee825a2eecaf0",
+      "bytes": 14500
+    },
+    {
+      "path": "internal/api/artifact_policy_schema_test.go",
+      "sha256": "247f49e3033e943c5a0b6aa4f0459567a025a9e6ad1c489f8a87ae90e61349b1",
+      "bytes": 2411
+    },
+    {
+      "path": "web/tests/artifact-policy-schema.test.mjs",
+      "sha256": "f03b91e54014cbc42c5ae67b860e1cf310aedb29efc65cfe10531b4c79d1f002",
+      "bytes": 1507
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "4ddc53cd02f5b98d3bec8f5277508845fc2182573c8375edf9feefd35369c23f",
+      "bytes": 138297
+    }
+  ],
+  "remaining": [
+    "Replay the corrected policy-grammar step and native unit and integration checks on exact source. Other original failures remain open.",
+    "F531 loses a successful stock OpenSSH reply in a separate fault scenario. Its native replay remains due."
+  ]
+}

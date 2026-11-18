@@ -337,6 +337,13 @@ read authority. Held sources and incoming views omit it. Real PostgreSQL,
 the stock MCP SDK, HTTPS, the full CLI journey and browser contract checks
 passed locally. Native Linux and the live browser lineage journey remain due.
 
+[F534](docs/qualification/evidence/F534-native-recovery-and-policy-grammar.json)
+records the original stock OpenSSH recovery after worker death passing on
+native Linux x86 and ARM. Both enclosing unit steps failed on the same stale
+MCP policy count as the core workflow. The corrected Go and browser checks
+exercise all nine published policy fields against 62 custody cases. The
+separate lost OpenSSH reply still needs its native replay.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

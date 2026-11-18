@@ -76,7 +76,7 @@ func TestPublicArtifactPolicySchemasMatchActualDomain(t *testing.T) {
 			walk(document)
 			want := 1
 			if name == "mcp" {
-				want = 8
+				want = 9
 			}
 			if count != want {
 				t.Fatalf("policy schema coverage changed: got %d,want %d", count, want)
