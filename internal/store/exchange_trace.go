@@ -8,9 +8,15 @@ import (
 	"github.com/jackc/pgx/v5"
 )
 
+const (
+	ExchangeEvidenceV1 = "authorized-exchange-evidence-v1"
+	ExchangeEvidenceV2 = "authorized-exchange-evidence-v2"
+)
+
 type ExchangeTraceRequest struct {
 	ID        string `json:"exchange_id"`
 	Direction string `json:"direction"`
+	Profile   string `json:"profile,omitempty"`
 }
 
 type ExchangeTraceExportSelection struct {
@@ -29,6 +35,9 @@ func ValidateExchangeTraceRequest(r ExchangeTraceRequest) error {
 	if !ValidID(r.ID) || (r.Direction != "incoming" && r.Direction != "outgoing") {
 		return ErrExchangeInput
 	}
+	if r.Profile != "" && r.Profile != ExchangeEvidenceV1 && r.Profile != ExchangeEvidenceV2 {
+		return ErrExchangeInput
+	}
 	return nil
 }
 
@@ -38,32 +47,44 @@ type ExchangeTraceEvent struct {
 	Resource string    `json:"resource_id"`
 	At       time.Time `json:"recorded_at"`
 }
+type ExchangeProjectionLineage struct {
+	ProjectionID   string           `json:"projection_id"`
+	DefinitionHash string           `json:"definition_hash"`
+	Source         ExchangeArtifact `json:"source_artifact"`
+	SourceEvent    string           `json:"source_accepted_event_id"`
+	CompletedEvent string           `json:"completed_event_id"`
+	CompletedAt    time.Time        `json:"completed_at"`
+}
 type ExchangeTrace struct {
-	Profile             string               `json:"profile"`
-	Tenant              string               `json:"tenant_id"`
-	Partner             string               `json:"partner_id"`
-	ID                  string               `json:"exchange_id"`
-	Direction           string               `json:"direction"`
-	State               string               `json:"current_metadata_state"`
-	CheckedAt           time.Time            `json:"checked_at"`
-	Details             string               `json:"details"`
-	RequestHash         string               `json:"request_hash,omitempty"`
-	Artifact            *ExchangeArtifact    `json:"artifact,omitempty"`
-	ReplyTo             string               `json:"reply_reference_only,omitempty"`
-	Events              []ExchangeTraceEvent `json:"recorded_events"`
-	StorageVerification string               `json:"storage_verification"`
-	Retrieval           string               `json:"retrieval"`
-	ReceiverPersistence string               `json:"receiver_persistence"`
-	BusinessProcessing  string               `json:"business_processing"`
+	Profile             string                     `json:"profile"`
+	Tenant              string                     `json:"tenant_id"`
+	Partner             string                     `json:"partner_id"`
+	ID                  string                     `json:"exchange_id"`
+	Direction           string                     `json:"direction"`
+	State               string                     `json:"current_metadata_state"`
+	CheckedAt           time.Time                  `json:"checked_at"`
+	Details             string                     `json:"details"`
+	RequestHash         string                     `json:"request_hash,omitempty"`
+	Artifact            *ExchangeArtifact          `json:"artifact,omitempty"`
+	ReplyTo             string                     `json:"reply_reference_only,omitempty"`
+	Events              []ExchangeTraceEvent       `json:"recorded_events"`
+	Projection          *ExchangeProjectionLineage `json:"record_projection,omitempty"`
+	StorageVerification string                     `json:"storage_verification"`
+	Retrieval           string                     `json:"retrieval"`
+	ReceiverPersistence string                     `json:"receiver_persistence"`
+	BusinessProcessing  string                     `json:"business_processing"`
 }
 
 func emptyExchangeTrace(scope Scope, r ExchangeTraceRequest, state string, at time.Time) *ExchangeTrace {
-	return &ExchangeTrace{Profile: "authorized-exchange-evidence-v1", Tenant: scope.Tenant, Partner: scope.Partner, ID: r.ID, Direction: r.Direction, State: state, CheckedAt: at.UTC(), Details: "opaque", Events: []ExchangeTraceEvent{}, StorageVerification: "not-checked", Retrieval: "unknown", ReceiverPersistence: "unknown", BusinessProcessing: "unknown"}
+	profile := r.Profile
+	if profile == "" {
+		profile = ExchangeEvidenceV1
+	}
+	return &ExchangeTrace{Profile: profile, Tenant: scope.Tenant, Partner: scope.Partner, ID: r.ID, Direction: r.Direction, State: state, CheckedAt: at.UTC(), Details: "opaque", Events: []ExchangeTraceEvent{}, StorageVerification: "not-checked", Retrieval: "unknown", ReceiverPersistence: "unknown", BusinessProcessing: "unknown"}
 }
 
-// Direction chooses the existing authority boundary;there is no sender/receiver
-// fallback. Only timestamps of already authorized immutable resource events are
-// read. No raw payload,arbitrary event selector,parent traversal or byte grant.
+// Direction chooses the existing incoming view or original sender authority.
+// V2 can also correlate one completed record projection for its original actor.
 func (s *Store) TraceExchange(ctx context.Context, scope Scope, r ExchangeTraceRequest, limits ExchangeLimits) (*ExchangeTrace, error) {
 	if err := ValidateExchangeTraceRequest(r); err != nil {
 		return nil, err
@@ -165,6 +186,57 @@ func (t *Transaction) TraceExchange(ctx context.Context, r ExchangeTraceRequest,
 				return nil, err
 			}
 		}
+		if r.Profile == ExchangeEvidenceV2 && r.Direction == "outgoing" {
+			result.Projection, err = t.exchangeProjectionLineage(ctx, file)
+			if err != nil {
+				return nil, err
+			}
+		}
 	}
 	return result, nil
+}
+
+// The outgoing trace already holds the shared namespace lock. Bind the output
+// acceptance and its private slot to the original completed projection. Use the
+// reviewed input tuple and ordinary current file access before disclosing it.
+func (t *Transaction) exchangeProjectionLineage(ctx context.Context, output *File) (*ExchangeProjectionLineage, error) {
+	var lineage ExchangeProjectionLineage
+	err := t.Tx.QueryRow(ctx, `
+SELECT r.projection_id::text,r.definition_hash,f.file_id::text,f.size_bytes,f.sha256,f.policy,
+       source.event_id::text,completed.event_id::text,completed.happened_at
+FROM record_projection_slots s
+JOIN record_projections r USING (tenant_id,partner_id,actor_id,projection_id)
+JOIN events accepted ON (accepted.tenant_id,accepted.partner_id,accepted.actor_id,accepted.resource_id,accepted.kind)
+                       =(r.tenant_id,r.partner_id,r.actor_id,s.file_id,'FileAccepted')
+JOIN files f ON (f.tenant_id,f.partner_id,f.file_id)=(r.tenant_id,r.partner_id,r.source_file_id)
+JOIN events source ON (source.tenant_id,source.partner_id,source.event_id,source.resource_id,source.kind)
+                     =(f.tenant_id,f.partner_id,f.accepted_event_id,f.file_id,'FileAccepted')
+JOIN events completed ON (completed.tenant_id,completed.partner_id,completed.event_id,completed.actor_id,completed.resource_id,completed.kind)
+                        =(r.tenant_id,r.partner_id,r.changed_event_id,r.actor_id,r.projection_id,'RecordProjectionChanged')
+WHERE s.file_id=$1 AND accepted.event_id=$2 AND s.actor_id=$3 AND r.state='completed' AND r.new_file_id=s.file_id
+  AND accepted.payload->>'schema_version' IN ('5','6','7')
+  AND accepted.payload #>> '{record_projection,id}'=r.projection_id::text
+  AND accepted.payload #>> '{record_projection,definition_hash}'=r.definition_hash
+  AND accepted.payload #>> '{record_projection,source_file_id}'=f.file_id::text
+  AND r.definition #>> '{plan,context,namespace_root}'=$4
+  AND r.definition #> '{plan,context,authority_revision}'=to_jsonb($5::bigint)
+  AND r.definition #> '{plan,context,source,file}'=jsonb_build_object(
+      'id',f.file_id::text,'size_bytes',f.size_bytes,'sha256',f.sha256,'policy',f.policy,'accepted_event_id',source.event_id::text)`,
+		output.ID, output.EventID, t.Actor, t.Root, t.AuthorityRevision).Scan(
+		&lineage.ProjectionID, &lineage.DefinitionHash, &lineage.Source.ID, &lineage.Source.Size, &lineage.Source.SHA256,
+		&lineage.Source.Policy, &lineage.SourceEvent, &lineage.CompletedEvent, &lineage.CompletedAt)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, nil
+	}
+	if err != nil {
+		return nil, err
+	}
+	if err = t.FileAccessible(ctx, lineage.Source.ID); err != nil {
+		if errors.Is(err, ErrState) || errors.Is(err, ErrNotFound) || errors.Is(err, ErrForbidden) || errors.Is(err, ErrLimit) {
+			return nil, nil
+		}
+		return nil, err
+	}
+	lineage.CompletedAt = lineage.CompletedAt.UTC()
+	return &lineage, nil
 }

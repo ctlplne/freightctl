@@ -48,6 +48,7 @@ type mcpToolArguments struct {
 	Upload             string                     `json:"upload_id"`
 	Path               string                     `json:"virtual_path"`
 	Direction          string                     `json:"direction"`
+	Profile            string                     `json:"profile"`
 	OutputPolicy       *store.OnboardingReference `json:"output_policy,omitempty"`
 	Proposal           string                     `json:"proposal_id"`
 	Action             string                     `json:"action"`
@@ -224,7 +225,7 @@ func (s *Server) callMCPTool(ctx context.Context, scope store.Scope, name string
 		}
 		return s.Service.CopyReceivedExchange(ctx, scope, args.Key, request)
 	case "freightctl.exchange_trace":
-		return s.Service.TraceExchange(ctx, scope, store.ExchangeTraceRequest{ID: args.Exchange, Direction: args.Direction})
+		return s.Service.TraceExchange(ctx, scope, store.ExchangeTraceRequest{ID: args.Exchange, Direction: args.Direction, Profile: args.Profile})
 	case "freightctl.validate_workflow", "freightctl.propose_workflow":
 		return s.mcpWorkflowControl(ctx, scope, name, args)
 	case "freightctl.artifact_upload_start", "freightctl.artifact_upload_status", "freightctl.artifact_upload_complete", "freightctl.artifact_upload_abort":

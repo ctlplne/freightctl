@@ -1,0 +1,114 @@
+{
+  "schema_version": 1,
+  "id": "F533",
+  "observed_at": "2026-11-19",
+  "base_candidate": "a34a6d8741abf7ffea2a1eb765cea174bcdf84da",
+  "qualification_claim": false,
+  "scope": "Direct deterministic record projection lineage in an authorized exchange trace",
+  "first_failure": {
+    "observation": "The existing trace returns v1 when the regression requests v2 after releasing and offering an actual generated output.",
+    "log": {
+      "sha256": "12508139bab942ea92338e0f396ff4fb79c8ec5a0f66b153b7219c94e2396508",
+      "bytes": 321
+    }
+  },
+  "local": {
+    "environment": "macOS ARM with Go 1.27.4, real PostgreSQL 16.15, disk custody, protected loopback HTTPS and the stock MCP SDK",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "stock_cli_workbook_producer": "XlsxWriter 3.3.1 from the existing hash-pinned installation",
+    "stock_cli_workbook": {
+      "sha256": "ab43b6e9e2919608d216adf09abe63e70f4944c254a9f8a3878899487887fc1c",
+      "bytes": 5777
+    },
+    "initial_focused_pass": {
+      "sha256": "b8fc46f3798e26fb19219b6ae400cda7905e71ee8e93feedf47edb1cd39ea9f9",
+      "bytes": 223
+    },
+    "aggregate_fixture_failure": {
+      "observation": "The first race replay lacked migration in the custody fixture database and the stock workbook for the last CLI intake check. The replay migrated the original database and supplied a stock workbook.",
+      "log": {
+        "sha256": "7f007af67160aa19d5e095caaf31cfef3559f50757dde4efc72270345d4a1950",
+        "bytes": 4620
+      }
+    },
+    "race_replay": {
+      "state": "pass",
+      "log": {
+        "sha256": "7d11f1f4f3df579c829473c184acc8b2c894fd132ebe4bd01ab5a146c84f0e17",
+        "bytes": 4546
+      }
+    },
+    "browser_contract": "12 affected JavaScript tests passed. The static type check and reproducible embedded browser build passed.",
+    "go_static": "Affected integration-tagged go vet passed.",
+    "assertions": [
+      "A real approved CSV-to-JSON record projection produced a new custody revision. The output required its own checks and release before exchange.",
+      "The original sender saw the output while the input stayed held. After the same input was released, v2 matched its immutable file tuple and acceptance event and the exact completed projection event and definition hash.",
+      "V1 and incoming evidence omitted the edge. The recipient could inspect the received output but could not read the original sender trace. Paths, reports, raw data and storage references were omitted.",
+      "The generated edge appeared in the portable export and the receipt verified the exact manifest bytes. Separately, live HTTPS, stock MCP and the full CLI journey selected v2 and omitted lineage for ordinary supplied artifacts.",
+      "Browser parsing requires outgoing v2, distinct input and output identities, recognized event IDs and a bounded field set. Storage verification, retrieval, receiver persistence and business processing keep their prior evidence values."
+    ]
+  },
+  "sources": [
+    {
+      "path": "internal/store/exchange_trace.go",
+      "sha256": "6f8c887acfca1e79d91bb25c5df57b635a5c0165f898926220250d3faed66454",
+      "bytes": 9751
+    },
+    {
+      "path": "internal/checks/exchange_lineage_integration_test.go",
+      "sha256": "b953b781cfe2616a33ef1172b42c9427f4be25693b0ba5c04864fe5f77138711",
+      "bytes": 6915
+    },
+    {
+      "path": "internal/api/mcp.go",
+      "sha256": "e864153c994a169f30f57e42caee3b1091da8c65c44c3334b77ae90ea86a64cb",
+      "bytes": 13477
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "4ddc53cd02f5b98d3bec8f5277508845fc2182573c8375edf9feefd35369c23f",
+      "bytes": 138297
+    },
+    {
+      "path": "internal/api/mcp_integration_test.go",
+      "sha256": "3b0cdc2f71b305dc68217a1b62bff8364ea34bdb6a1bc14dae5bb0ee23d2d894",
+      "bytes": 37539
+    },
+    {
+      "path": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "87d912d45971778dc823fc28914200f4388f13b474189345384d6b1c62e4368a",
+      "bytes": 24290
+    },
+    {
+      "path": "web/src/artifact-evidence-types.ts",
+      "sha256": "2b23687783dc746ad6f4e6e6161ddbd45d68d00d764c0b8e038692b55cbbc825",
+      "bytes": 7982
+    },
+    {
+      "path": "web/src/artifact-evidence.tsx",
+      "sha256": "bba42a4b3a08e458f103333025ee332523d8a0d6b3ba3a560acbc0d41e9a7118",
+      "bytes": 5559
+    },
+    {
+      "path": "web/src/artifact-exchanges-api.ts",
+      "sha256": "5c3511cd471208a7f5c3cbe99cd40a905f41a7401132388d2edac1ab05c2faba",
+      "bytes": 17483
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "2104b950e40ffaa8fffa08082b8d805e7008ec4d15f1c4936743f2d2ce880011",
+      "bytes": 14417
+    },
+    {
+      "path": "docs/api/artifact-evidence.openapi.json",
+      "sha256": "b04ee1ae2c5e7cdedc91fa1af113d339f7c7acfc8682f6f7ccf69c3f1413ca8c",
+      "bytes": 15002
+    }
+  ],
+  "remaining": [
+    "Positive generated-artifact lineage through a live browser and separate end-to-end native Linux qualification remain due.",
+    "Full AX05 and the remaining baseline and artifact exchange journeys stay open."
+  ]
+}

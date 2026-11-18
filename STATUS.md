@@ -330,6 +330,13 @@ records the default source scans for `2c19ff2`. The enforcing converter
 reports zero reachable findings on macOS ARM, Linux ARM and Windows x86.
 The separate native browser and live FTPS governance runtime step failed.
 
+[F533](docs/qualification/evidence/F533-authorized-projection-lineage.json)
+links a generated exchange artifact to its exact input revision and completed
+record projection. The original sender sees the link under current source
+read authority. Held sources and incoming views omit it. Real PostgreSQL,
+the stock MCP SDK, HTTPS, the full CLI journey and browser contract checks
+passed locally. Native Linux and the live browser lineage journey remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

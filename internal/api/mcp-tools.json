@@ -3009,7 +3009,7 @@
   },
   {
     "name": "freightctl.exchange_trace",
-    "description": "Inspect only already authorized recorded custody/offer/closure evidence under explicit incoming-view or original-sender-receipt authority. Held incoming views remain opaque. No parent traversal,raw event payload,physical verification,receipt/grant/effect or stronger receiver outcome.",
+    "description": "Read authorized custody, offer and closure records. Select v2 to see one completed record projection when the original sender also has current access to the source revision. Held incoming views remain opaque. Receiver outcomes remain unknown.",
     "inputSchema": {
       "type": "object",
       "additionalProperties": false,
@@ -3027,6 +3027,13 @@
           "enum": [
             "incoming",
             "outgoing"
+          ]
+        },
+        "profile": {
+          "type": "string",
+          "enum": [
+            "authorized-exchange-evidence-v1",
+            "authorized-exchange-evidence-v2"
           ]
         }
       }

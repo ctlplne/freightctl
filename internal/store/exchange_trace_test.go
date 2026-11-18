@@ -7,7 +7,7 @@ import (
 )
 
 func TestExchangeEvidenceOpaqueWireContainsNoSourceReplyOrImmutableEvents(t *testing.T) {
-	r := ExchangeTraceRequest{ID: "33333333-3333-4333-8333-333333333333", Direction: "incoming"}
+	r := ExchangeTraceRequest{ID: "33333333-3333-4333-8333-333333333333", Direction: "incoming", Profile: ExchangeEvidenceV2}
 	v := emptyExchangeTrace(Scope{Tenant: "11111111-1111-4111-8111-111111111111", Partner: "22222222-2222-4222-8222-222222222222"}, r, "held", time.Date(2026, 11, 5, 0, 0, 0, 123000, time.UTC))
 	raw, err := json.Marshal(v)
 	if err != nil {
@@ -17,7 +17,7 @@ func TestExchangeEvidenceOpaqueWireContainsNoSourceReplyOrImmutableEvents(t *tes
 	if json.Unmarshal(raw, &wire) != nil {
 		t.Fatal("wire decode")
 	}
-	for _, key := range []string{"artifact", "request_hash", "reply_reference_only", "payload", "storage_id", "actor_id"} {
+	for _, key := range []string{"artifact", "request_hash", "reply_reference_only", "record_projection", "payload", "storage_id", "actor_id"} {
 		if _, ok := wire[key]; ok {
 			t.Fatal("opaque evidence leaked a source/audit/authority field", key)
 		}

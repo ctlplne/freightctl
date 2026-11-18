@@ -2,15 +2,15 @@
   "openapi": "3.1.0",
   "info": {
     "title": "freightctl authorized exchange evidence subset",
-    "version": "1",
+    "version": "2",
     "description": "Structural interface contract;actual native/conformance and full product qualification remain separate."
   },
   "paths": {
     "/v1/tenants/{tenant}/partners/{partner}/exchange-traces/previews": {
       "post": {
         "operationId": "previewAuthorizedExchangeEvidence",
-        "summary": "Read original custody/offer/closure records under existing direction authority",
-        "description": "Incoming holds remain opaque;outgoing requires original sender-receipt authority. No raw event payload,arbitrary event ID,parent traversal,grant,receipt or effect. Cookie requests require ordinary same-origin/CSRF.",
+        "summary": "Read original custody, offer and closure records",
+        "description": "Incoming holds remain opaque. V2 may disclose one completed record projection to its original sender under current source read authority. Cookie requests require ordinary same-origin and CSRF checks.",
         "security": [
           {
             "bearerAuth": []
@@ -105,6 +105,14 @@
           "direction": {
             "type": "string",
             "enum": ["incoming", "outgoing"]
+          },
+          "profile": {
+            "type": "string",
+            "enum": [
+              "authorized-exchange-evidence-v1",
+              "authorized-exchange-evidence-v2"
+            ],
+            "default": "authorized-exchange-evidence-v1"
           }
         }
       },
@@ -134,6 +142,46 @@
           "acceptance_policy": {
             "type": "string",
             "pattern": "^(integrity-only-v1|intake-(csv-v1|json-records-v1|fixed-width-v1|xml-records-v1|xlsx-records-v1):[0-9a-f]{64})$"
+          }
+        }
+      },
+      "RecordProjectionLineage": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "projection_id",
+          "definition_hash",
+          "source_artifact",
+          "source_accepted_event_id",
+          "completed_event_id",
+          "completed_at"
+        ],
+        "properties": {
+          "projection_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          },
+          "definition_hash": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "source_artifact": {
+            "$ref": "#/components/schemas/Artifact"
+          },
+          "source_accepted_event_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          },
+          "completed_event_id": {
+            "type": "string",
+            "format": "uuid",
+            "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time"
           }
         }
       },
@@ -187,7 +235,10 @@
         ],
         "properties": {
           "profile": {
-            "const": "authorized-exchange-evidence-v1"
+            "enum": [
+              "authorized-exchange-evidence-v1",
+              "authorized-exchange-evidence-v2"
+            ]
           },
           "tenant_id": {
             "type": "string",
@@ -276,6 +327,9 @@
               }
             ]
           },
+          "record_projection": {
+            "$ref": "#/components/schemas/RecordProjectionLineage"
+          },
           "storage_verification": {
             "const": "not-checked"
           },
@@ -290,6 +344,14 @@
           }
         },
         "description": "An authorized read of existing records,not byte verification or a stronger receipt. Event IDs/resources/times must match actual immutable source/offer/closure rows;client and service enforce identity correlations beyond structural JSON Schema. Timestamps need not be monotonic. Reply reference is not followed.",
+        "if": { "required": ["record_projection"] },
+        "then": {
+          "properties": {
+            "profile": { "const": "authorized-exchange-evidence-v2" },
+            "direction": { "const": "outgoing" },
+            "details": { "const": "authorized-records" }
+          }
+        },
         "oneOf": [
           {
             "properties": {

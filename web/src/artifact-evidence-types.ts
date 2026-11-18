@@ -5,13 +5,24 @@ import {
 } from "./artifact-exchanges-types";
 
 export type EvidenceDirection = "incoming" | "outgoing";
+export const evidenceV1 = "authorized-exchange-evidence-v1";
+export const evidenceV2 = "authorized-exchange-evidence-v2";
+export type EvidenceProfile = typeof evidenceV1 | typeof evidenceV2;
 export interface EvidenceExpectation {
   request_hash: string;
   artifact: ExchangeArtifact;
   expires_at: string;
 }
+interface RecordProjectionLineage {
+  projection_id: string;
+  definition_hash: string;
+  source_artifact: ExchangeArtifact;
+  source_accepted_event_id: string;
+  completed_event_id: string;
+  completed_at: string;
+}
 export interface ExchangeEvidence {
-  profile: "authorized-exchange-evidence-v1";
+  profile: EvidenceProfile;
   tenant_id: string;
   partner_id: string;
   exchange_id: string;
@@ -33,6 +44,7 @@ export interface ExchangeEvidence {
     resource_id: string;
     recorded_at: string;
   }[];
+  record_projection?: RecordProjectionLineage;
   storage_verification: "not-checked";
   retrieval: "unknown";
   receiver_persistence: "unknown";
@@ -86,6 +98,7 @@ export function asExchangeEvidence(
   id: string,
   direction: EvidenceDirection,
   expected?: EvidenceExpectation,
+  profile: EvidenceProfile = evidenceV1,
 ): ExchangeEvidence {
   const o = object(value);
   keys(o, [
@@ -101,13 +114,14 @@ export function asExchangeEvidence(
     "artifact",
     "reply_reference_only",
     "recorded_events",
+    "record_projection",
     "storage_verification",
     "retrieval",
     "receiver_persistence",
     "business_processing",
   ]);
   if (
-    o.profile !== "authorized-exchange-evidence-v1" ||
+    o.profile !== profile ||
     o.tenant_id !== scope.tenant ||
     o.partner_id !== scope.partner ||
     o.exchange_id !== id ||
@@ -121,6 +135,8 @@ export function asExchangeEvidence(
     !Array.isArray(o.recorded_events)
   )
     bad();
+  const hasLineage = Object.hasOwn(o, "record_projection");
+  if (hasLineage && (profile !== evidenceV2 || direction !== "outgoing")) bad();
   const state = o.current_metadata_state;
   if (
     typeof state !== "string" ||
@@ -132,7 +148,7 @@ export function asExchangeEvidence(
   )
     bad();
   const result: ExchangeEvidence = {
-    profile: "authorized-exchange-evidence-v1",
+    profile,
     tenant_id: scope.tenant,
     partner_id: scope.partner,
     exchange_id: id,
@@ -213,6 +229,37 @@ export function asExchangeEvidence(
   result.recorded_events = events;
   if (Object.hasOwn(o, "reply_reference_only")) {
     result.reply_reference_only = identifier(o.reply_reference_only);
+  }
+  if (hasLineage) {
+    const lineage = object(o.record_projection);
+    keys(lineage, [
+      "projection_id",
+      "definition_hash",
+      "source_artifact",
+      "source_accepted_event_id",
+      "completed_event_id",
+      "completed_at",
+    ]);
+    const source = asExchangeArtifact(lineage.source_artifact);
+    const sourceEvent = identifier(lineage.source_accepted_event_id);
+    const completedEvent = identifier(lineage.completed_event_id);
+    if (
+      !digest(lineage.definition_hash) ||
+      source.file_revision_id === artifact.file_revision_id ||
+      sourceEvent === completedEvent ||
+      events.some(
+        (e) => e.event_id === sourceEvent || e.event_id === completedEvent,
+      )
+    )
+      bad();
+    result.record_projection = {
+      projection_id: identifier(lineage.projection_id),
+      definition_hash: lineage.definition_hash,
+      source_artifact: source,
+      source_accepted_event_id: sourceEvent,
+      completed_event_id: completedEvent,
+      completed_at: instant(lineage.completed_at),
+    };
   }
   return result;
 }

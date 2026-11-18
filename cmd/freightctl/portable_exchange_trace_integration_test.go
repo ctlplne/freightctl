@@ -22,6 +22,9 @@ func qualifyPortableExchangeTrace(t *testing.T, actor, token, unrelated string, 
 	selected := store.ExchangeTraceExportSelection{
 		ExchangeTraceRequest: store.ExchangeTraceRequest{ID: live.ID, Direction: live.Direction}, RequestHash: live.RequestHash,
 	}
+	if live.Profile == store.ExchangeEvidenceV2 {
+		selected.Profile = live.Profile
+	}
 	path := filepath.Join(t.TempDir(), "exchange-evidence.json")
 	input := requestFile(selected)
 	refuse := func(as string, selection store.ExchangeTraceExportSelection, want error) {
@@ -58,6 +61,7 @@ func qualifyPortableExchangeTrace(t *testing.T, actor, token, unrelated string, 
 		t.Fatal("published artifact differs from the prepared exchange receipt", err)
 	}
 	if !reflect.DeepEqual(portable.Evidence.Events, live.Events) ||
+		portable.Evidence.Profile != live.Profile || !reflect.DeepEqual(portable.Evidence.Projection, live.Projection) ||
 		portable.Evidence.State != live.State || portable.Evidence.Artifact == nil || *portable.Evidence.Artifact != *live.Artifact ||
 		portable.Evidence.ReceiverPersistence != "unknown" || portable.Evidence.Retrieval != "unknown" ||
 		portable.Evidence.BusinessProcessing != "unknown" || portable.Evidence.StorageVerification != "not-checked" {

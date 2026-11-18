@@ -17,7 +17,7 @@ const documents = [
     "received-artifact-copy",
     "artifact-evidence",
   ].map((name) => [name, "docs/api/" + name + ".openapi.json", 1]),
-  ["mcp", "internal/api/mcp-tools.json", 8],
+  ["mcp", "internal/api/mcp-tools.json", 9],
 ];
 for (const [name, path, expected] of documents) {
   const document = JSON.parse(await readFile(new URL(path, root), "utf8"));

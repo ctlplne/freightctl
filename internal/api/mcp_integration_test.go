@@ -293,7 +293,7 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 	// Ordinary cookie/CSRF and official SDK reads project the same immutable
 	// facts. The selected direction does not supply a role or sender fallback.
 	cookieB, csrfB := loginBrowser(t, server, scope, tokenB)
-	traceRequest := store.ExchangeTraceRequest{ID: offer.Exchange.ID, Direction: "incoming"}
+	traceRequest := store.ExchangeTraceRequest{ID: offer.Exchange.ID, Direction: "incoming", Profile: store.ExchangeEvidenceV2}
 	exchangeAPIRequest(t, server, "POST", prefix+"/exchange-traces/previews", cookieB, map[string]string{"Origin": server.URL, "X-CSRF-Token": "incorrect"}, exchangeAPIJSON(t, traceRequest), 403)
 	traceScope := store.Scope{Tenant: scope.Tenant, Partner: scope.Partner, TokenHash: secure.Digest(tokenA.Bytes)}
 	traceSnapshot := func() [4]int {
@@ -315,9 +315,12 @@ func TestMCPStockClientExchangeUsesOrdinaryAuthorityAndSeparateReply(t *testing.
 	}
 	var agentTrace, apiTrace, senderTrace store.ExchangeTrace
 	mcpDecodeResult(t, call(b, "exchange_trace", map[string]any{"exchange_id": offer.Exchange.ID, "direction": "incoming"}, true), &agentTrace)
-	mcpDecodeResult(t, call(a, "exchange_trace", map[string]any{"exchange_id": offer.Exchange.ID, "direction": "outgoing"}, true), &senderTrace)
+	mcpDecodeResult(t, call(a, "exchange_trace", map[string]any{"exchange_id": offer.Exchange.ID, "direction": "outgoing", "profile": store.ExchangeEvidenceV2}, true), &senderTrace)
+	if senderTrace.Profile != store.ExchangeEvidenceV2 || senderTrace.Projection != nil {
+		t.Fatal("MCP profile selection invented lineage for a supplied artifact")
+	}
 	_, traceRaw := exchangeAPIRequest(t, server, "POST", prefix+"/exchange-traces/previews", cookieB, map[string]string{"Origin": server.URL, "X-CSRF-Token": csrfB}, exchangeAPIJSON(t, traceRequest), 200)
-	if json.Unmarshal(traceRaw, &apiTrace) != nil {
+	if json.Unmarshal(traceRaw, &apiTrace) != nil || apiTrace.Profile != store.ExchangeEvidenceV2 || apiTrace.Projection != nil || agentTrace.Profile != store.ExchangeEvidenceV1 {
 		t.Fatal("ordinary cookie evidence decode")
 	}
 	for _, v := range []store.ExchangeTrace{agentTrace, apiTrace, senderTrace} {

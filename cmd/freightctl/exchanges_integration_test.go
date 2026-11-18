@@ -285,8 +285,8 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if err != nil || json.Unmarshal(body, &recovered) != nil || !recovered.Replayed || recovered.EventID != closed.EventID {
 		t.Fatal("CLI cancellation response recovery", err)
 	}
-	traceRaw, err = command(a, "exchange-trace", "-request-file", requestFile(store.ExchangeTraceRequest{ID: offered.Exchange.ID, Direction: "outgoing"}))
-	if err != nil || json.Unmarshal(traceRaw, &trace) != nil || trace.State != "canceled" || len(trace.Events) != 3 || trace.Events[2].ID != closed.EventID || trace.Events[2].Kind != "view-canceled" {
+	traceRaw, err = command(a, "exchange-trace", "-request-file", requestFile(store.ExchangeTraceRequest{ID: offered.Exchange.ID, Direction: "outgoing", Profile: store.ExchangeEvidenceV2}))
+	if err != nil || json.Unmarshal(traceRaw, &trace) != nil || trace.Profile != store.ExchangeEvidenceV2 || trace.Projection != nil || trace.State != "canceled" || len(trace.Events) != 3 || trace.Events[2].ID != closed.EventID || trace.Events[2].Kind != "view-canceled" {
 		t.Fatal("CLI lost authorized historical closure evidence", err)
 	}
 	t.Run("sender exports pinned cancellation evidence", func(t *testing.T) {

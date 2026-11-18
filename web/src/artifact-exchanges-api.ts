@@ -12,6 +12,8 @@ import {
 import {
   asExchangeEvidence,
   evidenceExpectation,
+  evidenceV1,
+  evidenceV2,
   type EvidenceDirection,
   type EvidenceExpectation,
 } from "./artifact-evidence-types";
@@ -161,16 +163,28 @@ export class ExchangeReceiveApi {
     const pinned = expected ? evidenceExpectation(expected) : undefined;
     if (pinned && !/^[0-9a-f]{64}$/.test(pinned.request_hash))
       throw new ApiError("invalid_artifact_exchange_contract", 400);
+    const profile = direction === "outgoing" ? evidenceV2 : evidenceV1;
     const result = await this.api.request(
       `${this.prefix}/exchange-traces/previews`,
       {
         method: "POST",
-        body: JSON.stringify({ exchange_id: id, direction }),
+        body: JSON.stringify({
+          exchange_id: id,
+          direction,
+          ...(profile === evidenceV2 ? { profile } : {}),
+        }),
         ...(signal ? { signal } : {}),
       },
       (value) => {
         permitted();
-        return asExchangeEvidence(value, this.identity, id, direction, pinned);
+        return asExchangeEvidence(
+          value,
+          this.identity,
+          id,
+          direction,
+          pinned,
+          profile,
+        );
       },
     );
     permitted();

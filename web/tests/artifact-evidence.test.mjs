@@ -153,7 +153,55 @@ test("metadata expiry comparisons retain the exact microsecond and terminal deci
   });
   p.asExchangeEvidence(v, scope, id(4), "outgoing", expected());
 });
-function transport(permissions = ["read", "list", "deliver"]) {
+const projection = () => ({
+  projection_id: id(10),
+  definition_hash: "d".repeat(64),
+  source_artifact: { ...artifact(), file_revision_id: id(11) },
+  source_accepted_event_id: id(12),
+  completed_event_id: id(13),
+  completed_at: "2026-11-04T00:00:01.123456Z",
+});
+test("v2 lineage is accepted only on an exact outgoing trace", () => {
+  const v = {
+    ...response(),
+    profile: p.evidenceV2,
+    direction: "outgoing",
+    record_projection: projection(),
+  };
+  const read = (wire) =>
+    p.asExchangeEvidence(
+      wire,
+      scope,
+      id(4),
+      wire.direction,
+      expected(),
+      wire.profile,
+    );
+  assert.deepEqual(read(v).record_projection, projection());
+  for (const change of [
+    (v) => (v.direction = "incoming"),
+    (v) => (v.profile = p.evidenceV1),
+    (v) => (v.record_projection = null),
+    (v) => (v.record_projection.report = {}),
+    (v) => (v.record_projection.definition_hash = "unverified"),
+    (v) => (v.record_projection.source_artifact = v.artifact),
+    (v) =>
+      (v.record_projection.source_accepted_event_id =
+        v.recorded_events[0].event_id),
+    (v) =>
+      (v.record_projection.completed_event_id =
+        v.record_projection.source_accepted_event_id),
+    (v) => (v.record_projection.completed_at = "unverified"),
+  ]) {
+    const dirty = structuredClone(v);
+    change(dirty);
+    assert.throws(() => read(dirty));
+  }
+});
+function transport(
+  permissions = ["read", "list", "deliver"],
+  respond = response,
+) {
   let during = () => {};
   const calls = [],
     api = {
@@ -171,7 +219,7 @@ function transport(permissions = ["read", "list", "deliver"]) {
       request: async (path, options, decode) => {
         calls.push({ path, options });
         during();
-        return decode(response());
+        return decode(respond());
       },
     };
   return {
@@ -207,4 +255,26 @@ test("evidence client pins its expected snapshot and refuses a changed identity 
   t = transport(["read", "deliver"]);
   await assert.rejects(() => t.client.evidence(id(4), "incoming", expected()));
   assert.equal(t.calls.length, 0);
+});
+test("outgoing browser evidence requests v2 and pins the response profile", async () => {
+  const t = transport(undefined, () => ({
+    ...response(),
+    direction: "outgoing",
+    profile: p.evidenceV2,
+    record_projection: projection(),
+  }));
+  const result = await t.client.evidence(id(4), "outgoing", expected());
+  assert.deepEqual(result.record_projection, projection());
+  assert.deepEqual(JSON.parse(t.calls[0].options.body), {
+    exchange_id: id(4),
+    direction: "outgoing",
+    profile: p.evidenceV2,
+  });
+  const legacy = transport(undefined, () => ({
+    ...response(),
+    direction: "outgoing",
+  }));
+  await assert.rejects(() =>
+    legacy.client.evidence(id(4), "outgoing", expected()),
+  );
 });

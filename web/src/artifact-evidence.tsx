@@ -119,6 +119,38 @@ export function ArtifactEvidence({
                   </li>
                 ))}
               </ol>
+              {trace.record_projection && (
+                <section aria-label="Record projection lineage">
+                  <h5>Record projection lineage</h5>
+                  <p>
+                    Input revision{" "}
+                    <code>
+                      {trace.record_projection.source_artifact.file_revision_id}
+                    </code>{" "}
+                    was accepted in event{" "}
+                    <code>
+                      {trace.record_projection.source_accepted_event_id}
+                    </code>
+                    . Its SHA-256 is{" "}
+                    <code>
+                      {trace.record_projection.source_artifact.sha256}
+                    </code>
+                    .
+                  </p>
+                  <p>
+                    Projection{" "}
+                    <code>{trace.record_projection.projection_id}</code>{" "}
+                    produced this artifact. Definition SHA-256{" "}
+                    <code>{trace.record_projection.definition_hash}</code>.
+                    Completion event{" "}
+                    <code>{trace.record_projection.completed_event_id}</code> at{" "}
+                    <time dateTime={trace.record_projection.completed_at}>
+                      {trace.record_projection.completed_at}
+                    </time>
+                    .
+                  </p>
+                </section>
+              )}
               {trace.reply_reference_only && (
                 <p>
                   Reply reference: <code>{trace.reply_reference_only}</code>.
