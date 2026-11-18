@@ -183,8 +183,9 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 	t.Run("portable workflow returns through ordinary draft approval boundary", func(t *testing.T) {
 		qualifyPortableWorkflowDraft(t, ctx, service, scope, cfg, command, requestFile)
 	})
+	var portableSchedule workflow.PortableSchedule
 	t.Run("portable schedule retains frozen clock and needs new review", func(t *testing.T) {
-		qualifyPortableScheduleDraft(t, ctx, service, scope, cfg, command, requestFile)
+		portableSchedule = qualifyPortableScheduleDraft(t, ctx, service, scope, cfg, command, requestFile)
 	})
 	raw, err = command("workflow-run", "-request-file", runRequest, "-idempotency-key", "cli-processing-run")
 	var created workflow.Result
@@ -458,8 +459,12 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 				}
 				t.Logf("portable intake policy definition %s, archive %s", restored.Hash, receipt.SHA256)
 				t.Run("rebound workspace repeats approved processing", func(t *testing.T) {
-					qualifyReboundPortableProcessing(t, ctx, service, scope, destination, cfg, destinationOutput,
+					rebound := qualifyReboundPortableProcessing(t, ctx, service, scope, destination, cfg, destinationOutput,
 						restored.Hash, file.ID, work.Processing.FileID, destinationFlags, command, requestFile)
+					if portableSchedule.Profile == "" {
+						portableSchedule = qualifyPortableScheduleDraft(t, ctx, service, scope, cfg, command, requestFile)
+					}
+					qualifyReboundPortableSchedule(t, ctx, service, destination, portableSchedule, rebound, destinationFlags, command, requestFile)
 				})
 			})
 		})

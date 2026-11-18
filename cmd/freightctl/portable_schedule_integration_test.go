@@ -21,7 +21,7 @@ import (
 	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
-func qualifyPortableScheduleDraft(t *testing.T, ctx context.Context, service *custody.Service, scope store.Scope, cfg store.Configuration, command func(string, ...string) ([]byte, error), requestFile func(any) string) {
+func qualifyPortableScheduleDraft(t *testing.T, ctx context.Context, service *custody.Service, scope store.Scope, cfg store.Configuration, command func(string, ...string) ([]byte, error), requestFile func(any) string) workflow.PortableSchedule {
 	t.Helper()
 	const directory = "/schedule-export-source"
 	if _, err := service.PathCommand(ctx, scope, "portable-schedule-directory", store.PathCommand{Operation: "mkdir", Path: directory}); err != nil {
@@ -106,4 +106,49 @@ func qualifyPortableScheduleDraft(t *testing.T, ctx context.Context, service *cu
 		t.Fatal("refused calendar has an output artifact", err)
 	}
 	t.Logf("schedule export SHA-256 %s, definition SHA-256 %s, %d frozen clock rules", receipt.SHA256, original.Hash, len(artifact.FrozenCalendar.Rules))
+	artifact.Selection.ExpectedAuthority = 0
+	return artifact
+}
+
+func qualifyReboundPortableSchedule(t *testing.T, ctx context.Context, service *custody.Service, destination store.Scope,
+	archive workflow.PortableSchedule, rebound workflow.Reference, destinationFlags []string,
+	command func(string, ...string) ([]byte, error), requestFile func(any) string) {
+	t.Helper()
+	selected := archive.Selection
+	if selected.ExpectedAuthority != 0 || archive.SourceTenant == destination.Tenant || selected.Workflow.ID == rebound.ID {
+		t.Fatal("expected an unbound source schedule from another workspace")
+	}
+	selected.Source.Directory = "/portable-schedule-destination"
+	identity, err := service.DB.Identity(ctx, destination)
+	if err != nil {
+		t.Fatal(err)
+	}
+	run := func(name string, args ...string) ([]byte, error) {
+		return command(name, append(append([]string{}, destinationFlags...), args...)...)
+	}
+	if _, err = run("namespace", "--request-file", requestFile(store.PathCommand{Operation: "mkdir", Path: selected.Source.Directory}),
+		"--idempotency-key", "portable-schedule-destination-path"); err != nil {
+		t.Fatal("destination source directory", err)
+	}
+	selected.ExpectedAuthority = identity.AuthorityRevision
+	if _, err = run("workflow-schedule-preview", "--request-file", requestFile(selected)); !errors.Is(err, store.ErrNotFound) {
+		t.Fatal("destination schedule accepted a foreign workflow reference", err)
+	}
+	selected.Workflow = rebound
+	raw, err := run("workflow-schedule-preview", "--request-file", requestFile(selected))
+	var review workflow.SchedulePreview
+	if err != nil || json.Unmarshal(raw, &review) != nil || !review.ApprovalRequired || review.ExternalContact ||
+		!reflect.DeepEqual(review.Definition.Calendar, archive.FrozenCalendar) || review.Definition.Workflow != rebound ||
+		review.Definition.Source.Directory != selected.Source.Directory || review.Hash == archive.Source.Hash {
+		t.Fatal("destination preview lost clock rules or reused source routing", err)
+	}
+	raw, err = run("workflow-schedule-draft", "--request-file", requestFile(workflow.ScheduleDraftRequest{Selection: selected, Hash: review.Hash}),
+		"--idempotency-key", "portable-rebound-schedule")
+	var accepted workflow.Result
+	var draft workflow.ScheduleResource
+	if err != nil || json.Unmarshal(raw, &accepted) != nil || json.Unmarshal(accepted.Resource, &draft) != nil ||
+		draft.Schedule.ID == archive.Source.ID || draft.Schedule.State != "draft" || draft.Schedule.NextDue != nil || draft.Schedule.ApprovalAuthority != 0 {
+		t.Fatal("destination schedule did not preserve the independent activation boundary", err)
+	}
+	t.Logf("new tenant schedule definition %s, %d equal clock rules", review.Hash, len(archive.FrozenCalendar.Rules))
 }

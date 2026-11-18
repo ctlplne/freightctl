@@ -220,6 +220,12 @@ PostgreSQL replay across two tenants. The destination required its own
 approval and output release. The released JSON bytes match the original
 workflow output exactly.
 
+[F491](docs/qualification/evidence/F491-portable-schedule-rebind.json)
+replays the exported schedule against that rebound workflow in the
+second tenant. The destination refused the original workflow ID, then
+preserved all three frozen clock rules with its own workflow and source
+directory. The new schedule remained a draft with no next run.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

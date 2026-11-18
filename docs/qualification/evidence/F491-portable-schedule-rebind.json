@@ -1,0 +1,44 @@
+{
+  "schema_version": 1,
+  "id": "F491",
+  "observed_at": "2026-11-18",
+  "candidate": "cafa113",
+  "scope": "Cross-tenant schedule review with exact civil-time rules and newly bound workflow and source path",
+  "qualification_claim": false,
+  "base_evidence": [
+    "docs/qualification/evidence/F479-portable-calendar-export.json",
+    "docs/qualification/evidence/F490-portable-processing-rebind.json"
+  ],
+  "green": {
+    "platform": "darwin/arm64 ordinary CLI and Linux arm64 PostgreSQL with actual local custody",
+    "go_version": "go1.27.4",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "memory_limit_bytes_per_fixture": 201326592,
+    "cpu_limit_per_fixture": 1,
+    "private_witness_directory": ".private/freightctl-f491-confirm",
+    "fixture_sha256": "dabf0fa1e9e1d967fc99f610c62f3993262b0cbdd9214e427fbe0f6685079993",
+    "source_schedule_archive_sha256": "9c54183e3792b4615ec66c77b5158864702c0168901362c1df1797e6e6575697",
+    "source_schedule_definition_sha256": "94f41185bbb76aabe0881e43391a2cb4b78a4f961bd565b3efd1c68d5c670346",
+    "bound_destination_definition_sha256": "fe9bc8f9023c8172b4c8da053d93e5e8684c2c04e0d0e5077d70fdd25d999076",
+    "equal_frozen_clock_rules": 3,
+    "source_workflow_reference_refused_under_current_destination_authority": true,
+    "rebound_workflow_and_independent_directory_used": true,
+    "preview_requires_approval_and_has_no_external_contact": true,
+    "new_schedule_draft_without_approval_or_next_due_time": true,
+    "original_processing_cli_parent_and_prior_portability_cases": "pass",
+    "isolated_selected_case_with_its_own_schedule_setup": "pass",
+    "race_enabled": true,
+    "exact_task_containers_removed_verified": true,
+    "original_test_log_sha256": "977eeed20af4b6a02267b4011b0482c2e5a4c3395535a1eee1ff3fe02b47bb11",
+    "selected_test_log_sha256": "eb71e9abcc69e8d5405190ac0a4bd0fe5e9e7d84be9f087f6091445f973644a5"
+  },
+  "checks": {
+    "affected_tagged_vet": "pass",
+    "format": "pass",
+    "record_references": "pass"
+  },
+  "remaining": [
+    "Repeat unattended occurrences and controlled transfer cutover on separate installs, with independent operators and external effects",
+    "Native matrix replay and complete J12 recovery"
+  ]
+}

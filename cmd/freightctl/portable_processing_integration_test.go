@@ -22,7 +22,7 @@ import (
 
 func qualifyReboundPortableProcessing(t *testing.T, ctx context.Context, service *custody.Service, source, destination store.Scope,
 	sourceWorkflow store.Configuration, destinationOutput workflow.Reference, intakeHash, inputFile, originalOutput string,
-	destinationFlags []string, command func(string, ...string) ([]byte, error), requestFile func(any) string) {
+	destinationFlags []string, command func(string, ...string) ([]byte, error), requestFile func(any) string) workflow.Reference {
 	t.Helper()
 	archive := filepath.Join(t.TempDir(), "workflow.json")
 	raw, err := command("workflow-export", "--workflow-id", sourceWorkflow.ID, "--version", strconv.Itoa(sourceWorkflow.Version),
@@ -119,4 +119,5 @@ func qualifyReboundPortableProcessing(t *testing.T, ctx context.Context, service
 		t.Fatal("destination workflow missed separately released outcome", err)
 	}
 	t.Logf("source archive %s, rebound definition %s, equal released output %s", receipt.SHA256, newWorkflow.Hash, secure.Digest(actual))
+	return ref
 }
