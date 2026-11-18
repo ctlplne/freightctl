@@ -56,7 +56,7 @@ func (s *Server) inspectExchangeIntegrityReport(w http.ResponseWriter, r *http.R
 		failure(w, err)
 		return
 	}
-	result, err := s.Service.DB.InspectExchangeIntegrityReport(r.Context(), identity, store.ExchangeTraceRequest{ID: r.PathValue("exchange"), Direction: query.Get("direction")}, limits)
+	result, err := s.Service.DB.InspectExchangeIntegrityReport(r.Context(), identity, store.ExchangeIntegritySelection{ID: r.PathValue("exchange"), Direction: query.Get("direction")}, limits)
 	if err != nil {
 		failure(w, err)
 		return

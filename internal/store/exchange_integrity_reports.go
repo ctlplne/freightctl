@@ -34,6 +34,23 @@ type ExchangeIntegrityReport struct {
 	BusinessProcessing  string           `json:"business_processing"`
 }
 
+type ExchangeIntegritySelection struct {
+	ID        string `json:"exchange_id"`
+	Direction string `json:"direction"`
+}
+
+func (s ExchangeIntegritySelection) validate() error {
+	return ValidateExchangeTraceRequest(ExchangeTraceRequest{ID: s.ID, Direction: s.Direction})
+}
+
+func DecodeExchangeIntegritySelection(raw []byte) (ExchangeIntegritySelection, error) {
+	var selection ExchangeIntegritySelection
+	if err := decodeExchangeJSONBound(raw, &selection, 4096); err != nil {
+		return selection, err
+	}
+	return selection, selection.validate()
+}
+
 func canonicalExchangeIntegrityCommand(command ExchangeIntegrityCommand) ([]byte, string, error) {
 	if command.Schema != 1 || !ValidID(command.ExchangeID) || !ValidID(command.ReadAuthorization) || !ValidID(command.FileID) || command.Size < 0 ||
 		!browserSecretHash.MatchString(command.RequestHash) || !browserSecretHash.MatchString(command.SHA256) {
@@ -129,8 +146,8 @@ func (s *Store) RecordExchangeIntegrityReport(ctx context.Context, scope Scope, 
 	return result, replayed, nil
 }
 
-func (s *Store) InspectExchangeIntegrityReport(ctx context.Context, scope Scope, request ExchangeTraceRequest, limits ExchangeLimits) (*ExchangeIntegrityReport, error) {
-	if request.Profile != "" || ValidateExchangeTraceRequest(request) != nil || !limits.valid() {
+func (s *Store) InspectExchangeIntegrityReport(ctx context.Context, scope Scope, request ExchangeIntegritySelection, limits ExchangeLimits) (*ExchangeIntegrityReport, error) {
+	if request.validate() != nil || !limits.valid() {
 		return nil, ErrExchangeInput
 	}
 	ctx, cancel := context.WithTimeout(ctx, 10*time.Second)

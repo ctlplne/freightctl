@@ -83,7 +83,7 @@ func TestMCPMediaOriginAndHeaderAmbiguityRefuseBeforeDatabase(t *testing.T) {
 
 func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing.T) {
 	var tools []*mcp.Tool
-	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 45 {
+	if err := json.Unmarshal(mcpCatalog, &tools); err != nil || len(tools) != 47 {
 		t.Fatal("missing fixed tool catalog", err)
 	}
 	raw, err := os.ReadFile("../../web/tests/fixtures/artifact-exchange.json")
@@ -105,6 +105,11 @@ func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing
 		}
 		if tool.Name == "freightctl.reconcile_onward" && (tool.Annotations.ReadOnlyHint || tool.Annotations.DestructiveHint == nil || *tool.Annotations.DestructiveHint || !tool.Annotations.IdempotentHint) {
 			t.Fatal("receiver check must disclose the local journal update and keep the remote observation non-destructive")
+		}
+		if tool.Name == "freightctl.report_exchange_integrity" || tool.Name == "freightctl.inspect_exchange_integrity" {
+			if tool.Annotations.ReadOnlyHint != (tool.Name == "freightctl.inspect_exchange_integrity") || tool.Annotations.DestructiveHint == nil || *tool.Annotations.DestructiveHint || !tool.Annotations.IdempotentHint {
+				t.Fatal("integrity tool annotations changed the receipt effect")
+			}
 		}
 		seen[tool.Name] = true
 		wire, _ := json.Marshal(tool.InputSchema)
@@ -132,6 +137,13 @@ func TestMCPToolSchemasBindOrdinaryRequestsAndExcludeAmbientAuthority(t *testing
 			args = map[string]any{"request": map[string]any{"exchange_id": "44444444-4444-4444-8444-444444444444", "request_hash": fixture.Hash, "artifact": map[string]any{"file_revision_id": "55555555-5555-4555-8555-555555555555", "size_bytes": 8, "sha256": fixture.Hash, "acceptance_policy": "integrity-only-v1"}, "virtual_path": "/new.dat"}, "request_key": "original-copy"}
 		case "freightctl.exchange_trace":
 			args = map[string]any{"exchange_id": "55555555-5555-4555-8555-555555555555", "direction": "incoming", "profile": store.ExchangeEvidenceV2}
+		case "freightctl.inspect_exchange_integrity":
+			args = map[string]any{"exchange_id": "55555555-5555-4555-8555-555555555555", "direction": "outgoing"}
+		case "freightctl.report_exchange_integrity":
+			args = map[string]any{"request_key": "integrity-original", "command": store.ExchangeIntegrityCommand{
+				Schema: 1, ExchangeID: "55555555-5555-4555-8555-555555555555", RequestHash: fixture.Hash,
+				ReadAuthorization: "66666666-6666-4666-8666-666666666666", FileID: "77777777-7777-4777-8777-777777777777", Size: 8, SHA256: fixture.Hash,
+			}}
 		case "freightctl.validate_workflow", "freightctl.propose_workflow":
 			request := map[string]any{"definition": map[string]any{"schema_version": 1, "name": "Reviewed draft", "steps": []any{map[string]any{"id": "send", "kind": "sftp.deliver", "connection": map[string]any{"id": "55555555-5555-4555-8555-555555555555", "version": 1, "hash": fixture.Hash}, "filename": "new.dat"}}}}
 			args = map[string]any{"request": request}

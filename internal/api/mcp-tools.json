@@ -3046,6 +3046,110 @@
     }
   },
   {
+    "name": "freightctl.report_exchange_integrity",
+    "description": "Commit one recipient-authored length and SHA-256 report using the current incoming grant and the read authorization from a full verified download. The tool records the participant statement. It has no byte transfer, durability claim, business receipt or forwarding effect.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "command",
+        "request_key"
+      ],
+      "properties": {
+        "command": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "schema_version": {
+              "type": "integer",
+              "const": 1
+            },
+            "exchange_id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "request_hash": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            },
+            "read_authorization_event_id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "file_revision_id": {
+              "type": "string",
+              "format": "uuid",
+              "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+            },
+            "size_bytes": {
+              "type": "integer",
+              "format": "int64",
+              "minimum": 0,
+              "maximum": 9223372036854775807
+            },
+            "sha256": {
+              "type": "string",
+              "pattern": "^[0-9a-f]{64}$"
+            }
+          },
+          "required": [
+            "schema_version",
+            "exchange_id",
+            "request_hash",
+            "read_authorization_event_id",
+            "file_revision_id",
+            "size_bytes",
+            "sha256"
+          ]
+        },
+        "request_key": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9._:-]{1,128}$"
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": false,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
+    "name": "freightctl.inspect_exchange_integrity",
+    "description": "Read one report under the current incoming grant or the original sender receipt authority. Receiver persistence and business processing stay unknown.",
+    "inputSchema": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "exchange_id",
+        "direction"
+      ],
+      "properties": {
+        "exchange_id": {
+          "type": "string",
+          "format": "uuid",
+          "pattern": "^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$"
+        },
+        "direction": {
+          "type": "string",
+          "enum": [
+            "incoming",
+            "outgoing"
+          ]
+        }
+      }
+    },
+    "annotations": {
+      "readOnlyHint": true,
+      "destructiveHint": false,
+      "idempotentHint": true,
+      "openWorldHint": false
+    }
+  },
+  {
     "name": "freightctl.copy_received_artifact",
     "description": "Create or recover a new private owned copy of exact received bytes. Requires current receive plus separate write permission;new path mode0600,no overwrite. Source bytes stay in server custody;fresh intake applies. Original-key recovery returns original acceptance,current state unchecked. No forwarding,execution or stronger receiver outcome.",
     "inputSchema": {

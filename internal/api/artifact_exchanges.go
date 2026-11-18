@@ -284,8 +284,8 @@ func (s *Server) downloadExchange(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	defer reader.Close()
-	if id := reader.ExchangeReportAuthorization(); id != "" {
-		w.Header().Set("X-Exchange-Read-Authorization-ID", id)
+	if report := reader.ExchangeIntegrityCommand(); report != nil {
+		w.Header().Set("X-Exchange-Read-Authorization-ID", report.ReadAuthorization)
 	}
 	w.Header().Set("X-Artifact-Exchange-ID", r.PathValue("exchange"))
 	// No mutable filename or file path enters serving or content disposition.

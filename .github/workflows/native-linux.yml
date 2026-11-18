@@ -137,6 +137,7 @@ jobs:
           sudo install -d -m 755 /run/sshd
           dpkg-query --show --showformat='${Package} ${Version} ${Architecture}\n' openssh-server openssh-client
       - name: Security - stock XLSX producer and complete dependency closure
+        id: stock_xlsx
         run: |
           umask 077
           mkdir -p .private
@@ -232,6 +233,15 @@ jobs:
           curl --version
           sh scripts/go.sh test -tags=integration -timeout=120s -count=1 -p 1 -race -v \
             -run '^TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload$' ./internal/api
+      - name: Recipient integrity report across the native CLI and stock MCP SDK
+        if: ${{ !cancelled() && steps.postgres.outcome == 'success' && steps.stock_xlsx.outcome == 'success' }}
+        env:
+          FREIGHTCTL_TEST_ADMIN_FILE: ${{ github.workspace }}/.private/pg-admin.dsn
+          FREIGHTCTL_TEST_RUNTIME_FILE: ${{ github.workspace }}/.private/pg-runtime.dsn
+        run: |
+          umask 077
+          sh scripts/go.sh test -tags=integration -timeout=180s -count=1 -p 1 -race -v \
+            -run '^TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload$' ./cmd/freightctl
       - name: Independent stock FTPS producer through HTTPS agent custody to stock SFTP
         if: ${{ !cancelled() && steps.postgres.outcome == 'success' && steps.stock_clients.outcome == 'success' }}
         env:

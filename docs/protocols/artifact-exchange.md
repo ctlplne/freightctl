@@ -149,6 +149,19 @@ and an explicit `direction=incoming` or `direction=outgoing`. Incoming reads
 require the live receive grant. The original sender can read an already recorded
 report after closure under ordinary sender-receipt authority.
 
+The native CLI can prepare the same command. Run `exchange-download` with
+`-prepare-integrity-report` and a new `-output` path. After the CLI verifies,
+syncs and publishes the local file, its JSON result includes `integrity_report`.
+Save that object in a protected request file and submit it with
+`exchange-integrity-report -request-file` and `-idempotency-key`. Read the
+committed result with `exchange-integrity-inspect -request-file` using an object
+containing only `exchange_id` and `direction`.
+
+Agent tools use the same report and scope through
+`freightctl.report_exchange_integrity` and `freightctl.inspect_exchange_integrity`.
+The agent's host downloads and checks the file through HTTPS or the native CLI.
+The tool call carries the measured metadata and stable key.
+
 API/CLI closure, offered-view browser decline,reviewed browser sending and
 [sender history](artifact-exchange-outgoing.md) are implemented.
 [Browser endpoint administration](artifact-exchange-admin-browser.md) is implemented.

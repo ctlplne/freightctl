@@ -67,7 +67,7 @@ func TestMCPStockClientRecoversMetadataOnlyNamespaceReceiptWithoutRepeatingDelet
 	client := connect(admin)
 	unrelated := connect(other)
 	catalog, err := client.ListTools(t.Context(), &mcp.ListToolsParams{})
-	if err != nil || len(catalog.Tools) != 45 || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
+	if err != nil || len(catalog.Tools) != 47 || catalog.TTLMs != 0 || catalog.CacheScope != "private" {
 		t.Fatal("stock receipt caller lacks exact private catalog", err)
 	}
 	call := func(ctx context.Context, session *mcp.ClientSession, key string, expected bool) *mcp.CallToolResult {

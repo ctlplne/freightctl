@@ -25,6 +25,7 @@ type exchangeOptions struct {
 	MaxFile, MaxStored                      int64
 	NamespaceMax                            int
 	Settings                                custody.ExchangeSettings
+	PrepareIntegrityReport                  bool
 }
 
 func runExchanges(ctx context.Context, command string, o exchangeOptions, output io.Writer) error {
@@ -40,6 +41,8 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 	var trace store.ExchangeTraceRequest
 	var traceExport store.ExchangeTraceExportSelection
 	var copyRequest store.ExchangeCopyRequest
+	var integrityCommand store.ExchangeIntegrityCommand
+	var integritySelection store.ExchangeIntegritySelection
 	switch command {
 	case "exchange-copy":
 		if !store.ValidBrowserOperationKey(o.Key) {
@@ -87,6 +90,23 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 			return store.ErrExchangeInput
 		}
 		if err = traceExport.Validate(); err != nil {
+			return err
+		}
+	case "exchange-integrity-report", "exchange-integrity-inspect":
+		if command == "exchange-integrity-report" && !store.ValidBrowserOperationKey(o.Key) {
+			return store.ErrExchangeInput
+		}
+		input, err := secure.ReadSecret(o.Input, 4096)
+		if err != nil {
+			return errors.New("exchange integrity request must be a protected bounded regular file")
+		}
+		if command == "exchange-integrity-report" {
+			integrityCommand, err = store.DecodeExchangeIntegrityCommand(input.Bytes)
+		} else {
+			integritySelection, err = store.DecodeExchangeIntegritySelection(input.Bytes)
+		}
+		input.Close()
+		if err != nil {
 			return err
 		}
 	case "exchange-ingress-descriptor":
@@ -189,6 +209,10 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 		result, err = service.CopyReceivedExchange(ctx, scope, o.Key, copyRequest)
 	case "exchange-trace":
 		result, err = service.TraceExchange(ctx, scope, trace)
+	case "exchange-integrity-report":
+		result, _, err = db.RecordExchangeIntegrityReport(ctx, scope, o.Key, integrityCommand, limits)
+	case "exchange-integrity-inspect":
+		result, err = db.InspectExchangeIntegrityReport(ctx, scope, integritySelection, limits)
 	case "exchange-trace-export":
 		return writePortableArtifact(ctx, o.Output, "exchange-evidence", func(staged io.Writer) (*custody.ExchangeTraceExportReceipt, error) {
 			return service.PreparePortableExchangeTrace(ctx, scope, traceExport, staged)
@@ -216,9 +240,11 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 	case "exchange-source-inspect":
 		result, err = service.InspectExchangeSource(ctx, scope, o.ID)
 	case "exchange-download":
-		var file *store.File
-		var reader *custody.RevisionReader
-		file, reader, err = service.OpenExchangeReader(ctx, scope, o.ID)
+		open := service.OpenExchangeReader
+		if o.PrepareIntegrityReport {
+			open = service.OpenExchangeReportReader
+		}
+		file, reader, err := open(ctx, scope, o.ID)
 		if err != nil {
 			return err
 		}
@@ -227,13 +253,17 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 			return err
 		}
 		result = struct {
-			ID       string `json:"exchange_id"`
-			File     string `json:"file_revision_id"`
-			Size     int64  `json:"size_bytes"`
-			Digest   string `json:"sha256"`
-			Output   string `json:"output"`
-			Evidence string `json:"evidence"`
-		}{o.ID, file.ID, file.Size, file.SHA256, o.Output, "local-file-verified-and-synced"}
+			ID       string                          `json:"exchange_id"`
+			File     string                          `json:"file_revision_id"`
+			Size     int64                           `json:"size_bytes"`
+			Digest   string                          `json:"sha256"`
+			Output   string                          `json:"output"`
+			Evidence string                          `json:"evidence"`
+			Report   *store.ExchangeIntegrityCommand `json:"integrity_report,omitempty"`
+		}{
+			ID: o.ID, File: file.ID, Size: file.Size, Digest: file.SHA256, Output: o.Output,
+			Evidence: "local-file-verified-and-synced", Report: reader.ExchangeIntegrityCommand(),
+		}
 	}
 	if err != nil {
 		return err

@@ -43,6 +43,8 @@ same-origin CSRF protection. Tool-list results are private and immediately stale
 | `incoming_exchanges`, `inspect_exchange` | Poll and inspect currently authorized incoming views; held rows stay opaque. |
 | `retrieval_descriptor` | Return exact integrity metadata and a relative authenticated HTTPS download path, without artifact bytes. |
 | `exchange_trace` | Read authorized custody/offer/closure records under an explicit incoming or outgoing selector;held incoming views stay opaque. |
+| `report_exchange_integrity` | Commit one current recipient's length and SHA-256 statement under the original key and full-read authorization. |
+| `inspect_exchange_integrity` | Read the exact report through an explicit incoming or outgoing selector. |
 | `validate_workflow`, `propose_workflow` | Validate a typed ordinary workflow or record an unapproved draft with its original operation key. Current workflow permissions and registered connection/source checks apply. |
 | `artifact_upload_start`, `artifact_upload_status`, `artifact_upload_complete`, `artifact_upload_abort` | Create/recover a new confined virtual-file ticket,inspect committed progress or explicitly complete/abort through ordinary resumable custody. Host sends bytes outside MCP. |
 | `outgoing_exchanges`, `exchange_receipt` | Inspect own original offer receipts and separately checked current state. Enumeration also needs list. |
@@ -52,10 +54,18 @@ same-origin CSRF protection. Tool-list results are private and immediately stale
 | `onward_status`, `work_onward` | Inspect or execute one ordinary step only with the original reviewed-start receipt and exact run binding. |
 | `reconcile_onward` | Read an uncertain delivery's exact registered final file and record the scoped observation under its original key. |
 
-The current implementation is `exchange-tools-v21` with 45 tools. The prior
-44 entries keep their schemas, annotations and behavior. `reconcile_onward`
+The current implementation is `exchange-tools-v22` with 47 tools. `reconcile_onward`
 can contact the approved receiver to read exact bytes and can update the local
 journal. Its annotations reflect both effects. [Onward recovery](artifact-onward.md)
+
+`report_exchange_integrity` takes the ordinary integrity-report `command` and
+`request_key`. Have the host verify the complete download's length and SHA-256
+first. The exact read authorization, exchange, revision and original request
+must match when the report commits. `inspect_exchange_integrity` takes
+`exchange_id` and `direction`. The recipient needs the live receive grant.
+The original sender uses sender-receipt authority. Results identify the
+participant's statement and keep receiver persistence and business processing
+unknown. [Recipient integrity report](artifact-exchange.md#recipient-integrity-report)
 
 `namespace_receipt`
 adds one read-only,non-destructive,idempotent,closed-world tool with a strict

@@ -122,8 +122,8 @@ func (s *Service) OpenExchangeReader(ctx context.Context, scope store.Scope, id 
 	return s.openExchangeReader(ctx, scope, id, false)
 }
 
-// OpenExchangeReportReader gives the full HTTP response's recipient an exact
-// read authorization selector for a later report, after ordinary admission.
+// OpenExchangeReportReader gives a full-read recipient an exact authorization
+// selector for a later report, after ordinary admission.
 func (s *Service) OpenExchangeReportReader(ctx context.Context, scope store.Scope, id string) (*store.File, *RevisionReader, error) {
 	return s.openExchangeReader(ctx, scope, id, true)
 }
@@ -180,12 +180,23 @@ func (s *Service) openExchangeReader(ctx context.Context, scope store.Scope, id 
 	ok = true
 	reader := &RevisionReader{service: s, ctx: ctx, scope: scope, file: f, data: data, exchangeID: e.ID}
 	if reportEligible {
-		reader.reportAuthorization = event
+		reader.integrityReport = &store.ExchangeIntegrityCommand{
+			Schema: 1, ExchangeID: e.ID, RequestHash: e.RequestHash, ReadAuthorization: event,
+			FileID: f.ID, Size: f.Size, SHA256: f.SHA256,
+		}
 	}
 	return f, reader, nil
 }
 
-func (r *RevisionReader) ExchangeReportAuthorization() string { return r.reportAuthorization }
+// ExchangeIntegrityCommand supplies the immutable expected tuple and the read
+// event. A full-read client verifies the bytes before using the command.
+func (r *RevisionReader) ExchangeIntegrityCommand() *store.ExchangeIntegrityCommand {
+	if r.integrityReport == nil {
+		return nil
+	}
+	command := *r.integrityReport
+	return &command
+}
 
 func (r *RevisionReader) checkExchangeRead(ctx context.Context, t *store.Transaction) error {
 	limits, _, err := r.service.ExchangeLimits()

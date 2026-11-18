@@ -372,6 +372,12 @@ records the original generated-artifact lineage step passing on Linux x86
 Chrome with real PostgreSQL. The separate recipient UI step still failed.
 The three exact source-scan configurations and the core workflow passed.
 
+[F540](docs/qualification/evidence/F540-native-cli-mcp-integrity-report.json)
+adds CLI report preparation, submission and inspection plus two scoped MCP
+tools. The native CLI verified the local bytes, the stock MCP SDK committed
+the report, and CLI and HTTPS recovered the exact receipt after retry or
+restart. Native Linux replay and the browser report flow remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

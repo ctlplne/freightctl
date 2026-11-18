@@ -2072,7 +2072,8 @@
         "docs/qualification/evidence/F536-original-reviewed-onward-batch-terminal.json",
         "docs/qualification/evidence/F537-guarded-generated-lineage-batch.json",
         "docs/qualification/evidence/F538-recipient-https-integrity-report.json",
-        "docs/qualification/evidence/F539-native-generated-lineage-original.json"
+        "docs/qualification/evidence/F539-native-generated-lineage-original.json",
+        "docs/qualification/evidence/F540-native-cli-mcp-integrity-report.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -2263,7 +2264,8 @@
         "F536 closes the original 2c19ff2 run inventory with all 17 workflows and 37 jobs terminal on attempt one. The stock browser collection, onward exchange and private read-only recovery steps pass on native Linux Chrome. Eight workflows and twelve jobs failed. S003 retains their nonsecurity repairs and full replay for FINISH.",
         "F537 records the owner-authored and owner-committed fast-forward from 2c19ff2 to 439881e with the enabled Gitleaks hook. All 17 original workflows started on the exact pushed SHA. Native generated lineage and the separate FTPS and SFTP fault replays remain due.",
         "F538 adds the recipient-authored HTTPS integrity report to schema 68. The stock client hashes and measures the actual complete download. PostgreSQL binds its statement to the exact incoming read event, artifact and original request, and preserves one atomic report across retries. Native stock-client replay, schema-68 restore and additional report surfaces remain due.",
-        "F539 records the exact original generated lineage test passing on native Linux Chrome and the three native source scans passing. The separate original recipient UI step remains red. The workflow catalog shows one later-visible successful document-container original in addition to the 17 launch observations. Terminal replay for the full batch remains due."
+        "F539 records the exact original generated lineage test passing on native Linux Chrome and the three native source scans passing. The separate original recipient UI step remains red. The workflow catalog shows one later-visible successful document-container original in addition to the 17 launch observations. Terminal replay for the full batch remains due.",
+        "F540 uses the native CLI to verify and sync downloaded bytes before preparing an explicit report command. The stock MCP SDK submits the exact command under the recipient's original key. Scoped CLI, MCP and HTTPS reads and retries return the same report, including sender history after recipient revocation and daemon restart. Native Linux, schema-68 restore and browser report integration remain due."
       ],
       "current_item": {
         "id": "F425",

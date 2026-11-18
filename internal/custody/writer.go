@@ -380,15 +380,15 @@ func (w *RevisionWriter) Close() error {
 // RevisionReader rechecks current key/account/mount/mode authority for each
 // bounded read from the verified immutable descriptor.
 type RevisionReader struct {
-	mu                  sync.Mutex
-	service             *Service
-	ctx                 context.Context
-	scope               store.Scope
-	file                *store.File
-	data                *os.File
-	closed              bool
-	exchangeID          string
-	reportAuthorization string
+	mu              sync.Mutex
+	service         *Service
+	ctx             context.Context
+	scope           store.Scope
+	file            *store.File
+	data            *os.File
+	closed          bool
+	exchangeID      string
+	integrityReport *store.ExchangeIntegrityCommand
 }
 
 func (s *Service) OpenRevisionReader(ctx context.Context, scope store.Scope, virtual string) (*RevisionReader, error) {

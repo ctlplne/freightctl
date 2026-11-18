@@ -1,0 +1,105 @@
+{
+  "schema_version": 1,
+  "id": "F540",
+  "observed_at": "2026-11-19",
+  "base_candidate": "bb8221fccf1dab765298d6347ca719ff6f046b90",
+  "qualification_claim": false,
+  "scope": "Current recipient integrity report across the native CLI, stock MCP SDK and ordinary HTTPS",
+  "prior_https_report": "docs/qualification/evidence/F538-recipient-https-integrity-report.json",
+  "first_failure": {
+    "finding": "The original native binary completed the regular exchange and rejected the missing -prepare-integrity-report option.",
+    "log": {
+      "sha256": "3a368f21f2600125cbee4a23de97fd39bee26ab1159852273bc90dd1402cc885",
+      "bytes": 1301
+    }
+  },
+  "local_replay": {
+    "environment": "macOS ARM, Go 1.27.4, real PostgreSQL 16.15, disk custody, native freightctl daemon and executable, stock Go MCP SDK and stock curl. Inference disabled.",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "native_binary_sha256": "e00e4e69d574ccb69c3a135e46f6e6e595af10180c584fc5eaa8c3f5c336d320",
+    "stock_xlsx_fixture": {
+      "sha256": "ab43b6e9e2919608d216adf09abe63e70f4944c254a9f8a3878899487887fc1c",
+      "bytes": 5777
+    },
+    "focused_green_log": {
+      "sha256": "2aec99bbb85c7c5fdc6bcaba513d2fcf6d9df63bb6252e4bd07653400271907c",
+      "bytes": 4127
+    },
+    "fresh_race_and_vet_log": {
+      "sha256": "635dba785de513da11dd6e1aea66719baadff95171a964e42d88cc2b23a7a0c3",
+      "bytes": 4465
+    },
+    "observations": [
+      "An opt-in native CLI download published and synced verified bytes, then emitted the exact immutable report command. Host-side independent length and SHA-256 matched the actual file.",
+      "The report was absent before explicit SDK submission. Other recipients and the sender were denied submission. A stock SDK call under the authorized recipient committed the bound report.",
+      "Stock SDK sender and recipient inspection, native CLI submit retry and CLI sender inspection returned the exact original report. Changing the digest under the original key and attempting a stronger durability claim were refused.",
+      "The original sender report was identical after recipient permission revocation and a real daemon restart. The original process-recovery journey retained four daemon starts, three kills and zero extra delivery intents.",
+      "The existing stock HTTPS integrity report, stock SDK exchange, namespace receipt, catalog annotations and public artifact policy grammar checks passed again."
+    ]
+  },
+  "static_checks": {
+    "tagged_go_vet": "pass",
+    "actionlint_1_7_12": "pass",
+    "browser_policy_grammar": "pass",
+    "record_references": "pass"
+  },
+  "sources": [
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "3ac64fb4cfeb17a00503766da96001a87394d6b811815be47953264cc0ac4900",
+      "bytes": 17689
+    },
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "9208bda236e84b4e144dd80c4431e465a38b4446030059601756e0afc04d7f09",
+      "bytes": 54871
+    },
+    {
+      "path": "cmd/freightctl/exchanges.go",
+      "sha256": "d16a2654f90b36f786b5a1891d4e7724f644c01641d0b107bbd61811cac85972",
+      "bytes": 14669
+    },
+    {
+      "path": "cmd/freightctl/exchange_integrity_integration_test.go",
+      "sha256": "dfdf200edd7df4c57b5e09f8d69d2e5beecdb4b7da6091a29c4bea2fc7b5fa12",
+      "bytes": 7320
+    },
+    {
+      "path": "cmd/freightctl/exchange_process_integration_test.go",
+      "sha256": "ac61788e690984e5cdbfeaf3d3b7af36ef8dfc8bf6f0db23ade73d498220a1da",
+      "bytes": 16272
+    },
+    {
+      "path": "internal/custody/exchanges.go",
+      "sha256": "90717a8a90e5cd634b188af369248d724ab624f2b29325b8003fd7088505b495",
+      "bytes": 8042
+    },
+    {
+      "path": "internal/api/mcp.go",
+      "sha256": "97b9ba708d22d421ce780a841ce905d7896da706f4e07ac6b11cde3a5d62b2fe",
+      "bytes": 13956
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "155d0ebd0f4b235d013c72afdd64aa5d62e08cdba3185d3254aa78ae50570eaf",
+      "bytes": 141505
+    },
+    {
+      "path": "internal/api/mcp_test.go",
+      "sha256": "e006cfad278bd2a28216a6ad5b7532d0168605dc858de8e5c2f9266b3490350a",
+      "bytes": 22072
+    },
+    {
+      "path": "internal/store/exchange_integrity_reports.go",
+      "sha256": "530d97f16d98630fad4c5e4163211d533fda0b9ef8853943da03af78351625b4",
+      "bytes": 7736
+    }
+  ],
+  "remaining": [
+    "Execute the original Linux x86 and ARM report steps and schema-68 restore on the exact pushed candidate.",
+    "Show and submit the report in the browser and integrate it with ordinary exchange evidence. Receiver durability and business processing retain separate contracts.",
+    "Complete AX05, full reference journeys and all existing baseline gates."
+  ]
+}

@@ -334,6 +334,7 @@ func qualifyExchangeProcessRecovery(t *testing.T, ctx context.Context, f exchang
 	if err != nil || !bytes.Equal(actual, f.Payload) || secure.Digest(actual) != accepted.File.SHA256 {
 		t.Fatal("independent stock receiver bytes differ", err)
 	}
+	integrity := qualifyNativeExchangeIntegritySurfaces(t, ctx, f, binary, work, origin, client, original.Exchange)
 	control("POST", "/exchanges", "receive-is-not-forwarding", receiver, encode(request), 403)
 	account, err := f.DB.Account(ctx, f.Administrator, f.Recipient)
 	if err != nil {
@@ -346,6 +347,10 @@ func qualifyExchangeProcessRecovery(t *testing.T, ctx context.Context, f exchang
 	start()
 	control("GET", "/exchanges/"+original.Exchange.ID, "", receiver, nil, 403)
 	control("GET", "/exchanges/"+original.Exchange.ID+"/file", "", receiver, nil, 403)
+	var afterRevocation store.ExchangeIntegrityReport
+	if json.Unmarshal(control("GET", "/exchanges/"+original.Exchange.ID+"/integrity-report?direction=outgoing", "", sender, nil, 200), &afterRevocation) != nil || afterRevocation != integrity {
+		t.Fatal("reader revocation changed the sender's original integrity report")
+	}
 	if json.Unmarshal(control("POST", "/exchanges", "process-original-offer", sender, encode(request), 200), &recovered) != nil || !recovered.Replayed || recovered.Exchange.ID != original.Exchange.ID {
 		t.Fatal("revocation erased sender original receipt")
 	}
