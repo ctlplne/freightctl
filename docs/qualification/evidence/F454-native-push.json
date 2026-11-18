@@ -1,0 +1,222 @@
+{
+  "schema_version": 1,
+  "id": "F454",
+  "observed_at": "2026-11-18",
+  "base_candidate": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+  "qualification_claim": false,
+  "push": {
+    "from_commit": "010a3a2b4e6efe57c15be1814f1f93fa53363982",
+    "to_commit": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+    "remote_head_verified": true,
+    "exit_code": 0,
+    "author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+    "commit_ids": [
+      "473954eb22a3ab384632890e61f5698102d6de31",
+      "0fb19669ea4e08d7628fb02fb73c3b81424ce1b6",
+      "109624a85d84b26f05d8db2f4bc4b528efa103e1",
+      "56da91bd1bb94e7f13a52d2d6dd51bc0ec23c27c",
+      "b12005f7136977b13332827f9069c31d3c3b38ea",
+      "cb09dd4607e67eec97d381bb73e29cfc9f9a8511",
+      "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8"
+    ],
+    "pre_push_guard_enabled": true,
+    "gitleaks_version": "8.30.1",
+    "leaks": 0,
+    "previous_terminal_evidence": "docs/qualification/evidence/F453-original-ci-terminal.json"
+  },
+  "original_runs": [
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291767546,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native first enrollment and browser exchange",
+      "status": "queued",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291767546"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291767104,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native Windows and macOS unit checks",
+      "status": "queued",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291767104"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766202,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native FTPS dispatch approval qualification",
+      "status": "in_progress",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766202"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766130,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native browser and FTPS operator qualification",
+      "status": "in_progress",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766130"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766011,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native FTPS workflow consent qualification",
+      "status": "in_progress",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766011"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766096,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Core correctness and security",
+      "status": "in_progress",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766096"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766218,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native tus stock client and custody checkpoints",
+      "status": "in_progress",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766218"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766298,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native artifact receive browser",
+      "status": "in_progress",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766298"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766646,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native document container contracts",
+      "status": "queued",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766646"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766217,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native legacy SCP regular-file custody",
+      "status": "queued",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766217"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766170,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "status": "queued",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766170"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766421,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native FTPS client and independent stock receiver",
+      "status": "queued",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766421"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766448,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native JSON intake and custody interfaces",
+      "status": "queued",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766448"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766576,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native FTPS stock clients and custody",
+      "status": "queued",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766576"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766431,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Stock peer and browser qualification",
+      "status": "queued",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766431"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766384,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native source vulnerability configurations",
+      "status": "queued",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766384"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766310,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native immutable HTTPS stock resume",
+      "status": "queued",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766310"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291766190,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native reproducible core binaries",
+      "status": "in_progress",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291766190"
+    },
+    {
+      "attempt": 1,
+      "conclusion": "",
+      "databaseId": 44291765976,
+      "headSha": "6412db07a18ce759b217c9dc9b62ecdd1b9fa3e8",
+      "name": "Native independent DAV application",
+      "status": "in_progress",
+      "url": "https://github.com/ctlplne/freightctl/actions/runs/44291765976"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f454-outgoing.tsv",
+      "bytes": 1253,
+      "sha256": "1c9176ca4c0379bbbd15abac1a885aab33a61aa6b75ca01fc074a7499ea29d35"
+    },
+    {
+      "reference": ".private/freightctl-f454-push.log",
+      "bytes": 209,
+      "sha256": "1f3bb0a626ba48e848b7cdcf81ddd18ffcd38f589b6fdc685aa1880eae000261"
+    },
+    {
+      "reference": ".private/freightctl-f454-original-runs.json",
+      "bytes": 4709,
+      "sha256": "881c0aacbbcecb734e3ede473974104e9b3892b68ed94b30fd7ff839afaa4025"
+    }
+  ],
+  "owed": [
+    "CI outcomes for the exact candidate",
+    "Independent test peer image advisories and independent condition-enforcing DAV receiver",
+    "Full product, native, external and final-source qualification"
+  ]
+}

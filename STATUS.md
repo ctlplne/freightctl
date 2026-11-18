@@ -50,6 +50,10 @@ scans blocked on CVE-2026-100290 and CVE-2026-115819 in Debian glibc.
 Debian still lists the pinned release as vulnerable. The receive browser
 failure, Go source failures and stock DAV security failures remain recorded.
 
+[F454](docs/qualification/evidence/F454-native-push.json) records the verified
+fast-forward to `6412db0`. Gitleaks passed across all seven outgoing
+commits. The 19 original CI workflows are running against that candidate.
+
 F442 implements direct DAV delivery schema3 through the existing custody,
 durable intent,draft/approval,worker slot,lease/fence and reconciliation paths.
 Exact pinned TLS1.3 and protected bearer/Basic references,private-stage contract,
