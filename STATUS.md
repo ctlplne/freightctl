@@ -21,6 +21,12 @@ unchanged complete metadata,receiver bytes and read/write counts. Focused old-
 predicate red→green and affected static/compile checks pass. Production worker
 code is unchanged;native replay remains owed. Rclone delivery remains unqualified.
 
+F447 records the confirmed owner-only push to `010a3a2` and fifteen original
+attempt1 workflows. New security gates block on reachable GO-2026-6859 in the
+Go1.27.3 HTTP stack;Go1.27.4 contains the fix. The x/crypto OpenPGP notice is
+module-only,not called. Original failures are preserved;compiler repair takes
+priority. Runtime and final-source qualification remain owed.
+
 F442 implements direct DAV delivery schema3 through the existing custody,
 durable intent,draft/approval,worker slot,lease/fence and reconciliation paths.
 Exact pinned TLS1.3 and protected bearer/Basic references,private-stage contract,
