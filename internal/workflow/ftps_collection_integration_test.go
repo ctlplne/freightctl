@@ -44,20 +44,31 @@ func newFTPSCollection(t *testing.T, implicit, program, scheduled bool) ftpsColl
 
 func prepareFTPSCollection(t *testing.T, f *fixture, connection ConnectionView, program, scheduled bool) ftpsCollectionSetup {
 	t.Helper()
+	source, selection := prepareCollectionTest(t, f, connection, program, scheduled)
+	return ftpsCollectionSetup{f: f, connection: connection, source: source, workflow: selection.Workflow, selection: selection}
+}
+
+func prepareCollectionTest(t *testing.T, f *fixture, connection ConnectionView, program, scheduled bool) (CollectionSource, CollectionSelection) {
+	t.Helper()
+	protocol := connection.Protocol
+	if protocol == "" {
+		// The original SFTP connection view omits the transport field.
+		protocol = "sftp"
+	}
 	source := collectionTestSource()
-	source.Kind, source.Directory = "ftps.collect", "/"
+	source.Kind, source.Directory = protocol+".collect", "/"
 	source.Connection = Reference{ID: connection.ID, Version: connection.Version, Hash: connection.Hash}
 	if scheduled {
 		source.Contract, source.Manifest = ScheduledCollectionContract, "settlement-{due_utc}.ready.json"
 	}
-	d := Definition{Schema: 1, Name: "Read-only FTPS settlement", Steps: []Step{}, Source: &source}
+	d := Definition{Schema: 1, Name: "Read-only " + strings.ToUpper(protocol) + " settlement", Steps: []Step{}, Source: &source}
 	if program {
 		d.Schema = 2
 		d.Program = &Program{Nodes: []ProgramNode{{Kind: "keep_local", Reason: "reviewed_local_collection"}}}
 	}
 	preview, err := f.s.Validate(f.ctx, f.scope, PreviewRequest{Definition: d})
-	if err != nil || preview.ExternalContact || preview.Collection == nil || preview.Collection.Kind != source.Kind || preview.Collection.Connection.Protocol != "ftps" {
-		t.Fatal("FTPS source preview declared external contact or lost its transport", err)
+	if err != nil || preview.ExternalContact || preview.Collection == nil || preview.Collection.Kind != source.Kind || preview.Collection.Connection.Protocol != connection.Protocol {
+		t.Fatal("source preview declared external contact or lost its transport", err)
 	}
 	w := f.approved(t, d)
 	tx, err := f.s.Custody.DB.Begin(f.ctx, f.scope)
@@ -67,8 +78,7 @@ func prepareFTPSCollection(t *testing.T, f *fixture, connection ConnectionView, 
 	authority := tx.AuthorityRevision
 	tx.Tx.Rollback(f.ctx)
 	ref := Reference{ID: w.ID, Version: w.Version, Hash: w.Hash}
-	return ftpsCollectionSetup{f: f, connection: connection, source: source, workflow: ref,
-		selection: CollectionSelection{Workflow: ref, Timeout: 120, Authority: authority}}
+	return source, CollectionSelection{Workflow: ref, Timeout: 120, Authority: authority}
 }
 
 func publishFTPSCollectionObject(t *testing.T, x ftpsCollectionSetup, name string, body []byte) *store.File {
@@ -91,14 +101,14 @@ func publishFTPSCollectionManifest(t *testing.T, x ftpsCollectionSetup, name str
 	return m
 }
 
-func requireCollectedFTPSBytes(t *testing.T, x ftpsCollectionSetup, job string, expected []byte) *CollectionView {
+func requireCollectedBytes(t *testing.T, f *fixture, job string, expected []byte) *CollectionView {
 	t.Helper()
-	v, err := x.f.s.CollectionStatus(x.f.ctx, x.f.scope, job)
+	v, err := f.s.CollectionStatus(f.ctx, f.scope, job)
 	if err != nil || !v.Current || v.Job.State != "captured" || !v.Job.Captured || len(v.Inputs) != 1 || v.BusinessAcceptance != "unknown" {
-		t.Fatal("FTPS batch not exactly captured", err)
+		t.Fatal("batch not exactly captured", err)
 	}
 	i := v.Inputs[0]
-	file, stream, err := x.f.s.Custody.DownloadPath(x.f.ctx, x.f.scope, i.Target)
+	file, stream, err := f.s.Custody.DownloadPath(f.ctx, f.scope, i.Target)
 	if err != nil {
 		t.Fatal("captured local namespace unavailable", err)
 	}
@@ -127,7 +137,7 @@ func TestFTPSCollectionCopiesExactSourceAndReplaysWithoutAnotherContact(t *testi
 				if err != nil {
 					t.Fatal("actual FTPS collector", err)
 				}
-				v := requireCollectedFTPSBytes(t, x, job.ID, body)
+				v := requireCollectedBytes(t, x.f, job.ID, body)
 				_, expectedHash, _ := digest(manifest)
 				if v.Job.Attempts != 1 || v.Job.Fence != 1 || v.Job.ManifestHash == nil || *v.Job.ManifestHash != expectedHash || v.Inputs[0].FileID == nil || *v.Inputs[0].FileID == original.ID {
 					t.Fatal("source batch/fence or separate local custody identity differs")
@@ -213,7 +223,7 @@ func TestFTPSCollectionProducerBatchCannotDuplicateOrChangeItsCapturedMeaning(t 
 			if _, err := x.f.s.WorkCollection(x.f.ctx, x.f.scope, first.ID, "capture-original-ftps-batch", CollectionWorkRequest{Hash: first.Hash}); err != nil {
 				t.Fatal(err)
 			}
-			captured := requireCollectedFTPSBytes(t, x, first.ID, body)
+			captured := requireCollectedBytes(t, x.f, first.ID, body)
 			duplicate, _ := startCollection(t, x.f, x.selection, "same-ftps-batch-new-job")
 			if _, err := x.f.s.WorkCollection(x.f.ctx, x.f.scope, duplicate.ID, "observe-same-ftps-batch", CollectionWorkRequest{Hash: duplicate.Hash}); err != nil {
 				t.Fatal(err)
@@ -244,7 +254,7 @@ func TestFTPSCollectionProducerBatchCannotDuplicateOrChangeItsCapturedMeaning(t 
 			if err != nil || v.Job.Captured || v.Job.State != "attention" || v.Job.Reason != "producer_batch_binding_refused" || v.Job.Manifest != nil || len(v.Inputs) != 0 {
 				t.Fatal("changed producer batch became accepted input authority", err)
 			}
-			if original := requireCollectedFTPSBytes(t, x, first.ID, body); !reflect.DeepEqual(original.Job, captured.Job) || !reflect.DeepEqual(original.Inputs, captured.Inputs) {
+			if original := requireCollectedBytes(t, x.f, first.ID, body); !reflect.DeepEqual(original.Job, captured.Job) || !reflect.DeepEqual(original.Inputs, captured.Inputs) {
 				t.Fatal("refused batch altered original immutable history")
 			}
 		})
@@ -453,7 +463,7 @@ func TestScheduledFTPSCollectionUsesFrozenDueManifestAndOriginalReceipts(t *test
 			if _, err = x.f.s.WorkCollection(x.f.ctx, x.f.scope, job.ID, "scheduled-ftps-worker", CollectionWorkRequest{Hash: job.Hash}); err != nil {
 				t.Fatal(err)
 			}
-			requireCollectedFTPSBytes(t, x, job.ID, []byte("abc"))
+			requireCollectedBytes(t, x.f, job.ID, []byte("abc"))
 		})
 	}
 }

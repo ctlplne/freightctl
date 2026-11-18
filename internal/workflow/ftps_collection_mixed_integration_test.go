@@ -61,7 +61,7 @@ func TestFTPSCollectionRoutesStockSFTPAndEncryptedFTPSWithSeparateConsent(t *tes
 			if err != nil {
 				t.Fatal(err)
 			}
-			captured := requireCollectedFTPSBytes(t, x, job.ID, []byte("abc"))
+			captured := requireCollectedBytes(t, x.f, job.ID, []byte("abc"))
 			if captured.Job.Attempts != 1 || captured.Job.Fence != 1 || sourceListener.contacts.Load() != 1 || captured.Inputs[0].FileID == nil || captured.Inputs[0].RunID != nil {
 				t.Fatal("capture duplicated a source acquisition or prematurely queued output")
 			}

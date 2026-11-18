@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "id": "F516",
+  "observed_at": "2026-11-19",
+  "base_candidate": "a3c4194e65853dc8318c9ba99ecb0bb316a6ad9a",
+  "qualification_claim": false,
+  "scope": "Stock read-only SFTP producer through separately authorized HTTPS agent receipt to independent stock SFTP delivery",
+  "environment": {
+    "go": "go1.27.4 darwin/arm64",
+    "race_detector": true,
+    "postgres": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "runtime_database_role": "freightctl_runtime",
+    "postgres_resource_limits": "192 MiB memory, one CPU and task-owned loopback",
+    "stock_https": "Apple curl 8.7.1",
+    "stock_producer_and_recipient": "Separate unprivileged loopback OpenSSH 10.5p1 daemons with independently generated host and client keys and separate source and receiver directories",
+    "inference": "disabled"
+  },
+  "independent_stock_sftp_run": {
+    "test": "TestStockSFTPCollectionToAgentAndSeparatelyApprovedStockSFTP",
+    "log": {
+      "sha256": "dae21ac89cb67f3ba99bacf383eac1d28bff84bfb089bff8f05a5a477f96b019",
+      "bytes": 1757
+    },
+    "producer_sessions_during_workflow": 1,
+    "producer_write_refusals_after_workflow": 1,
+    "producer_tree_and_bytes_unchanged": true,
+    "checks": [
+      "The registered source pins the OpenSSH host and collection public key. An exact approved workflow reads the ready manifest and stages the named payload under its digest and length.",
+      "Preview, queueing, capture replay, source review, offer replay and onward delivery do not add an authenticated connection to the producer.",
+      "The sender reviews the original immutable revision over the CLI. The receiving agent cannot review the actor-private source or open its ordinary file path.",
+      "Stock curl reads the exact bytes through its separately registered HTTPS view. The receiving identity cannot create an onward offer merely because it received that view.",
+      "The owning-copy CLI commits a new revision with exact source lineage. Explicit workflow permissions and operator-provisioned SSH transport are required for ordinary onward approval and execution.",
+      "The separate receiver stores the original bytes and a stock SFTP client independently reads them back. Revoking the exact route blocks the queued delivery before contacting the receiver.",
+      "After the journey the stock producer refuses a write using the actual producer credential. The original files and directory contents are unchanged.",
+      "The custody offer retains unknown business processing and receiver persistence."
+    ]
+  },
+  "retained_original_replays": {
+    "freightctl_ftps_producer_modes": 2,
+    "freightctl_ftps_collection_subcases": 4,
+    "independent_ftps_producer_journeys": 4,
+    "independent_ftps_journeys_by_mode": {
+      "explicit": 2,
+      "implicit": 2
+    },
+    "independent_ftps_summary": {
+      "sha256": "ba87308cf336b5e10645c8548da7fb2b34f29cc6c45e4a506b88d0b098de58d8",
+      "bytes": 2989
+    },
+    "independent_ftps_harness": "docs/qualification/evidence/F513-native-stock-ftps-producer-harness.json"
+  },
+  "static_checks": [
+    "Tagged Go vet with integration and stockftpsproducer",
+    "gofmt",
+    "record validator and 15 record contract tests",
+    "git diff --check"
+  ],
+  "sources": [
+    {
+      "path": "internal/workflow/ftps_collection_exchange_integration_test.go",
+      "sha256": "0d15af5e6b68fd03edff5a49462c6c18b0553260f7c20a4c6442b1dfbd7866fc",
+      "bytes": 20022
+    },
+    {
+      "path": "internal/workflow/ftps_collection_integration_test.go",
+      "sha256": "172e1ebee17a2214f52ca2aea1936ff5e67bd188501d2c5216c4773be98da7bc",
+      "bytes": 24439
+    },
+    {
+      "path": "internal/workflow/ftps_collection_mixed_integration_test.go",
+      "sha256": "4d96d66aed157f7e1920550062aca34427f2e4530d71602a9026419bb90882d5",
+      "bytes": 9695
+    },
+    {
+      "path": "internal/workflow/ftps_collection_recovery_integration_test.go",
+      "sha256": "001ee694667d784e31c7546304f95963d932eca49a1ee33f4adafc3b970eafff",
+      "bytes": 9477
+    },
+    {
+      "path": "internal/workflow/ftps_stock_producer_exchange_integration_test.go",
+      "sha256": "7f533811356bc74eb58d4c4cd049cd36094df4465ceb3ff414603ab146a7b690",
+      "bytes": 1959
+    },
+    {
+      "path": "internal/workflow/mixed_ftps_workflow_integration_test.go",
+      "sha256": "d273c5808295ca895f01536ce9c24a78d1dc35481926ebcf783f0df257e95581",
+      "bytes": 13945
+    },
+    {
+      "path": "internal/workflow/sftp_collection_exchange_integration_test.go",
+      "sha256": "43bfdbb92679273ef7186715b7191f5696c9b66015d91b4588d3836ca78dec10",
+      "bytes": 2278
+    }
+  ],
+  "remaining": [
+    "Repeat the stock SFTP producer profile on native Linux. Grow actual API, MCP, browser and interrupted recovery proof across the required profiles.",
+    "Preserve all open standalone FTPS and original workflow failures. Complete the remaining baseline journeys and final-source gates."
+  ]
+}

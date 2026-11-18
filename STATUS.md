@@ -212,6 +212,13 @@ records the guarded fast-forward to `8403038` after all 15 preceding originals
 finished. Gitleaks found zero leaks across two owner commits. Native run
 `44374127362` carries the ARM and x86 supervised producer steps.
 
+[F516](docs/qualification/evidence/F516-stock-sftp-source-agent-exchange.json)
+replays a read-only stock OpenSSH source through governed collection, scoped
+HTTPS access, an agent-owned copy and separate approval to send to another
+stock OpenSSH daemon. Source access uses one authenticated session. The
+producer credential cannot write, and the source files remain unchanged.
+Native Linux and the remaining interfaces and recovery cases stay open.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

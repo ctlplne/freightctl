@@ -2042,7 +2042,8 @@
         "docs/qualification/evidence/F505-operator-connection-provisioning.json",
         "docs/qualification/evidence/F509-stock-ftps-producer-exchange.json",
         "docs/qualification/evidence/F510-supervised-stock-ftps-producer.json",
-        "docs/qualification/evidence/F513-native-stock-ftps-producer-harness.json"
+        "docs/qualification/evidence/F513-native-stock-ftps-producer-harness.json",
+        "docs/qualification/evidence/F516-stock-sftp-source-agent-exchange.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -2215,7 +2216,8 @@
         "F505 lets an operator provision a named agent’s exact SFTP route without elevating the agent. The real CLI, PostgreSQL and stock receiver replay both original FTPS modes. Same-key commands preserve their receipts, raw mismatched authority and orphan events are refused, and route revocation stops queued work before receiver contact. A seeded schema-66 connection survives the exact schema-67 upgrade with all original checksums and the 77 forced-RLS tables intact. Native Linux replay and additional connection profiles remain open.",
         "F509 replays the exact ready-manifest to stock HTTPS to agent-owned custody to stock OpenSSH chain from a read-only Alpine vsftpd producer. Both TLS modes require TLS 1.3 control and resumed data, log one authenticated source session, and leave producer bytes intact. Stock listener continuity remains open after exit status 139 in both witnessed runs. Native Linux freightctl replay and other source/recipient profiles remain owed.",
         "F510 reproduces the standalone listener exit with an independent OpenSSL client. The supervised variant starts stock vsftpd per control socket through stock inetd. Two serial full journeys in each mode pass against one continuously running listener with the same isolation, read-only and TLS guards. The standalone failure remains open.",
-        "F513 pins the signed Alpine producer packages for native ARM and x86 and adds the exact repeated stock source journey to the native Linux matrix. The checked-in harness passes all four local exchanges on macOS ARM and rejects incomplete or mismatched witness logs. Both native results remain due."
+        "F513 pins the signed Alpine producer packages for native ARM and x86 and adds the exact repeated stock source journey to the native Linux matrix. The checked-in harness passes all four local exchanges on macOS ARM and rejects incomplete or mismatched witness logs. Both native results remain due.",
+        "F516 passes a local read-only stock OpenSSH producer through the governed ready manifest, scoped HTTPS retrieval, agent-owned custody and separately approved delivery to another stock OpenSSH daemon. The source credential cannot write and the original source bytes remain intact. Native Linux and the additional surfaces and recovery cases stay open."
       ],
       "current_item": {
         "id": "F425",

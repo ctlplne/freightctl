@@ -34,7 +34,7 @@ func TestFTPSCollectionToAgentAndSeparatelyApprovedStockSFTP(t *testing.T) {
 			original := publishFTPSCollectionObject(t, x, "one.csv", body)
 			manifest := publishFTPSCollectionManifest(t, x, x.source.Manifest, []CollectionFile{{Name: "one.csv", Size: int64(len(body)), SHA256: original.SHA256}})
 
-			proveFTPSCollectionAgentOnward(t, x, binary, body, original, manifest, x.listener.contacts.Load)
+			proveCollectionAgentOnward(t, x.f, x.selection, binary, body, original.ID, manifest, x.listener.contacts.Load)
 			if !bytes.Equal(readReceiverBytes(t, x.producer, "/inbox/one.csv"), body) {
 				t.Fatal("read-only collection changed the producer bytes")
 			}
@@ -42,20 +42,20 @@ func TestFTPSCollectionToAgentAndSeparatelyApprovedStockSFTP(t *testing.T) {
 	}
 }
 
-func proveFTPSCollectionAgentOnward(t *testing.T, x ftpsCollectionSetup, binary string, body []byte, original *store.File, manifest *CollectionManifest, contacts func() int64) {
+func proveCollectionAgentOnward(t *testing.T, f *fixture, selection CollectionSelection, binary string, body []byte, sourceFileID string, manifest *CollectionManifest, contacts func() int64) {
 	t.Helper()
-	f, service := x.f, x.f.s.Custody
+	service := f.s.Custody
 	service.Exchanges = custody.ExchangeSettings{MaxLifetime: time.Hour, MaxSenders: 16, MaxOpenViews: 16, MaxEndpoints: 16}
-	job, _ := startCollection(t, f, x.selection, "exchange-source-start")
+	job, _ := startCollection(t, f, selection, "exchange-source-start")
 	if contacts != nil && contacts() != 0 {
 		t.Fatal("approval and queue contacted producer")
 	}
 	workRequest := CollectionWorkRequest{Hash: job.Hash}
 	worked, err := f.s.WorkCollection(f.ctx, f.scope, job.ID, "exchange-source-capture", workRequest)
 	if err != nil || worked.Replayed {
-		t.Fatal("capture of the exact FTPS source failed", err)
+		t.Fatal("capture of the exact source failed", err)
 	}
-	captured := requireCollectedFTPSBytes(t, x, job.ID, body)
+	captured := requireCollectedBytes(t, f, job.ID, body)
 	input := captured.Inputs[0]
 	if (contacts != nil && contacts() != 1) || captured.Job.Attempts != 1 || captured.Job.Fence != 1 || input.RunID != nil {
 		t.Fatal("capture made extra producer contacts or staged a run")
@@ -142,9 +142,9 @@ func proveFTPSCollectionAgentOnward(t *testing.T, x ftpsCollectionSetup, binary 
 	if err != nil || json.Unmarshal(reviewRaw, &source) != nil || source.Profile != CollectedExchangeSourceProfile ||
 		source.StorageVerification != "not-checked" || source.State != "source-review-only" ||
 		source.Origin.CollectionID != job.ID || source.Origin.FirstCollectionID != job.ID || source.Origin.DefinitionHash != job.Hash ||
-		source.Origin.Workflow != x.workflow || source.Origin.ManifestHash != manifestHash || source.Origin.ProducerBatch != manifest.Batch ||
+		source.Origin.Workflow != selection.Workflow || source.Origin.ManifestHash != manifestHash || source.Origin.ProducerBatch != manifest.Batch ||
 		source.Origin.InputID != input.ID || source.Origin.InputIdentity != input.Identity || source.Artifact.ID != *input.FileID ||
-		source.Artifact.ID == original.ID || source.Artifact.Size != original.Size || source.Artifact.SHA256 != original.SHA256 ||
+		source.Artifact.ID == sourceFileID || source.Artifact.Size != int64(len(body)) || source.Artifact.SHA256 != secure.Digest(body) ||
 		bytes.Contains(reviewRaw, []byte("one.csv")) || bytes.Contains(reviewRaw, []byte(service.Disk.Identity())) {
 		t.Fatalf("source review lost or over-disclosed collected evidence; output_sha256=%s; error=%v", secure.Digest(reviewRaw), err)
 	}
@@ -208,7 +208,7 @@ func proveFTPSCollectionAgentOnward(t *testing.T, x ftpsCollectionSetup, binary 
 		return copied
 	}
 	owned := copyArtifact()
-	if owned.Replayed || owned.Artifact.ID == source.Artifact.ID || owned.Artifact.ID == original.ID ||
+	if owned.Replayed || owned.Artifact.ID == source.Artifact.ID || owned.Artifact.ID == sourceFileID ||
 		owned.Artifact.SHA256 != source.Artifact.SHA256 || owned.Artifact.Size != source.Artifact.Size || owned.Source != copyRequest.ExchangeCopyOrigin {
 		t.Fatal("recipient-owned copy missed the exact received source")
 	}

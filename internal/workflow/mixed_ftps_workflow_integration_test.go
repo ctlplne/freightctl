@@ -45,6 +45,11 @@ func mixedReceiverCommand(t *testing.T, f *fixture, name string, args ...string)
 
 func newMixedStockReceiver(t *testing.T, f *fixture) *mixedStockReceiver {
 	t.Helper()
+	return newStockSFTPPeer(t, f, false)
+}
+
+func newStockSFTPPeer(t *testing.T, f *fixture, readOnly bool) *mixedStockReceiver {
+	t.Helper()
 	if os.Geteuid() == 0 {
 		t.Fatal("stock receiver qualification requires an unprivileged account")
 	}
@@ -95,6 +100,10 @@ func newMixedStockReceiver(t *testing.T, f *fixture) *mixedStockReceiver {
 	if err != nil {
 		t.Fatal(err)
 	}
+	args, operation := "-d", "mixed-stock-connection"
+	if readOnly {
+		args, operation = "-R -d", "stock-sftp-source-connection"
+	}
 	config := fmt.Sprintf(`Port %s
 ListenAddress 127.0.0.1
 HostKey %s
@@ -116,9 +125,9 @@ MaxSessions 1
 MaxStartups 2
 LoginGraceTime 5
 Subsystem sftp internal-sftp
-ForceCommand internal-sftp -d %s
+ForceCommand internal-sftp %s %s
 LogLevel VERBOSE
-`, r.port, strconv.Quote(host), strconv.Quote(filepath.Join(dir, "receiver.pid")), strconv.Quote(authorized), r.user, strconv.Quote(r.directory))
+`, r.port, strconv.Quote(host), strconv.Quote(filepath.Join(dir, "receiver.pid")), strconv.Quote(authorized), r.user, args, strconv.Quote(r.directory))
 	configPath := filepath.Join(dir, "sshd_config")
 	if err = os.WriteFile(configPath, []byte(config), 0600); err != nil {
 		t.Fatal(err)
@@ -176,7 +185,7 @@ LogLevel VERBOSE
 	if err = os.WriteFile(r.knownHosts, append([]byte("[127.0.0.1]:"+r.port+" "), hostPublic...), 0600); err != nil {
 		t.Fatal(err)
 	}
-	registered, err := f.s.RegisterConnection(f.ctx, f.scope, "mixed-stock-connection", ConnectionRequest{Address: address, User: r.user, Directory: r.directory, HostPublicFile: host + ".pub", KeyFile: r.client, KeyPublicFile: r.client + ".pub"})
+	registered, err := f.s.RegisterConnection(f.ctx, f.scope, operation, ConnectionRequest{Address: address, User: r.user, Directory: r.directory, HostPublicFile: host + ".pub", KeyFile: r.client, KeyPublicFile: r.client + ".pub"})
 	if err != nil || json.Unmarshal(registered.Resource, &r.connection) != nil {
 		t.Fatal("stock connection registration failed", err)
 	}
@@ -192,6 +201,12 @@ func (r *mixedStockReceiver) sessions(t *testing.T) int {
 	return bytes.Count(data, []byte("Accepted publickey for "))
 }
 
+func (r *mixedStockReceiver) sftpArgs(batch string) []string {
+	return []string{"-F", "/dev/null", "-P", r.port, "-oBatchMode=yes", "-oStrictHostKeyChecking=yes",
+		"-oUserKnownHostsFile=" + r.knownHosts, "-oIdentitiesOnly=yes", "-oIdentityAgent=none",
+		"-i", r.client, "-b", batch, r.user + "@127.0.0.1"}
+}
+
 func (r *mixedStockReceiver) requireBytes(t *testing.T, f *fixture, filename string) {
 	t.Helper()
 	final := filepath.Join(r.directory, filename)
@@ -204,7 +219,7 @@ func (r *mixedStockReceiver) requireBytes(t *testing.T, f *fixture, filename str
 	if err = os.WriteFile(batch, []byte("get "+strconv.Quote(final)+" "+strconv.Quote(destination)+"\n"), 0600); err != nil {
 		t.Fatal(err)
 	}
-	mixedReceiverCommand(t, f, "sftp", "-F", "/dev/null", "-P", r.port, "-oBatchMode=yes", "-oStrictHostKeyChecking=yes", "-oUserKnownHostsFile="+r.knownHosts, "-oIdentitiesOnly=yes", "-oIdentityAgent=none", "-i", r.client, "-b", batch, r.user+"@127.0.0.1")
+	mixedReceiverCommand(t, f, "sftp", r.sftpArgs(batch)...)
 	data, err = os.ReadFile(destination)
 	if err != nil || !bytes.Equal(data, []byte("abc")) {
 		t.Fatal("independent stock SFTP readback differs", err)

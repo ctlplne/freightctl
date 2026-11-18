@@ -190,8 +190,11 @@ complete runtime qualification is inferred;remaining AX-J02 pairs remain owed.
 The governed-source bridge pins `governed-collection-exchange-source-v1` for
 already captured exact inputs. Its [contract](../protocols/artifact-collection-source.md)
 correlates original input/manifest custody and separately checks current ordinary
-source permission through API,CLI,MCP and browser review. Stock SFTP collection
-to separately authorized custody-poll offer is the first pinned source pair.
+source permission through API,CLI,MCP and browser review. The stock SFTP pair
+passes on macOS ARM from a read-only OpenSSH producer through the separately
+authorized custody-poll offer, agent-owned copy and approved onward delivery to
+a different OpenSSH daemon. Native Linux and the other surfaces remain open.
+[F516](../qualification/evidence/F516-stock-sftp-source-agent-exchange.json)
 The local FTPS pair uses a separate freightctl producer, stock HTTPS retrieval,
 an agent-owned copy and separately approved delivery to stock OpenSSH. It
 passes for explicit and implicit FTPS. The same local chain passes from a

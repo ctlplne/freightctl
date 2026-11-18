@@ -184,7 +184,7 @@ func TestFTPSCollectionKilledAfterSealRecoversOriginalObjectWithoutSourceContact
 			if first.Replayed || !replay.Replayed || json.Unmarshal(first.Resource, &action) != nil || json.Unmarshal(replay.Resource, &replayed) != nil || !reflect.DeepEqual(action, replayed) || action.ID != job.ID || action.Hash != job.Hash || action.State != "captured" {
 				t.Fatal("original stopped key did not recover one exact captured receipt")
 			}
-			recovered := requireCollectedFTPSBytes(t, x, job.ID, body)
+			recovered := requireCollectedBytes(t, x.f, job.ID, body)
 			_, manifestHash, _ := digest(manifest)
 			if recovered.Job.Attempts != 2 || recovered.Job.Fence != 2 || recovered.Job.ManifestHash == nil || *recovered.Job.ManifestHash != manifestHash || recovered.Inputs[0].ObjectID != input.ObjectID || recovered.Inputs[0].ID != input.ID || recovered.Inputs[0].FileID == nil || *recovered.Inputs[0].FileID != input.ObjectID || x.listener.contacts.Load() != contacts {
 				t.Fatal("takeover repeated source contact or replaced the sealed custody revision")

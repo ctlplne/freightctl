@@ -40,10 +40,9 @@ func TestStockFTPSProducerToAgentAndSeparatelyApprovedStockSFTP(t *testing.T) {
 		})
 		x := prepareFTPSCollection(t, f, connection, false, false)
 		body := []byte("abc")
-		original := &store.File{Size: int64(len(body)), SHA256: secure.Digest(body)}
 		manifest := &CollectionManifest{Schema: 1, Batch: "00000000-0000-4000-8000-000000000509",
-			Files: []CollectionFile{{Name: "one.csv", Size: original.Size, SHA256: original.SHA256}},
+			Files: []CollectionFile{{Name: "one.csv", Size: int64(len(body)), SHA256: secure.Digest(body)}},
 		}
-		proveFTPSCollectionAgentOnward(t, x, binary, body, original, manifest, nil)
+		proveCollectionAgentOnward(t, f, x.selection, binary, body, "", manifest, nil)
 	})
 }

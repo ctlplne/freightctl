@@ -47,10 +47,14 @@ That form requires a fresh source check and an explicitly approved receive
 endpoint before an offer can be confirmed. The navigation itself creates none.
 Held,unpublished or incomplete input snapshots show no review action.
 
-The governed-source profiles cover both SFTP and FTPS ready manifests. The
-stock SFTP profile uses this source review and a separately authorized custody
-HTTPS poll offer. Its full stock-source, API, MCP, browser and recovery proof
-remains due.
+The governed-source profiles cover both SFTP and FTPS ready manifests. In
+the stock SFTP replay, a read-only OpenSSH producer served the ready manifest
+and exact payload in one authenticated session. The agent received a separately
+authorized HTTPS view and created a new custody copy. A second OpenSSH daemon
+received the approved onward delivery. A stock SFTP write using the producer
+credential was refused, and both producer files stayed unchanged. Native Linux
+and additional API, MCP, browser and recovery checks remain open.
+[F516 replay](../qualification/evidence/F516-stock-sftp-source-agent-exchange.json)
 
 The FTPS profile uses explicit AUTH TLS or implicit FTPS from a separately
 provisioned freightctl producer. A collector reads the ready manifest and pins
@@ -100,5 +104,5 @@ workspace directory. The registered connection reads `/inbox` on the producer.
 The collection definition uses `/` as its local custody directory.
 [F513 harness evidence](../qualification/evidence/F513-native-stock-ftps-producer-harness.json)
 
-The native Linux freightctl runtime matrix, the full SFTP pair, additional actor
-and transport pairs, process-death recovery and restore remain open.
+The native Linux freightctl runtime matrix, additional actor and transport pairs,
+process-death recovery and restore remain open.
