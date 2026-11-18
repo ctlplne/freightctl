@@ -161,6 +161,13 @@ peer settings from PostgreSQL and enrolled a different client key in a
 separate database. The reviewed registration preserved the public host
 pin and received a new connection identity.
 
+[F481](docs/qualification/evidence/F481-portable-output-policy-export.json)
+exports a producer-bound processing policy with its exact checks and source
+binding. The PostgreSQL CLI restored a revoked source revision as a new
+policy after explicit enrollment under a distinct destination producer.
+The new policy had the same definition hash and left destination intake
+unconfigured.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

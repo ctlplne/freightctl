@@ -98,8 +98,8 @@ references to authorized destination revisions when moving between
 workspaces. Then submit it through ordinary `workflow-draft`. The
 destination creates a separate draft that needs its own approval. The
 export checksum appears in the CLI receipt and the scoped preparation
-event. Export connection revisions separately. Policy content recovery
-remains open.
+event. Export connection and producer-bound output policy revisions
+separately. Intake policy recovery remains open.
 
 ## Export a schedule and compare its clock rules
 
@@ -153,3 +153,31 @@ Compare the recorded source trust pin with the newly registered peer
 pin. Use the resulting connection ID, version and definition hash when
 rebinding a workflow. The new registration has its own credential and
 revocation lifecycle.
+
+## Export a producer-bound output policy
+
+Use the exact ID, version and definition hash from
+`processing-output-policy-status`. Run the export as a workspace
+administrator with intake management permission.
+
+```sh
+umask 077
+freightctl processing-output-policy-export --tenant "$TENANT" --partner "$PARTNER" \
+  --output-policy-id "$POLICY_ID" --version "$VERSION" \
+  --definition-hash "$DEFINITION_SHA256" \
+  --output .private/portable-output-policy.json
+jq '.destination_registration' .private/portable-output-policy.json \
+  > .private/output-policy-registration.json
+```
+
+The `freightctl-portable-output-policy-v1` file records the exact checks,
+the observed source state and the source producer binding. Review a
+historical or revoked source under the destination's current policy.
+Set `producer_id` to an authorized destination account. Preserve any
+signature and scanner requirements and rebind their exact references
+to authorized destination revisions. Use ordinary
+`processing-output-policy-register` with the reviewed request. The
+destination registry checks the producer and those dependencies and
+returns a new policy reference you can use when rebinding a workflow.
+An output policy governs that producer's workflow output. The partner
+has a separate intake policy for uploads.

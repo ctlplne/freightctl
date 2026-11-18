@@ -8,6 +8,7 @@ import (
 	"os"
 	"path/filepath"
 
+	"github.com/ctlplne/freightctl/internal/checks"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
@@ -15,6 +16,11 @@ import (
 )
 
 type configurationExporter func(*workflow.Service, context.Context, store.Scope, workflow.Reference, io.Writer) (*workflow.PortableExportReceipt, error)
+
+func preparePortableOutputPolicy(service *workflow.Service, ctx context.Context, scope store.Scope, ref workflow.Reference, output io.Writer) (*workflow.PortableExportReceipt, error) {
+	checkService := checks.Service{Custody: service.Custody}
+	return checkService.PreparePortableOutputPolicy(ctx, scope, ref, output)
+}
 
 func portableConfigurationExport(ctx context.Context, dsn, token, tenant, partner, path, resource string, ref workflow.Reference, export configurationExporter, output io.Writer) error {
 	if path == "" {

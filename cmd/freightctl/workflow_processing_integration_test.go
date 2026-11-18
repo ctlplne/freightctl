@@ -331,5 +331,74 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 		if err != nil || after.ID != before.ID || after.Version != before.Version || after.Hash != before.Hash || after.State != before.State {
 			t.Fatal("CLI output registry altered ingress", err)
 		}
+		t.Run("portable output policy enrolls a distinct scoped producer", func(t *testing.T) {
+			destination := store.Scope{Tenant: secure.NewID(), Partner: secure.NewID()}
+			destinationToken := filepath.Join(t.TempDir(), "destination.token")
+			if err := secure.WriteToken(destinationToken); err != nil {
+				t.Fatal(err)
+			}
+			if err := store.Provision(ctx, refs[0], destination.Tenant, destination.Partner, destinationToken); err != nil {
+				t.Fatal(err)
+			}
+			secret, err := secure.ReadSecret(destinationToken, 64)
+			if err != nil {
+				t.Fatal(err)
+			}
+			destination.TokenHash = secure.Digest(secret.Bytes)
+			secret.Close()
+			producer, err := db.Identity(ctx, destination)
+			if err != nil || producer.Actor == identity.Actor {
+				t.Fatal("destination needs its own producer", err)
+			}
+			destinationFlags := []string{"-tenant", destination.Tenant, "-partner", destination.Partner, "-token-file", destinationToken}
+			reference := []string{"-output-policy-id", record.Policy.ID, "-version", "1", "-definition-hash", record.Policy.Hash}
+			exportPath := filepath.Join(t.TempDir(), "policy.json")
+			exportFlags := append(reference, "-output", exportPath)
+			if _, err := command("processing-output-policy-export", append(exportFlags, destinationFlags...)...); err == nil {
+				t.Fatal("export crossed workspace boundary")
+			}
+			if _, err := command("processing-output-policy-export", append(exportFlags, "-definition-hash", strings.Repeat("0", 64))...); !errors.Is(err, store.ErrRevision) {
+				t.Fatal("export accepted changed definition hash", err)
+			}
+			if _, err := os.Lstat(exportPath); !os.IsNotExist(err) {
+				t.Fatal("failed export published a path", err)
+			}
+			raw, err := command("processing-output-policy-export", exportFlags...)
+			var receipt workflow.PortableExportReceipt
+			if err != nil || json.Unmarshal(raw, &receipt) != nil {
+				t.Fatal("export refused exact historical revision", err)
+			}
+			archive, err := os.ReadFile(exportPath)
+			var manifest checks.PortableOutputPolicy
+			if err != nil || json.Unmarshal(archive, &manifest) != nil || secure.Digest(archive) != receipt.SHA256 ||
+				receipt.Size != len(archive) || receipt.Source != manifest.Source || manifest.Profile != checks.PortableOutputPolicyProfile ||
+				manifest.ObservedState != "output_revoked" || manifest.SourceBinding == nil || *manifest.SourceBinding != *record.Binding ||
+				manifest.Registration.Producer != "" || len(manifest.RequiredBindings) != 1 || manifest.RequiredBindings[0] != "producer_id" {
+				t.Fatal("export changed the exact policy, observed state, or binding", err)
+			}
+			register := func(request checks.OutputPolicyRequest) ([]byte, error) {
+				flags := append(destinationFlags, "-request-file", requestFile(request), "-idempotency-key", "cli-recreate-output-policy")
+				return command("processing-output-policy-register", flags...)
+			}
+			if _, err := register(manifest.Registration); !errors.Is(err, checks.ErrInput) {
+				t.Fatal("unbound template registered without a destination producer", err)
+			}
+			manifest.Registration.Producer = producer.Actor
+			raw, err = register(manifest.Registration)
+			var result checks.Result
+			var restored checks.OutputPolicyRecord
+			if err != nil || json.Unmarshal(raw, &result) != nil || json.Unmarshal(result.Resource, &restored) != nil ||
+				restored.Policy == nil || restored.Binding == nil || restored.Policy.Hash != record.Policy.Hash ||
+				restored.Policy.ID == record.Policy.ID || restored.Policy.State != "output_active" ||
+				restored.Binding.Producer.Actor != producer.Actor || restored.Binding.Producer.Tenant != destination.Tenant ||
+				restored.Binding.Producer.Partner != destination.Partner || restored.IngressChanged {
+				t.Fatal("new policy failed to preserve exact checks under the new producer", err)
+			}
+			intake, err := control.Policy(ctx, destination)
+			if err != nil || intake != nil {
+				t.Fatal("export or output registration configured destination ingress", err)
+			}
+			t.Logf("portable output policy definition %s, archive %s", restored.Policy.Hash, receipt.SHA256)
+		})
 	})
 }

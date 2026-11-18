@@ -119,7 +119,7 @@ func (s *Service) PreparePortableWorkflow(ctx context.Context, scope store.Scope
 		Source: ref, ObservedState: stored.State, Draft: DraftRequest{Definition: normalized},
 		Dependencies: portableDependencies(normalized),
 	}
-	return writePortableExport(ctx, tx, "PortableWorkflowExportPrepared", ref, manifest, output)
+	return WritePortableExport(ctx, tx, "PortableWorkflowExportPrepared", ref, manifest, output)
 }
 
 func (s *Service) PreparePortableSchedule(ctx context.Context, scope store.Scope, ref Reference, output io.Writer) (*PortableExportReceipt, error) {
@@ -154,10 +154,12 @@ func (s *Service) PreparePortableSchedule(ctx context.Context, scope store.Scope
 		SourceTenant: scope.Tenant, SourcePartner: scope.Partner,
 		Source: ref, ObservedState: stored.State, FrozenCalendar: definition.Calendar, Selection: selection,
 	}
-	return writePortableExport(ctx, tx, "PortableScheduleExportPrepared", ref, manifest, output)
+	return WritePortableExport(ctx, tx, "PortableScheduleExportPrepared", ref, manifest, output)
 }
 
-func writePortableExport(ctx context.Context, tx *store.Transaction, event string, ref Reference, manifest any, output io.Writer) (*PortableExportReceipt, error) {
+// WritePortableExport writes a bounded protected staging artifact, then checks
+// current authority and commits its exact checksum as a preparation event.
+func WritePortableExport(ctx context.Context, tx *store.Transaction, event string, ref Reference, manifest any, output io.Writer) (*PortableExportReceipt, error) {
 	payload, err := json.Marshal(manifest)
 	if err != nil {
 		return nil, err

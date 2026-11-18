@@ -100,5 +100,5 @@ func (s *Service) PreparePortableConnection(ctx context.Context, scope store.Sco
 	manifest.SchemaVersion, manifest.Profile = 1, PortableConnectionProfile
 	manifest.SourceTenant, manifest.SourcePartner = scope.Tenant, scope.Partner
 	manifest.Source, manifest.ObservedState = ref, stored.State
-	return writePortableExport(ctx, tx, "PortableConnectionExportPrepared", ref, manifest, output)
+	return WritePortableExport(ctx, tx, "PortableConnectionExportPrepared", ref, manifest, output)
 }
