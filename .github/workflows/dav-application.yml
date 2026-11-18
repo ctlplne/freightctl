@@ -53,6 +53,7 @@ jobs:
         with:
           persist-credentials: false
       - uses: actions/setup-go@924ae3a1cded613372ab5595356fb5720e22ba16 # v6
+        id: compiler
         with:
           go-version: '1.27.4'
           cache: false
@@ -63,6 +64,7 @@ jobs:
         run: python3 scripts/acquire-rclone-native.py
       - name: Task-owned loopback PostgreSQL and ordinary initialization
         id: database
+        if: ${{ !cancelled() && steps.compiler.outcome == 'success' }}
         run: |
           python3 scripts/dev-db.py
           sh scripts/go.sh run ./cmd/freightctl init
@@ -71,7 +73,7 @@ jobs:
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVApplication' -count=1 -v ./internal/api
       - name: Actual reviewed bearer DAV source,SQL,custody and original receipt
-        if: ${{ !cancelled() && steps.peer.outcome == 'success' && steps.database.outcome == 'success' }}
+        if: ${{ !cancelled() && steps.database.outcome == 'success' }}
         run: |
           sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVCollectionNative' -count=1 -v ./internal/api
       - name: Actual independent stock DAV server,Basic source and exact custody
@@ -82,4 +84,8 @@ jobs:
         if: ${{ !cancelled() && steps.peer.outcome == 'success' && steps.database.outcome == 'success' }}
         run: |
           sh scripts/go.sh build -trimpath -o .private/freightctl-dav-delivery-native ./cmd/freightctl
-          sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVDeliveryNative' -count=1 -v ./internal/api
+          sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVDeliveryNativeStockReceiverCLIIndependentApprovalAndExactBytes$' -count=1 -v ./internal/api
+      - name: Actual PostgreSQL DAV lost MOVE response and read-only reconciliation
+        if: ${{ !cancelled() && steps.database.outcome == 'success' }}
+        run: |
+          sh scripts/go.sh test -race -timeout=0 -tags=integration,davpeer -run '^TestDAVDeliveryNativeLostMoveReplyReconcilesReadOnly$' -count=1 -v ./internal/api

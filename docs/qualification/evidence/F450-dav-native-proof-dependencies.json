@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "F450",
+  "observed_at": "2026-11-18",
+  "base_candidate": "109624a85d84b26f05d8db2f4bc4b528efa103e1",
+  "qualification_claim": false,
+  "original_scope": {
+    "candidate": "010a3a2b4e6efe57c15be1814f1f93fa53363982",
+    "run_id": 44285816592,
+    "attempt": 1,
+    "source_findings_converter_exit": 3,
+    "jobs": {
+      "linux_arm64": 134738100461,
+      "linux_amd64": 134738100677
+    },
+    "observation": "Both original stock source findings converters failed. The raw finding IDs were unavailable in their original summaries. Binary scans, PostgreSQL setup and later proofs did not run."
+  },
+  "changed": "Native bearer collection and lost-MOVE recovery now depend on PostgreSQL setup with the pinned compiler. They require the checked-out Actions candidate but do not require stock rclone. Proofs that actually invoke stock rclone still require its exact manifest, binary and passing source and binary security checks.",
+  "local_checks": [
+    "Actionlint on the changed workflow",
+    "Tagged Go vet and exact five native integration test names listed by the compiled test binary",
+    "Whitespace and ledger checks"
+  ],
+  "source_files": [
+    {
+      "reference": ".github/workflows/dav-application.yml",
+      "bytes": 3872,
+      "sha256": "4bffd0cff04b5505b636f955c32e9e65537fb49557351140d0eac45f51f970b4"
+    },
+    {
+      "reference": "docs/protocols/webdav-read-profile.md",
+      "bytes": 40550,
+      "sha256": "1ef487e9ec408f852e8a03883dc5fbb768a91dde34f11bc3eeecfd5e98a1f2ad"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 718297,
+      "sha256": "45fa96e685f22709add16ed69edb54dd36ce0ae84b93819518eafced28577f5a"
+    },
+    {
+      "reference": "internal/api/dav_collection_integration_test.go",
+      "bytes": 14699,
+      "sha256": "7e4643d7e01a5876f8426be4e435c7c06f1352f19c4957799663a0622996c0e2"
+    },
+    {
+      "reference": "internal/api/dav_delivery_recovery_integration_test.go",
+      "bytes": 7635,
+      "sha256": "cadf681fc1236b5679e850ec9afa900e8735a22d756891b10c5b5effe947d2bb"
+    },
+    {
+      "reference": "internal/api/dav_stock_peer_integration_test.go",
+      "bytes": 4718,
+      "sha256": "e3e6bfe3fa343b21f43231203553999869b299bd90740a326c539fe1b4f47c83"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f447-134738100461-job.log",
+      "bytes": 19377,
+      "sha256": "e12b70ad62dc4ff7f6c44f20ec59e0673f766c964538dc36260b24732ac46fe2"
+    },
+    {
+      "reference": ".private/freightctl-f449-134738100677-job.log",
+      "bytes": 38918,
+      "sha256": "b79c98b4afded280434e1b0f3c996b64764a7aefef50d8ace4e56faa7ef08708"
+    },
+    {
+      "reference": ".private/freightctl-f449-original-dav-jobs.json",
+      "bytes": 5661,
+      "sha256": "75032b763d920d73392f61f00d867f1324a5c0a0bb11d68bb3b3ce18ce4a9a92"
+    },
+    {
+      "reference": ".private/freightctl-f450-original-proof-red.log",
+      "bytes": 908,
+      "sha256": "291f3923bac79f14e1b948a677477604f2f7d4ddb86b8be0f7bbafad7d95c0d1"
+    },
+    {
+      "reference": ".private/freightctl-f450-native-compile.log",
+      "bytes": 378,
+      "sha256": "70eb1c441f29448c0299dd34dac1f210b0b7af8db0d3e12c0575bd3728922505"
+    }
+  ],
+  "owed": [
+    "Native Linux ARM64 and AMD64 PostgreSQL and stock peer replay at changed source",
+    "Independent receiver condition proof and final-source qualification"
+  ]
+}

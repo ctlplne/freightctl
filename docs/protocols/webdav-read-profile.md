@@ -541,12 +541,16 @@ fsync,power-loss durability and business acceptance remain unconfirmed.
 Original creation receipts and completed work retain their original meanings.
 Receiving an artifact grants no permission to create this separate send.
 
-This first profile refuses registered workflow bindings and recipient encryption;
-those integrations remain owed. Native ARM/x86 GitHub proofs are prepared for
-actual CLI plus independent stock rclone/Basic receiver,separate named API
-approval,SQL shape/effect guards,independent bytes and original receipts. A
-separate real-PostgreSQL/TLS stand-in drops the actual MOVE reply after the final
-effect and requires read-only reconciliation with the same attempt/fence.
-Those prepared tests have only compiled locally. Native execution,served browser,
-broader clients,restore and final-source qualification remain owed. Local
-inference and heavy runtimes stay off;the retained schema35 database is untouched.
+The profile covers direct delivery. Registered workflow bindings and recipient
+encryption remain due. The original Linux ARM64 and AMD64 jobs reached the
+stock rclone receiver and found that it overwrites an existing exclusive
+stage. Keep that receiver unqualified for delivery and preserve the refusal
+assertion when testing a new peer.
+
+The real PostgreSQL recovery test uses a TLS fixture that commits the final
+effect and drops the MOVE response. The test checks the original attempt and
+fence, the unchanged state after a refused repeat, and read-only reconciliation.
+CI runs this test and the freightctl-to-freightctl bearer collection test using
+the PostgreSQL fixture. Stock application, Basic collection and stock delivery
+each require passing the stock peer's source and binary security gates. The
+modified steps have compiled locally and await native replay.

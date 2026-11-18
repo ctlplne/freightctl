@@ -19,19 +19,26 @@ type nativeDAVStockPeer struct {
 	Binary, Commit, ManifestSHA256, BinarySHA256, PrivateDirectory string
 }
 
+func requireNativeDAVCandidate(t *testing.T) string {
+	t.Helper()
+
+	if os.Getenv("GITHUB_ACTIONS") != "true" || runtime.GOOS != "linux" || (runtime.GOARCH != "amd64" && runtime.GOARCH != "arm64") {
+		t.Fatal("DAV native proof requires its authorized Actions environment")
+	}
+	commitRaw, err := exec.Command("git", "rev-parse", "HEAD").Output()
+	commit := strings.TrimSpace(string(commitRaw))
+	if err != nil || len(commit) != 40 || strings.Trim(commit, "0123456789abcdef") != "" || commit != os.Getenv("GITHUB_SHA") {
+		t.Fatal("DAV proof source differs from the actual Actions candidate")
+	}
+	return commit
+}
+
 // Share the original complete identity and enforcing-gate checks with the
 // independent stock-server proof. No alternate peer or narrower build qualifies.
 func loadNativeDAVStockPeer(t *testing.T) nativeDAVStockPeer {
 	t.Helper()
 
-	if os.Getenv("GITHUB_ACTIONS") != "true" || runtime.GOOS != "linux" || (runtime.GOARCH != "amd64" && runtime.GOARCH != "arm64") {
-		t.Fatal("independent DAV application requires its authorized native Actions environment")
-	}
-	commitRaw, err := exec.Command("git", "rev-parse", "HEAD").Output()
-	commit := strings.TrimSpace(string(commitRaw))
-	if err != nil || len(commit) != 40 || strings.Trim(commit, "0123456789abcdef") != "" || commit != os.Getenv("GITHUB_SHA") {
-		t.Fatal("independent DAV source differs from the actual Actions candidate")
-	}
+	commit := requireNativeDAVCandidate(t)
 	rootRaw, err := exec.Command("git", "rev-parse", "--show-toplevel").Output()
 	if err != nil {
 		t.Fatal("native repository root unavailable")

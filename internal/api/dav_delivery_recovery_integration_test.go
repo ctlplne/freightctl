@@ -25,7 +25,7 @@ import (
 // Actual PostgreSQL and worker with a TLS protocol stand-in that drops the
 // MOVE reply after retaining exact final bytes. This is not a vendor claim.
 func TestDAVDeliveryNativeLostMoveReplyReconcilesReadOnly(t *testing.T) {
-	peer := loadNativeDAVStockPeer(t)
+	commit := requireNativeDAVCandidate(t)
 	consumer, scope, _, _ := browserAPI(t, 10*time.Minute)
 	data := bytes.Repeat([]byte("actual uncertain DAV publication;no automatic resend\n"), 1000)
 	file, _, err := consumer.Accept(t.Context(), scope, "dav-recovery-source", int64(len(data)), secure.Digest(data), bytes.NewReader(data))
@@ -178,5 +178,5 @@ func TestDAVDeliveryNativeLostMoveReplyReconcilesReadOnly(t *testing.T) {
 	if writes != 2 || reads != 2 || len(files) != 1 || !bytes.Equal(files["/inbox/"+worked.ID+"-input.dat"], data) {
 		t.Fatal("reconciliation repeated effects or changed exact receiver bytes")
 	}
-	t.Logf("actual PostgreSQL/TLS stand-in loss/recovery candidate=%s;content-SHA256=%s;attempt=1;fence=1;writes=2;read-only-reconciliation=true;independent-vendor-qualification=false", peer.Commit, secure.Digest(data))
+	t.Logf("actual PostgreSQL/TLS stand-in loss/recovery candidate=%s;content-SHA256=%s;attempt=1;fence=1;writes=2;read-only-reconciliation=true;independent-vendor-qualification=false", commit, secure.Digest(data))
 }

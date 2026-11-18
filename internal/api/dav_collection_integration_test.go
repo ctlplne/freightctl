@@ -7,7 +7,6 @@ import (
 	"encoding/json"
 	"io"
 	"os"
-	"os/exec"
 	"path/filepath"
 	"runtime"
 	"strings"
@@ -22,14 +21,7 @@ import (
 )
 
 func TestDAVCollectionNativeReviewedAPIReadOnlySourceAndOriginalReceipt(t *testing.T) {
-	if os.Getenv("GITHUB_ACTIONS") != "true" || runtime.GOOS != "linux" || (runtime.GOARCH != "amd64" && runtime.GOARCH != "arm64") {
-		t.Fatal("served DAV collection requires its authorized native Actions environment")
-	}
-	commitRaw, err := exec.Command("git", "rev-parse", "HEAD").Output()
-	commit := strings.TrimSpace(string(commitRaw))
-	if err != nil || len(commit) != 40 || strings.Trim(commit, "0123456789abcdef") != "" || commit != os.Getenv("GITHUB_SHA") {
-		t.Fatal("served DAV source differs from the actual native candidate")
-	}
+	commit := requireNativeDAVCandidate(t)
 	producer, producerScope, producerToken, producerHTTP := browserAPI(t, 10*time.Minute)
 	consumer, consumerScope, consumerToken, consumerHTTP := browserAPI(t, 10*time.Minute)
 	producerPrefix := "/v1/tenants/" + producerScope.Tenant + "/partners/" + producerScope.Partner
@@ -40,7 +32,7 @@ func TestDAVCollectionNativeReviewedAPIReadOnlySourceAndOriginalReceipt(t *testi
 		service *custody.Service
 		scope   store.Scope
 	}{{producer, producerScope}, {consumer, consumerScope}} {
-		if _, err = fixture.service.PathCommand(t.Context(), fixture.scope, "dav-collection-directory", store.PathCommand{Operation: "mkdir", Path: "/inbox"}); err != nil {
+		if _, err := fixture.service.PathCommand(t.Context(), fixture.scope, "dav-collection-directory", store.PathCommand{Operation: "mkdir", Path: "/inbox"}); err != nil {
 			t.Fatal(err)
 		}
 	}
