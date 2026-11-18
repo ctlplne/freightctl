@@ -1,10 +1,20 @@
 # freightctl status
 
-Updated 2026-11-07. Owner decision S007 requests completion,commit,push and pause
-of the current direct-DAV delivery batch. The full [GOAL.md](GOAL.md) is
-incomplete. All83 whole parity rows,twelve full journeys and AX01–AX08 remain
-open. Assisted deployment,independent adoption and enterprise readiness are
-separately unqualified. Resume only on a new owner instruction.
+Updated 2026-11-18. Owner decision S008 resumes the full [GOAL.md](GOAL.md)
+from actual local main `f29cb0d08cb16518f7c88be943d18fd492fea68d`. All83 whole
+parity rows,twelve full journeys and AX01–AX08 remain open. Assisted deployment,
+independent adoption and enterprise readiness remain separately unqualified.
+
+[F445](docs/qualification/evidence/F445-resume-native-terminal.json) preserves
+all17 original workflows/37 terminal jobs:33success,fourfailed. All16 named
+baseline security gates and both full stock DAV acquisition bundles pass.
+Both native bearer/Basic source profiles pass at schema66. Direct delivery fails
+on both architectures:stock rclone overwrites an existing exclusive stage;
+the recovery proof mistakes the worker's ErrState refusal for a restart.
+Rclone is unqualified for the required send contract. Preserve that failure and
+all conditions;correct the recovery proof around unchanged database/network
+state and qualify an independent condition-enforcing receiver. Older discovery,
+receive/local-browser failures and all final-source outcomes remain owed.
 
 F442 implements direct DAV delivery schema3 through the existing custody,
 durable intent,draft/approval,worker slot,lease/fence and reconciliation paths.
@@ -30,7 +40,7 @@ collision proofs and a separate real-PostgreSQL/TLS lost-MOVE-reply/read-only
 recovery proof are prepared and compiled only. Native execution,served browser,
 restore/recovery and actual final-source qualification remain owed.
 
-The last recorded push is `d5d8b7a4d98d86eb02e45f6fa343cf22862f98d2` in
+The earlier recorded push is `d5d8b7a4d98d86eb02e45f6fa343cf22862f98d2` in
 [F441](docs/qualification/evidence/F441-native-push.json):six owner-only commits,
 enabled Gitleaks,no leaks,and18 original attempt1 workflows. Original Windows
 checks and both exact native bearer/Basic source steps now succeed at that
@@ -41,8 +51,8 @@ failures remain preserved. Receiver SIGSYS54 classes retain all isolation.
 original workflows/41 terminal jobs:35success,sixfailed. All16 named security
 steps and both stock DAV source/binary acquisition bundles pass. Original
 Windows unit and bearer/Basic source steps succeed after F436/F438 corrections.
-F442/schema66 is excluded from those runtime results. The verified checkpoint
-is ready for the final S007 fast-forward push and pause. F440 and earlier
+F442/schema66 is excluded from those runtime results. The S007 checkpoint
+was pushed fast-forward to f29cb0d and is now resumed under S008. F440 and earlier
 evidence remain historical;no original run is cancelled,rerun or substituted.
 
 Detailed original failures,owner decisions and remaining work live in
