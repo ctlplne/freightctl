@@ -20,6 +20,7 @@ const pin = createHash("sha256")
   .update(cert.publicKey.export({ type: "spki", format: "der" }))
   .digest("base64");
 const v2 = "authorized-exchange-evidence-v2";
+const v3 = "authorized-exchange-evidence-v3";
 const summary = {
   phase: "launch",
   browser: "",
@@ -95,8 +96,7 @@ async function readEvidence(page, direction) {
     trigger.click(),
   ]);
   assert.equal(response.status(), 200);
-  const body = { exchange_id: config.exchange, direction };
-  if (direction === "outgoing") body.profile = v2;
+  const body = { exchange_id: config.exchange, direction, profile: v3 };
   assert.deepEqual(response.request().postDataJSON(), body);
   await trigger.waitFor();
   await panel.getByRole("listitem").first().waitFor();

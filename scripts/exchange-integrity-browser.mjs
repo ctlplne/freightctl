@@ -15,6 +15,7 @@ assert.equal(origin.hostname, "127.0.0.1");
 const prefix = `/v1/tenants/${config.tenant}/partners/${config.partner}`;
 const exchange = `${prefix}/exchanges/${config.exchange}`;
 const reportPath = exchange + "/integrity-report";
+const tracePath = prefix + "/exchange-traces/previews";
 const cert = new X509Certificate(Buffer.from(config.certificate_der, "base64"));
 const pin = createHash("sha256")
   .update(cert.publicKey.export({ type: "spki", format: "der" }))
@@ -50,7 +51,7 @@ async function login(token, sender = false) {
         return route.continue();
       if (
         request.method() === "POST" &&
-        url.pathname === prefix + "/browser-session"
+        [prefix + "/browser-session", tracePath].includes(url.pathname)
       )
         return route.continue();
       if (
@@ -94,13 +95,29 @@ async function inspectReport(page, direction, status) {
 }
 
 async function recorded(panel) {
-  const statement = panel
-    .getByRole("status")
-    .getByText(
-      /Recipient reported matching length and SHA-256\. Receiver persistence and business processing are unknown\./,
-    );
+  const statement = panel.getByText(
+    /Recipient reported matching length and SHA-256\. Receiver persistence and business processing are unknown\./,
+  );
   await statement.waitFor();
   return (await statement.getByRole("code").textContent()).trim();
+}
+
+async function inspectEvidence(page, direction, event) {
+  const scope = page.getByRole("region", {
+    name: "Recorded exchange evidence",
+    exact: true,
+  });
+  const [response] = await Promise.all([
+    page.waitForResponse((r) => r.url() === config.origin + tracePath),
+    button(scope, "Read recorded evidence").click(),
+  ]);
+  assert.equal(response.status(), 200);
+  assert.deepEqual(response.request().postDataJSON(), {
+    exchange_id: config.exchange,
+    direction,
+    profile: "authorized-exchange-evidence-v3",
+  });
+  assert.equal(await recorded(scope), event);
 }
 
 async function accessibility(page, panel) {
@@ -245,6 +262,7 @@ try {
   assert.equal(writes[0].body.size_bytes, config.artifact.size_bytes);
   assert.equal(writes[0].body.sha256, config.artifact.sha256);
   summary.event = await recorded(panel);
+  await inspectEvidence(page, "incoming", summary.event);
   assert.equal(
     await recorded(await inspectReport(page, "incoming", 200)),
     summary.event,
@@ -261,6 +279,7 @@ try {
   ).click();
   const history = await inspectReport(sender.page, "outgoing", 200);
   assert.equal(await recorded(history), summary.event);
+  await inspectEvidence(sender.page, "outgoing", summary.event);
   assert.equal(await button(history, "Submit integrity report").count(), 0);
   const denied = await sender.page.evaluate(
     async (paths) =>

@@ -201,9 +201,9 @@ func TestProjectionLineageNativeBrowserRespectsTheReleasedSourceBoundary(t *test
 		profile, direction string
 		lineage            bool
 	}{
-		{store.ExchangeEvidenceV2, "outgoing", false},
-		{store.ExchangeEvidenceV2, "outgoing", true},
-		{store.ExchangeEvidenceV1, "incoming", false},
+		{store.ExchangeEvidenceV3, "outgoing", false},
+		{store.ExchangeEvidenceV3, "outgoing", true},
+		{store.ExchangeEvidenceV3, "incoming", false},
 		{store.ExchangeEvidenceV2, "incoming", false},
 	} {
 		response := <-traces

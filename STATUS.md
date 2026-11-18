@@ -401,6 +401,12 @@ a committed reply was interrupted, the same key recovered the original
 report. The sender and recipient read the same event in separate browser
 sessions. Linux Chrome replay and final qualification remain due.
 
+[F545](docs/qualification/evidence/F545-authorized-integrity-evidence.json)
+puts the committed report in the v3 evidence preview and CLI export. Stock
+HTTPS, Chromium, the native CLI and the stock MCP SDK read the same report.
+A live policy hold hid it from the recipient. The sender retained authorized
+history through the hold and closure. Native Linux replay remains due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

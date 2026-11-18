@@ -39,6 +39,18 @@ const expected = () => ({
   artifact: artifact(),
   expires_at: "2026-11-06T00:00:00.000001Z",
 });
+const integrityReport = () => ({
+  profile: "recipient-sha256-report-v1",
+  exchange_id: id(4),
+  request_hash: expected().request_hash,
+  read_authorization_event_id: id(8),
+  artifact: artifact(),
+  observation: "recipient-reported-sha256-and-length-match",
+  event_id: id(9),
+  recorded_at: "2026-11-05T00:00:00.000001Z",
+  receiver_persistence: "unknown",
+  business_processing: "unknown",
+});
 const response = () => ({
   profile: "authorized-exchange-evidence-v1",
   tenant_id: scope.tenant,
@@ -80,18 +92,7 @@ test("integrity commands and receipts stay bound to the exact offer and reported
     size_bytes: pinned.artifact.size_bytes,
     sha256: pinned.artifact.sha256,
   };
-  const receipt = {
-    profile: "recipient-sha256-report-v1",
-    exchange_id: id(4),
-    request_hash: pinned.request_hash,
-    read_authorization_event_id: id(8),
-    artifact: artifact(),
-    observation: "recipient-reported-sha256-and-length-match",
-    event_id: id(9),
-    recorded_at: "2026-11-05T00:00:00.000001Z",
-    receiver_persistence: "unknown",
-    business_processing: "unknown",
-  };
+  const receipt = integrityReport();
   assert.deepEqual(p.asExchangeIntegrityCommand(command, id(4), pinned), command);
   assert.deepEqual(p.asExchangeIntegrityReport(receipt, id(4), pinned, id(8)), {
     event: id(9),
@@ -106,7 +107,9 @@ test("integrity commands and receipts stay bound to the exact offer and reported
     { read_authorization_event_id: "invented" },
     { receiver_persistence: "durable" },
   ])
-    assert.throws(() => p.asExchangeIntegrityCommand({ ...command, ...altered }, id(4), pinned));
+    assert.throws(() =>
+      p.asExchangeIntegrityCommand({ ...command, ...altered }, id(4), pinned),
+    );
   for (const altered of [
     { artifact: { ...artifact(), size_bytes: 9 } },
     { observation: "server-verified-possession" },
@@ -116,7 +119,51 @@ test("integrity commands and receipts stay bound to the exact offer and reported
     { business_processing: "complete" },
     { payload: "raw bytes" },
   ])
-    assert.throws(() => p.asExchangeIntegrityReport({ ...receipt, ...altered }, id(4), pinned, id(8)));
+    assert.throws(() =>
+      p.asExchangeIntegrityReport({ ...receipt, ...altered }, id(4), pinned, id(8)),
+    );
+});
+test("v3 groups the exact report with authorized records and keeps held evidence opaque", () => {
+  const result = {
+    ...response(),
+    profile: p.evidenceV3,
+    integrity_report: integrityReport(),
+  };
+  const decode = (wire) =>
+    p.asExchangeEvidence(wire, scope, id(4), "incoming", expected(), p.evidenceV3);
+  assert.deepEqual(decode(result).integrity_report, {
+    event: id(9),
+    recordedAt: result.integrity_report.recorded_at,
+  });
+  assert.throws(() =>
+    p.asExchangeEvidence(
+      { ...result, profile: p.evidenceV2 },
+      scope,
+      id(4),
+      "incoming",
+      expected(),
+      p.evidenceV2,
+    ),
+  );
+  const { artifact: _a, request_hash: _r, ...opaque } = result;
+  const held = {
+    ...opaque,
+    current_metadata_state: "held",
+    details: "opaque",
+    recorded_events: [],
+  };
+  assert.throws(() => decode(held));
+  delete held.integrity_report;
+  assert.equal(decode(held).details, "opaque");
+  for (const change of [
+    { request_hash: "a".repeat(64) },
+    { exchange_id: id(3) },
+    { event_id: id(7) },
+    { business_processing: "complete" },
+  ])
+    assert.throws(() =>
+      decode({ ...result, integrity_report: { ...integrityReport(), ...change } }),
+    );
 });
 test("recorded evidence preserves exact bindings and causal sequence without claiming byte or receiver outcomes", () => {
   const v = response();

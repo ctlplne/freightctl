@@ -17,6 +17,7 @@ import (
 	"testing"
 	"time"
 
+	"github.com/ctlplne/freightctl/internal/checks"
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
@@ -88,6 +89,20 @@ func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
 	}
 	exchange := f.prefix + "/exchanges/" + offer.ID
 	path := exchange + "/integrity-report"
+	trace := func(token *secure.Secret, direction, profile string, want int) map[string]json.RawMessage {
+		t.Helper()
+		body := exchangeAPIJSON(t, store.ExchangeTraceRequest{ID: offer.ID, Direction: direction, Profile: profile})
+		_, wire := exchangeAPIRequest(t, server, "POST", f.prefix+"/exchange-traces/previews", nil, credentials(token, ""), body, want)
+		var result map[string]json.RawMessage
+		if err := json.Unmarshal(wire, &result); err != nil {
+			t.Fatal("evidence preview was not a JSON object", err)
+		}
+		return result
+	}
+	const reportEvidence = store.ExchangeEvidenceV3
+	if result := trace(recipient, "incoming", reportEvidence, 200); result["integrity_report"] != nil {
+		t.Fatal("evidence preview disclosed a report before it was committed")
+	}
 	dir := t.TempDir()
 	cert, err := secure.NativeProofCertificatePEM(server.Certificate().Raw)
 	if err != nil {
@@ -185,6 +200,23 @@ func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
 	if !bytes.Equal(first, read(sender, "outgoing", 200)) || !bytes.Equal(first, read(recipient, "incoming", 200)) {
 		t.Fatal("directional receipt reads changed the original committed result")
 	}
+	checkTrace := func(token *secure.Secret, direction string) {
+		t.Helper()
+		result := trace(token, direction, reportEvidence, 200)
+		if !bytes.Equal(bytes.TrimSpace(first), result["integrity_report"]) || string(result["retrieval"]) != `"unknown"` ||
+			string(result["receiver_persistence"]) != `"unknown"` || string(result["business_processing"]) != `"unknown"` {
+			t.Fatal("combined preview changed the original report or claimed stronger outcomes")
+		}
+	}
+	checkTrace(recipient, "incoming")
+	checkTrace(sender, "outgoing")
+	for _, profile := range []string{"", store.ExchangeEvidenceV1, store.ExchangeEvidenceV2} {
+		if result := trace(sender, "outgoing", profile, 200); result["integrity_report"] != nil {
+			t.Fatal("frozen evidence profiles began returning the report")
+		}
+	}
+	trace(other, "incoming", reportEvidence, 404)
+	trace(sender, "incoming", reportEvidence, 404)
 	replay := post(recipient, "original-report", body, 200)
 	if !bytes.Equal(first, replay) {
 		t.Fatal("same key did not recover the exact receipt bytes")
@@ -264,6 +296,18 @@ func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
 	if err != nil || reports != 1 || events != 1 || effects != 0 {
 		t.Fatal("refusals or replays changed the original report cardinality or caused a delivery", err)
 	}
+	checking := &checks.Service{Custody: service}
+	if _, err = checking.Register(t.Context(), f.scope, "hold-reported-revision", checks.PolicyRequest{
+		Definition: checks.Policy{Schema: 1, Kind: "csv", Columns: []checks.Column{{Name: "record", Type: "text", Required: true}}},
+	}); err != nil {
+		t.Fatal(err)
+	}
+	held := trace(recipient, "incoming", reportEvidence, 200)
+	if string(held["details"]) != `"opaque"` || string(held["current_metadata_state"]) != `"held"` ||
+		held["integrity_report"] != nil || held["artifact"] != nil || held["request_hash"] != nil || string(held["recorded_events"]) != "[]" {
+		t.Fatal("held incoming v3 evidence disclosed the existing integrity report or artifact")
+	}
+	checkTrace(sender, "outgoing")
 	_, err = service.DB.CloseExchange(t.Context(), acting(sender), "cancel-integrity-view", store.ExchangeClosureCommand{Schema: 1, ID: offer.ID, RequestHash: offer.RequestHash, Operation: "cancel"})
 	if err != nil {
 		t.Fatal(err)
@@ -271,6 +315,8 @@ func TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload(t *testing.T) {
 	read(recipient, "incoming", 404)
 	exchangeAPIRequest(t, server, "GET", selection, nil, selectedHeader(receiverCookie, marker), nil, 404)
 	post(recipient, "original-report", body, 404)
+	trace(recipient, "incoming", reportEvidence, 404)
+	checkTrace(sender, "outgoing")
 	if !bytes.Equal(first, read(sender, "outgoing", 200)) {
 		t.Fatal("closure changed the original authorized sender report")
 	}

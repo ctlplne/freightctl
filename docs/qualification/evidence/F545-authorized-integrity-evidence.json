@@ -1,0 +1,146 @@
+{
+  "schema_version": 1,
+  "id": "F545",
+  "observed_at": "2026-11-19",
+  "base_candidate": "15d5ad999eda895bbc1ade17f1f0124d6fee5864",
+  "qualification_claim": false,
+  "scope": "Authorized exchange evidence v3 includes the exact existing recipient integrity report across ordinary review and explicit export",
+  "first_failures": [
+    {
+      "finding": "The existing trace endpoint returned HTTP 400 for a v3 request before the profile was implemented.",
+      "log": {
+        "sha256": "0dddde9acb98ab52f7e5bbca2dbe3f505ae14348a6cf50b474dc759eeab15c2e",
+        "bytes": 330
+      }
+    },
+    {
+      "finding": "The native CLI refused the test fixture’s export because the output path already held its request file. A distinct protected output path exercised real publication.",
+      "log": {
+        "sha256": "3e72a93b3497281d3f29b8f18e074ed95ea611ed214face5855e182b67809361",
+        "bytes": 1301
+      }
+    }
+  ],
+  "local_replay": {
+    "environment": "Native macOS ARM, Go 1.27.4 race build, PostgreSQL 16.15, disk custody, sandboxed Chromium 151.0.7922.34 and Node 26.13.0, native freightctl, stock Go MCP SDK and stock curl. Inference disabled.",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "stock_https_green_log": {
+      "sha256": "1616c2053026d2cb5d86c0ef103fee1bdff65c4fe71dbd904fbcb05b42573598",
+      "bytes": 208
+    },
+    "native_browser_and_stock_https_race_log": {
+      "sha256": "2367cdeb05226f82568fde18be6c972028bc369851a9f26c441eacdca2284602",
+      "bytes": 979
+    },
+    "native_cli_and_stock_mcp_race_log": {
+      "sha256": "145f95cb57a5e194ae1a33907f0b2f52827b72e3d8da6164ae880c24b8a8b715",
+      "bytes": 2777
+    },
+    "stock_xlsx_fixture": {
+      "sha256": "ab43b6e9e2919608d216adf09abe63e70f4944c254a9f8a3878899487887fc1c",
+      "bytes": 5777
+    },
+    "observations": [
+      "V3 returned no report before submission. Its nested report matched the ordinary HTTPS receipt exactly after the original commit. Default v1 and explicitly selected v1 and v2 retained their previous shapes.",
+      "The unrelated participant and wrong direction were refused. A new live policy hold on the same reported revision kept incoming evidence opaque. The original sender retained the same report under ordinary history authority during the hold and after closure.",
+      "Both Chromium report views and both v3 recorded-evidence views rendered the same report event. The independent browser projection-lineage test kept the held source and incoming private lineage undisclosed.",
+      "The stock Go MCP SDK and native CLI returned the identical typed report. The CLI export published a separately selected v3 document and its length and SHA-256 matched the export receipt.",
+      "The native process-recovery journey retained four starts, three kills and zero extra delivery intents. Retrieval, receiver persistence and business processing kept their existing unknown outcomes in the trace."
+    ]
+  },
+  "static_checks": {
+    "affected_browser_tests": 35,
+    "browser_typecheck_and_built_assets": "pass",
+    "tagged_go_vet_focused_race_and_import_boundary": "pass",
+    "openapi_and_mcp_json": "pass",
+    "record_references": "pass"
+  },
+  "sources": [
+    {
+      "path": "cmd/freightctl/exchange_integrity_integration_test.go",
+      "sha256": "3e670a8e14c02d90124d2340c6e9392573467d001375fc10be6e1aba36bb4e45",
+      "bytes": 9680
+    },
+    {
+      "path": "docs/api/artifact-evidence.openapi.json",
+      "sha256": "e8677807addb5d8b5185d9a5a7e089edbe45bd2815925eff6bd88b31358f6d3a",
+      "bytes": 15595
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-evidence.md",
+      "sha256": "ac98c24af6a1a80f58db265b904faa35cab69c7523f8b53432bec4494022dc1f",
+      "bytes": 3946
+    },
+    {
+      "path": "internal/api/exchange_integrity_integration_test.go",
+      "sha256": "68cd27cbd43425912eddeaed07e232ee913edd543bf11aa2ba0067cbcaf82418",
+      "bytes": 17430
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "e1486186d1fe7243edf4f5e3a8a5dfbc74aec3f21c8aa21bfb6ff6a1eb354c45",
+      "bytes": 141567
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "03a3075a27713bd29f86239bb9f244494c51a2d2df1c6addca2b6056c869f8c2",
+      "bytes": 936602
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "c81a883be12b7ecf25c62aaa60f1cf84190a7c11ab963319627f5b58842140aa",
+      "bytes": 14561
+    },
+    {
+      "path": "internal/checks/exchange_lineage_browser_integration_test.go",
+      "sha256": "a9fef60c886772b6e5d324b7725e19271144d3ec6258818ef98cb65e3e6c1400",
+      "bytes": 9039
+    },
+    {
+      "path": "internal/store/exchange_trace.go",
+      "sha256": "1a8ab87060e6a36a7cfc63015c84a5fe7f3e3c3273d4b81b6920c15b9766721e",
+      "bytes": 10195
+    },
+    {
+      "path": "scripts/exchange-integrity-browser.mjs",
+      "sha256": "a6ca3e8deaceb781737ccec8a36133c636534f2a8cf7407cacd7808ef8054387",
+      "bytes": 10257
+    },
+    {
+      "path": "scripts/projection-lineage-browser.mjs",
+      "sha256": "6d8a3fa703a6814925e06c33bb2e47861785346908e27da1bbc4375a6f87ad15",
+      "bytes": 9158
+    },
+    {
+      "path": "web/src/artifact-evidence-types.ts",
+      "sha256": "ab15734764d19c121029a2a05f854ae8d954290e0a7b467d3498da8e0d0e490d",
+      "bytes": 11044
+    },
+    {
+      "path": "web/src/artifact-evidence.tsx",
+      "sha256": "1c322450939054b5e3090a703f0eb29649a7154f09311f2fb3bbd9e5bc9137fd",
+      "bytes": 5721
+    },
+    {
+      "path": "web/src/artifact-exchanges-api.ts",
+      "sha256": "a48de95675e7dd4a97a9891d5fb9c59b74bba495eb3924b6c98e9ec21cf02392",
+      "bytes": 19946
+    },
+    {
+      "path": "web/src/artifact-integrity.tsx",
+      "sha256": "cc76ff585db06dec3217b25d81e7a42dffd72f569fe8c3db9ebb843277b46b14",
+      "bytes": 6359
+    },
+    {
+      "path": "web/tests/artifact-evidence.test.mjs",
+      "sha256": "70a1fd2776ce1321d49eaaf8d25d09b3d113643c419892e1db689278c529c392",
+      "bytes": 12173
+    }
+  ],
+  "remaining": [
+    "Run the original native Linux browser, stock HTTPS and native CLI/MCP v3 steps on the exact pushed candidate.",
+    "Complete schema-68 restore, final-source qualification and the independent reference journeys before claiming AX05."
+  ]
+}

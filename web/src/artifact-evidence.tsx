@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { ExchangeReceiveApi } from "./artifact-exchanges-api";
-import type {
-  EvidenceDirection,
-  EvidenceExpectation,
-  ExchangeEvidence,
+import { IntegrityReportStatement } from "./artifact-integrity";
+import {
+  evidenceV3,
+  type EvidenceDirection,
+  type EvidenceExpectation,
+  type ExchangeEvidence,
 } from "./artifact-evidence-types";
 
 const labels = {
@@ -64,6 +66,7 @@ export function ArtifactEvidence({
         direction,
         expected,
         controller.signal,
+        evidenceV3,
       );
       if (
         generation === serial.current &&
@@ -86,9 +89,8 @@ export function ArtifactEvidence({
     <section aria-label="Recorded exchange evidence">
       <h4>Recorded evidence</h4>
       <p>
-        Read the custody, offer and terminal decision records you can currently
-        inspect. This checks metadata; it does not verify stored bytes or
-        receiver processing.
+        Read the custody, offer, decision and integrity records you can
+        currently inspect.
       </p>
       <button type="button" disabled={busy} onClick={() => void load()}>
         {busy ? "Reading evidence…" : "Read recorded evidence"}
@@ -119,6 +121,9 @@ export function ArtifactEvidence({
                   </li>
                 ))}
               </ol>
+              {trace.integrity_report && (
+                <IntegrityReportStatement report={trace.integrity_report} />
+              )}
               {trace.record_projection && (
                 <section aria-label="Record projection lineage">
                   <h5>Record projection lineage</h5>

@@ -14,6 +14,7 @@ import (
 	"testing"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/custody"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/modelcontextprotocol/go-sdk/mcp"
 )
@@ -139,10 +140,49 @@ func qualifyNativeExchangeIntegritySurfaces(t *testing.T, ctx context.Context, f
 	call(recipient, "inspect_exchange_integrity", outgoing, false)
 	checkReceipt(cli(f.RecipientToken, "exchange-integrity-report", "-request-file", requestFile("integrity-command", command), "-idempotency-key", key))
 	checkReceipt(cli(f.SenderToken, "exchange-integrity-inspect", "-request-file", requestFile("integrity-selection", outgoing)))
+	incoming.Profile, outgoing.Profile = store.ExchangeEvidenceV3, store.ExchangeEvidenceV3
+	checkTrace := func(trace store.ExchangeTrace, direction string) {
+		t.Helper()
+		if trace.Profile != store.ExchangeEvidenceV3 || trace.Direction != direction || trace.ID != exchange.ID ||
+			trace.RequestHash != exchange.RequestHash || trace.IntegrityReport == nil || *trace.IntegrityReport != reported ||
+			trace.Retrieval != "unknown" || trace.ReceiverPersistence != "unknown" || trace.BusinessProcessing != "unknown" {
+			t.Fatal("combined evidence changed the original integrity report or its meaning")
+		}
+	}
+	for _, pair := range []struct {
+		client  *mcp.ClientSession
+		request store.ExchangeTraceRequest
+	}{{sender, outgoing}, {recipient, incoming}} {
+		var trace store.ExchangeTrace
+		if err := json.Unmarshal(call(pair.client, "exchange_trace", pair.request, true), &trace); err != nil {
+			t.Fatal("stock SDK did not return v3 evidence", err)
+		}
+		checkTrace(trace, pair.request.Direction)
+	}
+	call(other, "exchange_trace", incoming, false)
+	raw, err := cli(f.SenderToken, "exchange-trace", "-request-file", requestFile("evidence-v3", outgoing))
+	var trace store.ExchangeTrace
+	if err != nil || json.Unmarshal(raw, &trace) != nil {
+		t.Fatal("native CLI did not return v3 evidence", err)
+	}
+	checkTrace(trace, "outgoing")
+	selection := store.ExchangeTraceExportSelection{ExchangeTraceRequest: outgoing, RequestHash: exchange.RequestHash}
+	exportPath := filepath.Join(work, "published-evidence-v3.json")
+	raw, err = cli(f.SenderToken, "exchange-trace-export", "-request-file", requestFile("evidence-v3-export", selection), "-output", exportPath)
+	var receipt custody.ExchangeTraceExportReceipt
+	var portable custody.PortableExchangeTrace
+	export, readErr := os.ReadFile(exportPath)
+	if err != nil || readErr != nil || json.Unmarshal(raw, &receipt) != nil || json.Unmarshal(export, &portable) != nil ||
+		receipt.Source != selection || portable.Source != selection || portable.Evidence == nil ||
+		receipt.Size != len(export) || receipt.SHA256 != secure.Digest(export) {
+		t.Fatal("native CLI did not publish the exact selected v3 evidence", err, readErr)
+	}
+	checkTrace(*portable.Evidence, "outgoing")
 	changed := command
 	changed.SHA256 = secure.Digest([]byte("changed bytes"))
 	call(recipient, "report_exchange_integrity", map[string]any{"request_key": key, "command": changed}, false)
 	call(recipient, "report_exchange_integrity", map[string]any{"request_key": key, "command": command, "receiver_persistence": "durable"}, false)
 	t.Log("native CLI verified bytes and prepared a report, stock MCP committed once, and original sender/recipient reads and CLI retry matched")
+	t.Log("stock MCP, native CLI and verified portable v3 evidence retained the original integrity report")
 	return reported
 }

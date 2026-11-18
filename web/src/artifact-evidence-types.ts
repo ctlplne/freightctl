@@ -7,7 +7,9 @@ import {
 export type EvidenceDirection = "incoming" | "outgoing";
 export const evidenceV1 = "authorized-exchange-evidence-v1";
 export const evidenceV2 = "authorized-exchange-evidence-v2";
-export type EvidenceProfile = typeof evidenceV1 | typeof evidenceV2;
+export const evidenceV3 = "authorized-exchange-evidence-v3";
+export type EvidenceProfile =
+  typeof evidenceV1 | typeof evidenceV2 | typeof evidenceV3;
 export interface EvidenceExpectation {
   request_hash: string;
   artifact: ExchangeArtifact;
@@ -45,6 +47,7 @@ export interface ExchangeEvidence {
     recorded_at: string;
   }[];
   record_projection?: RecordProjectionLineage;
+  integrity_report?: ExchangeIntegrityReport;
   storage_verification: "not-checked";
   retrieval: "unknown";
   receiver_persistence: "unknown";
@@ -142,7 +145,7 @@ export function asExchangeIntegrityCommand(
 export function asExchangeIntegrityReport(
   value: unknown,
   id: string,
-  expected: EvidenceExpectation,
+  expected: Pick<EvidenceExpectation, "request_hash" | "artifact">,
   read?: string,
 ) {
   const o = object(value);
@@ -163,6 +166,7 @@ export function asExchangeIntegrityReport(
     expected.artifact.file_revision_id,
   );
   const authorization = identifier(o.read_authorization_event_id);
+  const event = identifier(o.event_id);
   if (
     o.profile !== "recipient-sha256-report-v1" ||
     o.exchange_id !== id ||
@@ -170,13 +174,14 @@ export function asExchangeIntegrityReport(
     artifact.size_bytes !== expected.artifact.size_bytes ||
     artifact.sha256 !== expected.artifact.sha256 ||
     artifact.acceptance_policy !== expected.artifact.acceptance_policy ||
+    event === authorization ||
     (read !== undefined && authorization !== read) ||
     o.observation !== "recipient-reported-sha256-and-length-match" ||
     o.receiver_persistence !== "unknown" ||
     o.business_processing !== "unknown"
   )
     bad();
-  return { event: identifier(o.event_id), recordedAt: instant(o.recorded_at) };
+  return { event, recordedAt: instant(o.recorded_at) };
 }
 
 export type ExchangeIntegrityReport = ReturnType<
@@ -206,6 +211,7 @@ export function asExchangeEvidence(
     "reply_reference_only",
     "recorded_events",
     "record_projection",
+    "integrity_report",
     "storage_verification",
     "retrieval",
     "receiver_persistence",
@@ -213,6 +219,7 @@ export function asExchangeEvidence(
   ]);
   if (
     o.profile !== profile ||
+    ![evidenceV1, evidenceV2, evidenceV3].includes(profile) ||
     o.tenant_id !== scope.tenant ||
     o.partner_id !== scope.partner ||
     o.exchange_id !== id ||
@@ -227,7 +234,9 @@ export function asExchangeEvidence(
   )
     bad();
   const hasLineage = Object.hasOwn(o, "record_projection");
-  if (hasLineage && (profile !== evidenceV2 || direction !== "outgoing")) bad();
+  if (hasLineage && (profile === evidenceV1 || direction !== "outgoing")) bad();
+  const hasReport = Object.hasOwn(o, "integrity_report");
+  if (hasReport && profile !== evidenceV3) bad();
   const state = o.current_metadata_state;
   if (
     typeof state !== "string" ||
@@ -267,6 +276,7 @@ export function asExchangeEvidence(
   if (direction === "incoming" && state === "held") {
     if (
       o.details !== "opaque" ||
+      hasReport ||
       o.recorded_events.length !== 0 ||
       ["artifact", "request_hash", "reply_reference_only"].some((k) =>
         Object.hasOwn(o, k),
@@ -351,6 +361,14 @@ export function asExchangeEvidence(
       completed_event_id: completedEvent,
       completed_at: instant(lineage.completed_at),
     };
+  }
+  if (hasReport) {
+    const report = asExchangeIntegrityReport(o.integrity_report, id, {
+      request_hash: o.request_hash,
+      artifact,
+    });
+    if (events.some((event) => event.event_id === report.event)) bad();
+    result.integrity_report = report;
   }
   return result;
 }

@@ -28,9 +28,9 @@ value;the sequence expresses causal links,not a monotonic-clock guarantee.
 and unrelated participants' receipts are excluded.
 
 Set `profile` to `authorized-exchange-evidence-v2` in the API body, CLI request
-file or agent tool arguments to request record projection lineage. The browser
-requests v2 when the sender opens recorded evidence. The same selector works
-in the CLI evidence export request. Omitting `profile` selects frozen v1.
+file or agent tool arguments to request record projection lineage. The same
+selector works in the CLI evidence export request. Omitting `profile` selects
+frozen v1.
 
 V2 adds `record_projection` when the original sender also owns the completed
 projection under the same authority revision and namespace root and can
@@ -42,6 +42,19 @@ time. If the input is held, outside current access, or no verified edge is
 available, the field is absent. Incoming evidence never discloses this edge.
 Each trace covers one direct input revision. Definition contents, check reports,
 paths and storage references stay private.
+
+Select `authorized-exchange-evidence-v3` to include the exact
+`recipient-sha256-report-v1` receipt once the recipient has committed one. The
+browser's **Read recorded evidence** action selects v3. The same profile works
+in the API preview, native CLI, explicit CLI export and MCP tool. V3 retains the
+v2 sender lineage rule. A recipient needs the live receive grant, and the
+original sender can inspect the receipt in authorized history after closure.
+Held incoming views stay opaque.
+
+The nested report binds the same exchange, request hash and artifact. It carries
+the eligible read authorization ID and the report's own event and time. The
+report records the recipient's statement about length and SHA-256. Receiver
+persistence and business processing stay unknown.
 
 Current metadata state and its observation time stay separate from immutable
 records. Physical storage verification is `not-checked`;retrieval,receiver

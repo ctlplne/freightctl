@@ -9,6 +9,21 @@ import type {
 import { digestFile, operationKey } from "./crypto";
 import { ApiError } from "./types";
 
+export function IntegrityReportStatement({
+  report,
+}: {
+  report: ExchangeIntegrityReport;
+}) {
+  return (
+    <p>
+      Recipient reported matching length and SHA-256. Receiver persistence and
+      business processing are unknown. Recorded at{" "}
+      <time dateTime={report.recordedAt}>{report.recordedAt}</time> in event{" "}
+      <code>{report.event}</code>.
+    </p>
+  );
+}
+
 export function ArtifactIntegrity({
   client,
   exchange,
@@ -185,14 +200,7 @@ export function ArtifactIntegrity({
       )}
       <div role="status">
         {notice && <p>{notice}</p>}
-        {report && (
-          <p>
-            Recipient reported matching length and SHA-256. Receiver persistence
-            and business processing are unknown. Recorded at{" "}
-            <time dateTime={report.recordedAt}>{report.recordedAt}</time> in
-            event <code>{report.event}</code>.
-          </p>
-        )}
+        {report && <IntegrityReportStatement report={report} />}
       </div>
     </section>
   );

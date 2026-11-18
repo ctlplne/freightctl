@@ -110,7 +110,8 @@
             "type": "string",
             "enum": [
               "authorized-exchange-evidence-v1",
-              "authorized-exchange-evidence-v2"
+              "authorized-exchange-evidence-v2",
+              "authorized-exchange-evidence-v3"
             ],
             "default": "authorized-exchange-evidence-v1"
           }
@@ -237,7 +238,8 @@
           "profile": {
             "enum": [
               "authorized-exchange-evidence-v1",
-              "authorized-exchange-evidence-v2"
+              "authorized-exchange-evidence-v2",
+              "authorized-exchange-evidence-v3"
             ]
           },
           "tenant_id": {
@@ -330,6 +332,9 @@
           "record_projection": {
             "$ref": "#/components/schemas/RecordProjectionLineage"
           },
+          "integrity_report": {
+            "$ref": "artifact-exchange.openapi.json#/components/schemas/IntegrityReport"
+          },
           "storage_verification": {
             "const": "not-checked"
           },
@@ -347,7 +352,9 @@
         "if": { "required": ["record_projection"] },
         "then": {
           "properties": {
-            "profile": { "const": "authorized-exchange-evidence-v2" },
+            "profile": {
+              "enum": ["authorized-exchange-evidence-v2", "authorized-exchange-evidence-v3"]
+            },
             "direction": { "const": "outgoing" },
             "details": { "const": "authorized-records" }
           }
@@ -413,6 +420,15 @@
           }
         ],
         "allOf": [
+          {
+            "if": { "required": ["integrity_report"] },
+            "then": {
+              "properties": {
+                "profile": { "const": "authorized-exchange-evidence-v3" },
+                "details": { "const": "authorized-records" }
+              }
+            }
+          },
           {
             "if": {
               "properties": {

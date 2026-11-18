@@ -264,7 +264,8 @@
         "docs/qualification/evidence/F538-recipient-https-integrity-report.json",
         "docs/qualification/evidence/F539-native-generated-lineage-original.json",
         "docs/qualification/evidence/F540-native-cli-mcp-integrity-report.json",
-        "docs/qualification/evidence/F544-native-browser-integrity-report.json"
+        "docs/qualification/evidence/F544-native-browser-integrity-report.json",
+        "docs/qualification/evidence/F545-authorized-integrity-evidence.json"
       ]
     },
     {
