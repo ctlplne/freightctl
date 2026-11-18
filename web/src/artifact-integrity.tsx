@@ -158,6 +158,7 @@ export function ArtifactIntegrity({
         <>
           <p>
             <a
+              className="integrity-download"
               href={client.integrityDownloadPath(id, read)}
               download="artifact"
               onClick={(event) => {

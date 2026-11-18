@@ -472,6 +472,13 @@ adds a safe phase and first failed check to the original recipient browser
 test. The focused regression passed with the race detector. Native Chrome
 still needs to replay the authority journey that stopped after revocation.
 
+[F557](docs/qualification/evidence/F557-stock-sftp-browser-download-target.json)
+fixes the undersized integrity download link that stopped the stock SFTP
+browser journey at the recipient accessibility check. The full local replay
+passed with real PostgreSQL, sandboxed Chromium and separate stock OpenSSH
+peers. It recovered the lost work reply with one delivery. Native Linux
+Chrome replay remains due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

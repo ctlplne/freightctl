@@ -1,0 +1,40 @@
+{
+  "schema_version": 1,
+  "id": "F557",
+  "observed_at": "2026-11-19",
+  "qualification_claim": false,
+  "scope": "Accessible recipient integrity download control in the collected stock OpenSSH browser journey",
+  "original_native_failure": {
+    "candidate": "5525129f428eeea91d569cfec659205e42009589",
+    "run": 44415734828,
+    "job": 135195415829,
+    "attempt": 1,
+    "step": "Collected stock SFTP artifact through browser custody to stock SFTP",
+    "phase": "exact-download",
+    "protected_job_log": {"sha256": "f598982c8a17b677fe42c62369331c3a033dcd7d47009fb70f87cd14231e7d14", "bytes": 61417}
+  },
+  "local_red": {
+    "log": {"sha256": "813fae541440a192b4a19002873766f62a06f52c8bb459e59639527f64cf0f02", "bytes": 492},
+    "target_probe": {"sha256": "ae2f75876319a00d9959ac0198fd58a19939f1642b701129d9596dde825e0147", "bytes": 596},
+    "observation": "Sandboxed Chromium reproduced the stop at exact download. The existing WCAG scan rejected the inline integrity download link for target-size before the browser attempted the download."
+  },
+  "local_green": {
+    "environment": "macOS ARM, Chromium 151.0.7922.34 with sandbox, task-owned PostgreSQL 16.15, separate stock OpenSSH producer and receiver on loopback",
+    "log": {"sha256": "11c58afadca9e2120c6315204a2f1a82cf324a129c3d4bc55b429d483f7325b1", "bytes": 392},
+    "accessibility_checks": 5,
+    "external_browser_requests": 0,
+    "work_requests": 2,
+    "destination_attempts": 1,
+    "destination_fence": 1,
+    "observation": "The original browser journey passed with the race detector after the integrity link received a 44 pixel minimum interactive height and width. It verified the saved bytes, accepted a new owned copy, refused the original sender revision as onward input, and recovered the result of one stock SFTP delivery after the committed work reply was lost."
+  },
+  "sources": {
+    "web/src/artifact-integrity.tsx": "f859c829ebae29cc68fe64de4ec0ca086c4525bfc0f55e7cdf5a1235bf12f291",
+    "web/src/style.css": "9713b001599d63199fcf09271d48d2b28d99fe938ee24d6a2d1a6cb8958d73c2",
+    "internal/browser/assets/app.js": "c8a7028c4d0e6bc8732bfec1a5a5c56e2c08841083a9fdbae38c14d6cc08f643",
+    "internal/browser/assets/app.css": "8c2791223b26e3dea744c3988a874d64bb9838a97c64756582e2d1426060a36e",
+    "internal/browser/assets/manifest.json": "900d85058edc5e7d1f9bc9f6ab9ca575e3efe1263644c2f40663f49fd844d36d"
+  },
+  "static_checks": ["embedded browser artifact closure", "TypeScript typecheck", "274 browser JavaScript tests", "qualification record validation"],
+  "remaining": "Replay the whole stock SFTP browser journey on native Linux Chrome. The longer recipient authority job still requires its own proof."
+}
