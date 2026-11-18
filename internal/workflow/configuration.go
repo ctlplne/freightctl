@@ -87,6 +87,17 @@ type FTPSConnectionView struct {
 }
 
 func connectionDefinition(c *store.Configuration) (*ConnectionDefinition, error) {
+	d, err := connectionDefinitionSnapshot(c)
+	if err != nil {
+		return nil, err
+	}
+	if d.Schema == 1 && secure.ValidateSSHDestination(d.Destination) != nil {
+		return nil, store.ErrState
+	}
+	return d, nil
+}
+
+func connectionDefinitionSnapshot(c *store.Configuration) (*ConnectionDefinition, error) {
 	var d ConnectionDefinition
 	// Stored SSH public identities use the library's historical Wire/Fingerprint
 	// keys. Request Decode's lowercase-key policy is not their storage format.
@@ -103,7 +114,7 @@ func connectionDefinition(c *store.Configuration) (*ConnectionDefinition, error)
 	if err != nil || hash != c.Hash || pathErr != nil || canonical != d.Directory || vpath.ControlPath(canonical) {
 		return nil, store.ErrState
 	}
-	if d.Schema == 1 && d.DAV == nil && d.FTPS == nil && d.Local == nil && secure.ValidateSSHDestination(d.Destination) == nil {
+	if d.Schema == 1 && d.DAV == nil && d.FTPS == nil && d.Local == nil && secure.ValidateSSHDestinationPublic(d.Destination) == nil {
 		return &d, nil
 	}
 	if d.Schema == 2 && d.DAV == nil && d.Local == nil && reflect.DeepEqual(d.Destination, secure.SSHDestination{}) && d.FTPS.Valid(d.Directory) {

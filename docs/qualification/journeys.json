@@ -403,7 +403,8 @@
         "docs/qualification/evidence/F476-portable-file-bundle.json",
         "docs/qualification/evidence/F477-portable-recovery-lineage.json",
         "docs/qualification/evidence/F478-portable-workflow-export.json",
-        "docs/qualification/evidence/F479-portable-calendar-export.json"
+        "docs/qualification/evidence/F479-portable-calendar-export.json",
+        "docs/qualification/evidence/F480-portable-connection-export.json"
       ],
       "failures": [],
       "limits": [

@@ -154,6 +154,13 @@ selection. Two local PostgreSQL runs verified the clock-rule round trip
 across daylight-saving transitions. The recovered schedule stayed a new
 draft that required current authority and approval.
 
+[F480](docs/qualification/evidence/F480-portable-connection-export.json)
+exports a connection revision as a template that requires credential
+enrollment. With its source key unavailable, the native CLI exported SFTP
+peer settings from PostgreSQL and enrolled a different client key in a
+separate database. The reviewed registration preserved the public host
+pin and received a new connection identity.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

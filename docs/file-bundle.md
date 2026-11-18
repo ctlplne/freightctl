@@ -98,8 +98,8 @@ references to authorized destination revisions when moving between
 workspaces. Then submit it through ordinary `workflow-draft`. The
 destination creates a separate draft that needs its own approval. The
 export checksum appears in the CLI receipt and the scoped preparation
-event. Connection definitions and policy contents have separate
-lifecycle and portability work.
+event. Export connection revisions separately. Policy content recovery
+remains open.
 
 ## Export a schedule and compare its clock rules
 
@@ -123,3 +123,33 @@ authority revision. Run ordinary schedule preview and compare its
 calendar to `source_frozen_calendar`, especially across clock changes.
 The destination assigns a new schedule identity on draft, with its own
 approval and activation lifecycle.
+
+## Export a connection and enroll its destination credentials
+
+Use the connection ID, version and definition hash from the source
+registry. Keep those values when recording workflow dependencies so
+you can export the saved revision even after a source key is retired.
+
+```sh
+umask 077
+freightctl connection-export --tenant "$TENANT" --partner "$PARTNER" \
+  --connection-id "$CONNECTION_ID" --version "$VERSION" \
+  --definition-hash "$DEFINITION_SHA256" \
+  --output .private/portable-connection.json
+jq '.destination_registration' .private/portable-connection.json \
+  > .private/connection-registration.json
+```
+
+The `freightctl-portable-connection-v1` file includes the source revision,
+observed state, peer settings and the fields the destination operator
+must fill in. SFTP carries the public host and client fingerprints for
+comparison. FTPS and WebDAV keep the public CA pin. The template omits
+source credential paths and password or token hashes.
+
+Confirm the intended peer, fill in `required_bindings` with destination
+credentials or approved root references, and use ordinary
+`connection-register` under destination administrator authority.
+Compare the recorded source trust pin with the newly registered peer
+pin. Use the resulting connection ID, version and definition hash when
+rebinding a workflow. The new registration has its own credential and
+revocation lifecycle.

@@ -32,15 +32,22 @@ type SSHDestination struct {
 }
 
 func ValidateSSHDestination(d SSHDestination) error {
+	if err := ValidateSSHDestinationPublic(d); err != nil {
+		return err
+	}
+	_, err := clientSigner(d)
+	return err
+}
+
+// ValidateSSHDestinationPublic checks the endpoint and public pin without
+// opening the private identity. It permits inspecting archived metadata.
+func ValidateSSHDestinationPublic(d SSHDestination) error {
 	host, port, err := net.SplitHostPort(d.Address)
 	portNumber, portErr := strconv.Atoi(port)
 	if err != nil || net.ParseIP(host) == nil || !net.ParseIP(host).IsLoopback() || portErr != nil || portNumber < 1 || portNumber > 65535 || strconv.Itoa(portNumber) != port || (!sshUserPattern.MatchString(d.User) && !sshParticipantPattern.MatchString(d.User)) {
 		return errors.New("development destination requires a numeric loopback address and a bounded SSH username")
 	}
-	if _, err = ValidateSSHPublic(d.Host); err != nil {
-		return err
-	}
-	_, err = clientSigner(d)
+	_, err = ValidateSSHPublic(d.Host)
 	return err
 }
 func clientSigner(d SSHDestination) (ssh.Signer, error) {

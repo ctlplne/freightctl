@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "F480",
+  "observed_at": "2026-11-18",
+  "base_candidate": "9b7f95b",
+  "base_evidence": "docs/qualification/evidence/F479-portable-calendar-export.json",
+  "scope": "Scoped registered connection export and distinct destination credential enrollment",
+  "qualification_claim": false,
+  "red": {
+    "exit_code": 1,
+    "observation": "The previous executable rejects connection-export and writes no artifact.",
+    "log_sha256": "79908aeb415dc166736adf47256be9a83108a48556683e9b8cdf330d6cd63ce2"
+  },
+  "green": {
+    "platform": "darwin/arm64 CLI and OpenSSH 10.5p1 identity tools with Linux arm64 PostgreSQL",
+    "go_version": "go1.27.4",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "memory_limit_bytes": 201326592,
+    "cpu_limit": 1,
+    "private_witness_directory": ".private/freightctl-f480-witness",
+    "executable_sha256": "7436cfc73c2e2b5e7a5acddbaf83217e58d7abf04c2a0c79dcae044320dcaa48",
+    "fixture_sha256": "756c2d9ba31a9f90c7c311b173b5ac3e0fea2a151f8a15dc526f455d2295db77",
+    "summary_sha256": "bbd773af238a5702c4859ba8f500e889b022c2f5e2f95b1c0462194776204f4d",
+    "operation_log_sha256": "05a3e83d67efef7e8c5a7671058d0ba80c4735aa01de8c04da678014f676f331",
+    "archive_sha256": "3c6fef257948e545a91f491bb921de8aea10581413eece1e3d9c8ccf41bccbea",
+    "source_definition_sha256": "07b847d2f98668fde920fbfeaf35916454ccaecd345fdd1d20c31cd0eeee99ee",
+    "destination_definition_sha256": "e7a94f6259f8974e5fa39e58785480491b198a3853089ef85c5531a3a7371850",
+    "separate_source_and_destination_databases": true,
+    "source_private_key_unavailable_during_export": true,
+    "ordinary_live_source_status_refuses_missing_key": true,
+    "archive_carries_no_original_private_reference": true,
+    "unbound_template_refused": true,
+    "old_host_public_pin_and_remote_directory_preserved": true,
+    "different_destination_connection_and_client_identity_verified": true,
+    "cross_scope_refused_without_output": true,
+    "exact_task_container_removed_verified": true
+  },
+  "checks": {
+    "focused_snapshot_template_and_existing_participant_validation_with_race": "pass",
+    "focused_log_sha256": "7b99e1c0294f82602f8c86bff0f913394709e9cf0fc9f611a39e2376ef8baa9d",
+    "affected_tagged_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Independently operated cross-workspace workflow rebinding and real peer transfer with the destination registration",
+    "Native Linux matrix and FTPS, WebDAV and local collection re-enrollment journeys",
+    "Policies, full receipt history and whole-estate cutover and exit"
+  ]
+}
