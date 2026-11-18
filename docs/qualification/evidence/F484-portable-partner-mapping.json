@@ -1,0 +1,47 @@
+{
+  "schema_version": 1,
+  "id": "F484",
+  "observed_at": "2026-11-18",
+  "base_candidate": "2e4e7ad",
+  "base_evidence": "docs/qualification/evidence/F482-portable-intake-policy-export.json",
+  "scope": "Exact ordinary partner registration mapping and reviewed new partner enrollment",
+  "qualification_claim": false,
+  "red": {
+    "exit_code": 1,
+    "observation": "The previous executable rejects partner-export and writes no artifact.",
+    "log_sha256": "79908aeb415dc166736adf47256be9a83108a48556683e9b8cdf330d6cd63ce2"
+  },
+  "green": {
+    "platform": "darwin/arm64 CLI with separate source and destination databases on Linux arm64 PostgreSQL",
+    "go_version": "go1.27.4",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "memory_limit_bytes_per_task_fixture": 201326592,
+    "cpu_limit_per_task_fixture": 1,
+    "private_witness_directory": ".private/freightctl-f484-witness",
+    "executable_sha256": "8021822339006318cba4c493d5ad1baaba1b0722690d836a7bb8b88c5edb81a6",
+    "fixture_sha256": "cfa74f2bab0b05847f5b58f3f04d0c42e2a53b36ab6afc60e9648211bdb16e2f",
+    "summary_sha256": "1f7b9ba83de858dfa7e572bdcec51d2b729d801c250879e46488831aeca8b6df",
+    "operation_log_sha256": "a59f1471ecacec8735e3a2b958d3a2f373184b0d1616426f96dbc7e75e9f90cc",
+    "source_mapping_sha256": "e97bd0e94f788105e7728d02ccee679d284c83477e167dda691e640b8751debe",
+    "archive_sha256": "4a5af140c27687daa3c40ae8c05d66ee5d381afbe4ab5586821c83221f0bb90c",
+    "exact_source_event_and_initial_mapping_preserved": true,
+    "old_credential_bytes_and_digest_absent": true,
+    "unbound_template_refused_without_enrollment": true,
+    "wrong_event_cross_tenant_plain_partner_admin_and_revoked_tenant_admin_refused": true,
+    "reviewed_narrower_destination_permissions_and_new_ids_verified": true,
+    "new_destination_credential_authenticates_without_tenant_directory_grant": true,
+    "exact_task_containers_removed_verified": true
+  },
+  "checks": {
+    "real_postgresql_existing_partner_enrollment_and_exact_event_regression_with_race": "pass",
+    "integration_fixture_sha256": "e33012c5338ce41a531e22d0bf3286354fc803002c8796fca802fc9af699a868",
+    "integration_log_sha256": "a182dbca05f6fd2f93e617a5ebbdbdd332f7fba0dd9c76dc7b8f6b1636ee417e",
+    "affected_tagged_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Native Linux matrix replay, independently operated whole-estate mapping and bootstrap or subsequent account state recovery",
+    "Receipt history, dependency rebinding across the whole estate and controlled cutover"
+  ]
+}

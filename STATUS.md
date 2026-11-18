@@ -182,6 +182,13 @@ hash after the operator supplied the destination's expected version.
 Real custody held a new upload and bound its ordinary check to the
 restored policy.
 
+[F484](docs/qualification/evidence/F484-portable-partner-mapping.json)
+exports a tenant partner mapping pinned to its original registration
+event. The native CLI recreated it by ordinary enrollment in a separate
+database using new IDs, a fresh credential and destination-reviewed
+permissions. Cross-tenant, non-directory and revoked-authority exports
+were refused.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

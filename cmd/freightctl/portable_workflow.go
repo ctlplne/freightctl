@@ -27,6 +27,12 @@ func preparePortableIntakePolicy(service *workflow.Service, ctx context.Context,
 	return checkService.PreparePortableIntakePolicy(ctx, scope, ref, output)
 }
 
+func portablePartnerExporter(event string) configurationExporter {
+	return func(service *workflow.Service, ctx context.Context, scope store.Scope, ref workflow.Reference, output io.Writer) (*workflow.PortableExportReceipt, error) {
+		return service.PreparePortablePartner(ctx, scope, ref.ID, event, output)
+	}
+}
+
 func portableConfigurationExport(ctx context.Context, dsn, token, tenant, partner, path, resource string, ref workflow.Reference, export configurationExporter, output io.Writer) error {
 	if path == "" {
 		return errors.New("configuration export requires a new output file in a private directory")

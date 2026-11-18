@@ -118,6 +118,34 @@ func (s *Store) Partners(ctx context.Context, scope Scope, after string, limit i
 	return page, t.Tx.Commit(ctx)
 }
 
+// PartnerRegistrationForExport snapshots the immutable registration receipt.
+// The shared directory lock keeps the tenant grant current through export.
+func (t *Transaction) PartnerRegistrationForExport(ctx context.Context, id, event string) (*Partner, error) {
+	if !ValidID(id) || !ValidID(event) {
+		return nil, ErrPartnerInput
+	}
+	if _, err := t.Tx.Exec(ctx, `SELECT pg_advisory_xact_lock_shared(hashtextextended($1,0))`, t.Scope.Tenant+":partner-directory"); err != nil {
+		return nil, err
+	}
+	if _, err := t.tenantAdministrator(ctx); err != nil {
+		return nil, err
+	}
+	var raw []byte
+	err := t.Tx.QueryRow(ctx, `SELECT result FROM partner_registrations WHERE target_partner_id=$1 AND event_id=$2`, id, event).Scan(&raw)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return nil, ErrNotFound
+	}
+	if err != nil {
+		return nil, err
+	}
+	var result Partner
+	if json.Unmarshal(raw, &result) != nil || result.ID != id || result.Event != event ||
+		!ValidID(result.Admin) || result.Root != "/" || result.RegisteredAt == nil {
+		return nil, ErrIsolation
+	}
+	return &result, nil
+}
+
 func (s *Store) RegisterPartner(ctx context.Context, scope Scope, key string, request PartnerCommand) (*PartnerResult, error) {
 	c, err := normalizePartner(request)
 	if err != nil || !ValidBrowserOperationKey(key) {

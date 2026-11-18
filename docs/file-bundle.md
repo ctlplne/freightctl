@@ -208,3 +208,30 @@ key and scanner to approved destination revisions and review the effect
 on new uploads. Apply the reviewed request with `intake-policy-register`.
 New uploads use the resulting destination policy and remain held until
 they pass its checks and an authorized operator releases them.
+
+## Export an enrolled tenant partner mapping
+
+A tenant directory administrator can export one registered partner.
+Get the partner ID and original registration event ID from
+`partner-list`. Use the operator's control partner in `--partner`
+and the selected entry in `--target-partner-id`.
+
+```sh
+umask 077
+freightctl partner-export --tenant "$TENANT" --partner "$CONTROL_PARTNER" \
+  --target-partner-id "$TARGET_PARTNER" --partner-registration-event-id "$EVENT_ID" \
+  --output .private/portable-partner.json
+jq '.destination_registration' .private/portable-partner.json \
+  > .private/partner-registration.json
+```
+
+The `freightctl-portable-partner-v1` file records the original registration
+and initial permissions for review. Its template carries the two display
+labels. Pick destination partner and administrator IDs, review the
+initial permissions, and fill in both current authority revisions from
+the destination's `partner-list`. Run ordinary `partner-create` with the
+reviewed request and a freshly generated protected `--new-token-file`.
+Keep the source event and new registration receipt together for mapping
+later workflow and connection references. Bootstrap entries without an
+ordinary registration event and later account changes need separate
+recovery.

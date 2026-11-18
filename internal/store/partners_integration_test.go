@@ -58,6 +58,22 @@ func TestPartnerEnrollmentRequiresSeparateAuthorityAndPreservesScope(t *testing.
 	if err != nil || r.Replayed || r.Partner.ID != c.Partner {
 		t.Fatal("enroll partner", err)
 	}
+	for _, event := range []string{secure.NewID(), r.Partner.Event} {
+		tx, err := db.Begin(ctx, scope)
+		if err != nil {
+			t.Fatal(err)
+		}
+		exported, err := tx.PartnerRegistrationForExport(ctx, c.Partner, event)
+		tx.Tx.Rollback(ctx)
+		if event == r.Partner.Event {
+			if err != nil || exported.ID != c.Partner || exported.Admin != c.Admin || exported.Event != event ||
+				!slices.Equal(exported.Permissions, r.Partner.Permissions) {
+				t.Fatal("exact tenant directory enrollment export", err)
+			}
+		} else if !errors.Is(err, ErrNotFound) {
+			t.Fatal("export accepted an unrelated event", err)
+		}
+	}
 	replay, err := db.RegisterPartner(ctx, scope, "enroll", c)
 	if err != nil || !replay.Replayed || replay.Partner.Event != r.Partner.Event {
 		t.Fatal("exact enrollment replay", err)
@@ -103,6 +119,15 @@ func TestPartnerEnrollmentRequiresSeparateAuthorityAndPreservesScope(t *testing.
 	}
 	if _, err = db.RegisterPartner(ctx, scope, "enroll", c); !errors.Is(err, ErrForbidden) {
 		t.Fatal("cached receipt bypassed current tenant authority", err)
+	}
+	tx, err = db.Begin(ctx, scope)
+	if err != nil {
+		t.Fatal(err)
+	}
+	_, exportErr := tx.PartnerRegistrationForExport(ctx, c.Partner, r.Partner.Event)
+	tx.Tx.Rollback(ctx)
+	if !errors.Is(exportErr, ErrForbidden) {
+		t.Fatal("partner export bypassed revoked tenant authority", exportErr)
 	}
 	old, err := AdministerTenant(ctx, adminPath, tenant, control, "grant", grant)
 	if err != nil || !old.Replayed || old.Membership.State != "active" {
