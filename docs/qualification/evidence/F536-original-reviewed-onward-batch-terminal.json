@@ -1,0 +1,342 @@
+{
+  "schema_version": 1,
+  "id": "F536",
+  "observed_at": "2026-11-19",
+  "candidate": "2c19ff2c83c0c13765a14f011dae28f0d8d7f515",
+  "qualification_claim": false,
+  "launch_record": "docs/qualification/evidence/F529-guarded-onward-recovery-batch.json",
+  "source_security_record": "docs/qualification/evidence/F532-native-source-security-reviewed-onward.json",
+  "stock_worker_death_and_policy_record": "docs/qualification/evidence/F534-native-recovery-and-policy-grammar.json",
+  "workflow_counts": {
+    "failure": 8,
+    "success": 9
+  },
+  "job_counts": {
+    "failure": 12,
+    "success": 25
+  },
+  "originals_metadata": {
+    "sha256": "8b5678f42c41050ce8a706af5b09c65728920901c187f5c56a2182763161c742",
+    "bytes": 209033
+  },
+  "originals": [
+    {
+      "name": "Core correctness and security",
+      "run": 44391841699,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "6272897b43477ac88df7893a39d001414895b38179e6d3fa10360203aec463a8",
+        "bytes": 3746
+      },
+      "failed_jobs": [
+        {
+          "job": 135111284298,
+          "name": "source-and-browser",
+          "failed_steps": [
+            "Published artifact policy grammar against actual domain cases"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native FTPS dispatch approval qualification",
+      "run": 44391842074,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "a34b48efc94504eda21349cb962dd3303a2fa3c3d896f1f2ab04c105bfffabda",
+        "bytes": 3221
+      }
+    },
+    {
+      "name": "Native FTPS stock clients and custody",
+      "run": 44391841873,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "242828efe4b0a1021d677a95376999027629dddb5ac49d5566ba6d6ed6b8d679",
+        "bytes": 5505
+      }
+    },
+    {
+      "name": "Native FTPS workflow consent qualification",
+      "run": 44391841934,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "fe839e1528d12024ed33b9ac07b16b4c1183c77e235fc23d48af1e4b9cc1ed0d",
+        "bytes": 7298
+      },
+      "failed_jobs": [
+        {
+          "job": 135111284999,
+          "name": "Native x86 registered FTPS workflow consent (recipient-encrypted)",
+          "failed_steps": [
+            "Three fresh registered FTPS consent, metadata and operator capture journeys"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native JSON intake and custody interfaces",
+      "run": 44391841944,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "4af7da915e103deea9666754c2b146967f15d4431b9c16a179a0a9a37c83f2b9",
+        "bytes": 9063
+      },
+      "failed_jobs": [
+        {
+          "job": 135111284237,
+          "name": "Native JSON custody (x86_64)",
+          "failed_steps": [
+            "Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes"
+          ]
+        },
+        {
+          "job": 135111284564,
+          "name": "Native JSON custody (arm64)",
+          "failed_steps": [
+            "Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "run": 44391841916,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "0987fd81a8b7c14d01b93a901c3612b949279ce426d15d12e6e6296dde755ddc",
+        "bytes": 17039
+      },
+      "failed_jobs": [
+        {
+          "job": 135111286868,
+          "name": "Native Go and PostgreSQL (arm64)",
+          "failed_steps": [
+            "Module integrity, vet and unit race checks"
+          ]
+        },
+        {
+          "job": 135111287016,
+          "name": "Native Go and PostgreSQL (x86_64)",
+          "failed_steps": [
+            "Module integrity, vet and unit race checks",
+            "Independent stock FTPS producer through HTTPS agent custody to stock SFTP"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native Windows and macOS unit checks",
+      "run": 44391841901,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "a0f9fbbd24c5f0940bdd19e2081e74c6bd8a28831ef9dfc47db7ff3546c75da2",
+        "bytes": 4673
+      },
+      "failed_jobs": [
+        {
+          "job": 135111284994,
+          "name": "windows-amd64",
+          "failed_steps": [
+            "Native Windows architecture and Go unit checks"
+          ]
+        },
+        {
+          "job": 135111285839,
+          "name": "macos-arm64",
+          "failed_steps": [
+            "Native macOS ARM architecture and Go unit race checks"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native artifact receive browser",
+      "run": 44391842486,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "77809563723f9c84580f36bd31f354f366cef6f89a3534505b54bab01e3d9b32",
+        "bytes": 3238
+      },
+      "failed_jobs": [
+        {
+          "job": 135111286917,
+          "name": "receive-browser",
+          "failed_steps": [
+            "Actual recipient UI, exact bytes, unrelated user and endpoint revocation"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native browser and FTPS operator qualification",
+      "run": 44391842042,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "44a393cc214eddc0a47491127e8c59dfb9c57ad3d9afb0d3baa561bb01cbc1ce",
+        "bytes": 3244
+      },
+      "failed_jobs": [
+        {
+          "job": 135111284614,
+          "name": "Native x86 browser and live FTPS governance",
+          "failed_steps": [
+            "Real browser policy and credential commands during FTPS transfers"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native first enrollment and browser exchange",
+      "run": 44391841779,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "cfb6da985224fac1de16f673fed3c872ba3dc20f9a6a0edb1a66156eb759a09c",
+        "bytes": 3029
+      }
+    },
+    {
+      "name": "Native immutable HTTPS stock resume",
+      "run": 44391842057,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "fbf5cfca61f1c41a922c908b9c6d29dfae21d2d07e5a11c86d02330b4a258289",
+        "bytes": 5363
+      }
+    },
+    {
+      "name": "Native independent DAV application",
+      "run": 44391842016,
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs_metadata": {
+        "sha256": "3d702a7826bd30b929a41048b149ff5fc2e15b2343d7d988bfbc1aabcb504033",
+        "bytes": 7854
+      },
+      "failed_jobs": [
+        {
+          "job": 135111285244,
+          "name": "Native stock rclone DAV (amd64)",
+          "failed_steps": [
+            "Actual independent DAV application,exact bytes,conditional writes and current authority",
+            "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+            "Direct DAV delivery between separate freightctl custody instances"
+          ]
+        },
+        {
+          "job": 135111285848,
+          "name": "Native stock rclone DAV (arm64)",
+          "failed_steps": [
+            "Actual independent DAV application,exact bytes,conditional writes and current authority",
+            "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+            "Actual PostgreSQL DAV lost MOVE response and read-only reconciliation",
+            "Direct DAV delivery between separate freightctl custody instances"
+          ]
+        }
+      ]
+    },
+    {
+      "name": "Native legacy SCP regular-file custody",
+      "run": 44391842130,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "db167c01cde9f49a10d8847e1e355f6b3bd58534f981ed6a9165c4cf9eead465",
+        "bytes": 5353
+      }
+    },
+    {
+      "name": "Native reproducible core binaries",
+      "run": 44391841681,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "e5db70894d5b4d23e26c0505233aa4dc6d3cbb7a006020ae3238024c6ed05f12",
+        "bytes": 4958
+      }
+    },
+    {
+      "name": "Native source vulnerability configurations",
+      "run": 44391841718,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "a170956317cb4fe199bbc85efa47a81c96a27d502c47a5590057df2bbdc4e4fb",
+        "bytes": 6824
+      }
+    },
+    {
+      "name": "Native tus stock client and custody checkpoints",
+      "run": 44391841695,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "551a14dad3c5bc53e4b38039966d8413a72bfd6a64d1741066960afcd2ba4d95",
+        "bytes": 6617
+      }
+    },
+    {
+      "name": "Stock peer and browser qualification",
+      "run": 44391842061,
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs_metadata": {
+        "sha256": "0eeb6235d44c0719cd0e3b0aca98953cb4f25dc47b75119410c3f912a40af82f",
+        "bytes": 21836
+      }
+    }
+  ],
+  "stock_chrome_recovery": {
+    "run": 44391842061,
+    "job": 135111286436,
+    "attempt": 1,
+    "steps": [
+      {
+        "number": 11,
+        "name": "Operator browser assigns and withdraws the exact SFTP route",
+        "conclusion": "success"
+      },
+      {
+        "number": 12,
+        "name": "Collected stock SFTP artifact through browser custody to stock SFTP",
+        "conclusion": "success"
+      },
+      {
+        "number": 13,
+        "name": "Browser recovers an exact read-only stock SFTP receiver check",
+        "conclusion": "success"
+      }
+    ]
+  },
+  "security_triage": {
+    "description": "The exact original source scans, core vulnerability and secret scans, stock XLSX dependency check and independent peer image checks passed. The combined Linux integrity checks verified modules before the known MCP inventory assertion failed.",
+    "json_scanner_signature_scope": "Both failed JSON custody steps name the original CLI aggregate. The selected portable export witness refuses a non-private output directory before producing a receipt. The failed native jobs remain open.",
+    "json_job_failure_logs": [
+      {
+        "job": 135111284237,
+        "sha256": "886bf366e2867b94ce2fad2964bea30cc08a145d7c6fdf4235108f36cae5c7b7",
+        "bytes": 34091
+      },
+      {
+        "job": 135111284564,
+        "sha256": "ac42bd6cb3d05709cb5b4024488946ced1010cfb8eb5e108fe206fc81cd5eae1",
+        "bytes": 33927
+      }
+    ]
+  },
+  "remaining": [
+    "Preserve all eight failed workflows and twelve failed jobs. S003 defers unrelated nonsecurity failure repairs and full qualification to FINISH.",
+    "Replay the exact F530 x86 FTPS startup witness, the separate F531 lost publication reply and the F535 generated lineage browser proof on the next candidate."
+  ]
+}

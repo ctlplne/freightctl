@@ -350,6 +350,12 @@ same sender session sees the input link after a separate release. The
 recipient receives the exact output with the source evidence withheld.
 The new native Linux Chrome step remains due.
 
+[F536](docs/qualification/evidence/F536-original-reviewed-onward-batch-terminal.json)
+records all 17 original workflows and 37 jobs at `2c19ff2`. Nine workflows
+and 25 jobs passed. The stock OpenSSH browser exchange and read-only
+recovery steps passed on native Linux Chrome. The terminal record keeps
+each failed workflow and job visible.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
