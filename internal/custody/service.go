@@ -8,6 +8,7 @@ import (
 	"regexp"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/portability"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/ctlplne/freightctl/internal/vpath"
 )
@@ -36,10 +37,18 @@ type Service struct {
 }
 
 func (s *Service) Accept(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader) (*store.File, bool, error) {
-	return s.accept(ctx, scope, key, size, digest, body, nil, nil, nil)
+	return s.accept(ctx, scope, key, size, digest, body, acceptanceOptions{})
 }
 
-func (s *Service) accept(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader, target *UploadTarget, sealed *sealedAcceptance, copySource *receivedCopy) (*store.File, bool, error) {
+type acceptanceOptions struct {
+	target     *UploadTarget
+	sealed     *sealedAcceptance
+	copySource *receivedCopy
+	recovery   *portability.RecoverySource
+}
+
+func (s *Service) accept(ctx context.Context, scope store.Scope, key string, size int64, digest string, body io.Reader, options acceptanceOptions) (*store.File, bool, error) {
+	target, sealed, copySource, recovery := options.target, options.sealed, options.copySource, options.recovery
 	if size < 0 || size > s.MaxFile || !digestPattern.MatchString(digest) || !keyPattern.MatchString(key) {
 		return nil, false, ErrInput
 	}
@@ -67,6 +76,9 @@ func (s *Service) accept(ctx context.Context, scope store.Scope, key string, siz
 	}
 	if copySource != nil {
 		meaning = store.ExchangeCopyMeaning(copySource.request, meaning)
+	}
+	if recovery != nil {
+		meaning = recovery.BindMeaning(meaning)
 	}
 	prior, err := t.Replay(ctx, key, meaning)
 	if err != nil {
@@ -166,6 +178,15 @@ func (s *Service) accept(ctx context.Context, scope store.Scope, key string, siz
 	}
 	if sealed != nil {
 		if err = sealed.bind(ctx, t, f, held); err != nil {
+			return nil, false, err
+		}
+	}
+	if recovery != nil {
+		_, err = t.Append(ctx, "PortableFileRecovered", f.ID, struct {
+			Source portability.RecoverySource `json:"source"`
+			Held   bool                       `json:"held"`
+		}{Source: *recovery, Held: held})
+		if err != nil {
 			return nil, false, err
 		}
 	}

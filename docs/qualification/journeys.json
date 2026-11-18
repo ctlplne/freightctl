@@ -400,7 +400,8 @@
       "evidence": [
         "docs/qualification/evidence/F003-signed-audit.json",
         "docs/qualification/evidence/F024-signed-scanned-exchange.json",
-        "docs/qualification/evidence/F476-portable-file-bundle.json"
+        "docs/qualification/evidence/F476-portable-file-bundle.json",
+        "docs/qualification/evidence/F477-portable-recovery-lineage.json"
       ],
       "failures": [],
       "limits": [

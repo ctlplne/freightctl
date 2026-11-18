@@ -38,7 +38,9 @@ func (s *Service) CopyReceivedExchange(ctx context.Context, scope store.Scope, k
 		return nil, ErrStorageIdentity
 	}
 	mode := uint32(0600)
-	f, replayed, err := s.accept(ctx, scope, key, request.Artifact.Size, request.Artifact.SHA256, nil, &UploadTarget{Path: request.Path, Mode: &mode}, nil, &receivedCopy{request: request, limits: limits})
+	f, replayed, err := s.accept(ctx, scope, key, request.Artifact.Size, request.Artifact.SHA256, nil, acceptanceOptions{
+		target: &UploadTarget{Path: request.Path, Mode: &mode}, copySource: &receivedCopy{request: request, limits: limits},
+	})
 	if err != nil {
 		return nil, err
 	}

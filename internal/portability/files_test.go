@@ -38,6 +38,19 @@ func TestPortableFilesArchiveCanonicalAndEveryMemberVerified(t *testing.T) {
 	if err != nil || !reflect.DeepEqual(verified, exported) || verified.ArchiveSHA256 != secure.Digest(raw) || verified.PayloadBytes != 6 {
 		t.Fatalf("portable bytes did not round trip: %v", err)
 	}
+	for _, file := range manifest.Files {
+		selected, err := VerifySelectedFile(bytes.NewReader(raw), int64(len(raw)), exported.ArchiveSHA256, file.ID)
+		if err != nil || selected.Source().Revision != file || selected.Source().ManifestSHA256 != verified.ManifestSHA256 {
+			t.Fatalf("the exact archive did not locate the selected bytes: %v", err)
+		}
+		body, err := io.ReadAll(selected.Bytes())
+		if err != nil || int64(len(body)) != file.Size || secure.Digest(body) != file.SHA256 {
+			t.Fatal("the verified section did not yield exactly the selected member", err)
+		}
+	}
+	if selected, err := VerifySelectedFile(bytes.NewReader(raw), int64(len(raw)), secure.Digest([]byte("another valid digest")), manifest.Files[0].ID); !errors.Is(err, ErrBundle) || selected != nil {
+		t.Fatal("a changed archive binding obtained a recovery member", err)
+	}
 	changed := bytes.Clone(raw)
 	changed[bytes.Index(changed, []byte("batch1"))] = 'B'
 	// The tar header and payload are valid independently in these variants.

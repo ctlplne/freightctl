@@ -50,5 +50,28 @@ Extract into a fresh private directory after verification. Upload recovered
 bytes using ordinary destination credentials and intake policy. The
 destination issues its own file revision IDs. Keep the source manifest
 and the destination acceptance receipts together to trace the move.
-Whole-workspace configuration, partner policies, receipt history and
-complete exit remain separate work.
+
+## Recover a revision with an audit link
+
+`bundle-restore` uses the same destination intake as an ordinary upload.
+Its protected request file supplies `archive_sha256` from the original
+export receipt, `source_revision_id` from the manifest, and a new
+`destination_path` chosen by the destination operator. The command
+checks the whole archive against the trusted digest before taking the
+selected member to intake.
+
+```sh
+freightctl bundle-restore --tenant "$DEST_TENANT" --partner "$DEST_PARTNER" \
+  --input .private/file-revisions.tar \
+  --request-file .private/recovery-selection.json \
+  --idempotency-key recover-selected-revision
+```
+
+The receipt gives the new revision ID, the original revision and archive
+references, and the destination acceptance status. PostgreSQL commits the
+source link in the same transaction as receipt and acceptance. Use the
+same key and selection after a lost reply. Reusing that key with different
+source evidence or a different destination path is a conflict. A new key
+still requires a new path. Destination policies can hold restored bytes
+for checks and separate release. Whole-workspace configuration, partner
+policies, full receipt history and complete exit remain open.

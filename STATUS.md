@@ -136,6 +136,12 @@ extracted both files and ordinary upload restored their exact bytes in a
 clean database and storage root. Held, cross-scope, tampered and revoked
 exports were refused at their relevant boundaries. Full estate exit remains open.
 
+[F477](docs/qualification/evidence/F477-portable-recovery-lineage.json) restores
+one verified archive member through ordinary intake with an atomic source
+link. PostgreSQL replay returns the original receipt, and a fresh key
+cannot overwrite an existing path. A governed destination still holds
+the restored bytes for checks and later release.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

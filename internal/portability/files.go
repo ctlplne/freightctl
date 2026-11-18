@@ -140,6 +140,10 @@ func WriteFiles(output io.Writer, manifest Manifest, open func(File) (io.ReadClo
 // into a second digest, so hidden headers, alternate metadata and padding
 // cannot survive simply because the standard tar reader skips them.
 func VerifyFiles(input io.Reader) (*Report, error) {
+	return verifyFiles(input, nil)
+}
+
+func verifyFiles(input io.Reader, locate func(File, int64)) (*Report, error) {
 	raw := &io.LimitedReader{R: input, N: MaxArchiveBytes + 1}
 	hash := secure.NewDigest()
 	archive := tar.NewReader(io.TeeReader(raw, hash))
@@ -166,8 +170,13 @@ func VerifyFiles(input io.Reader) (*Report, error) {
 	}
 	for _, file := range manifest.Files {
 		header, err := archive.Next()
-		if err != nil || header.Typeflag != tar.TypeReg || header.Name != fileName(file) || header.Size != file.Size ||
-			writeFile(reencode, file, archive) != nil {
+		if err != nil || header.Typeflag != tar.TypeReg || header.Name != fileName(file) || header.Size != file.Size {
+			return nil, ErrBundle
+		}
+		if locate != nil {
+			locate(file, MaxArchiveBytes+1-raw.N)
+		}
+		if writeFile(reencode, file, archive) != nil {
 			return nil, ErrBundle
 		}
 	}
@@ -180,4 +189,57 @@ func VerifyFiles(input io.Reader) (*Report, error) {
 		return nil, ErrBundle
 	}
 	return &Report{Manifest: manifest, ManifestSHA256: secure.Digest(data), ArchiveSHA256: hex.EncodeToString(digest), PayloadBytes: total}, nil
+}
+
+// RecoverySource identifies archived evidence, independently of destination
+// credentials and namespace permissions.
+type RecoverySource struct {
+	Tenant         string `json:"source_tenant_id"`
+	Partner        string `json:"source_partner_id"`
+	Revision       File   `json:"source_revision"`
+	ArchiveSHA256  string `json:"archive_sha256"`
+	ManifestSHA256 string `json:"manifest_sha256"`
+}
+
+func (source RecoverySource) BindMeaning(ordinary string) string {
+	data, _ := json.Marshal(struct {
+		Profile string         `json:"profile"`
+		Source  RecoverySource `json:"source"`
+		Target  string         `json:"target_meaning"`
+	}{"portable-file-recovery-v1", source, ordinary})
+	return secure.Digest(data)
+}
+
+type VerifiedFile struct {
+	source RecoverySource
+	bytes  *io.SectionReader
+}
+
+func (file *VerifiedFile) Source() RecoverySource { return file.source }
+func (file *VerifiedFile) Bytes() io.Reader       { return file.bytes }
+
+// VerifySelectedFile verifies the entire exact expected archive and opens
+// one member relative to the same supplied handle. The intake sink still
+// checks the selected bytes again when staging.
+func VerifySelectedFile(input io.ReaderAt, size int64, archiveSHA256, id string) (*VerifiedFile, error) {
+	if size < 1 || size > MaxArchiveBytes || len(archiveSHA256) != 64 || !store.ValidID(id) {
+		return nil, ErrBundle
+	}
+	var selected File
+	var offset int64
+	report, err := verifyFiles(io.NewSectionReader(input, 0, size), func(file File, at int64) {
+		if file.ID == id {
+			selected, offset = file, at
+		}
+	})
+	if err != nil || report.ArchiveSHA256 != archiveSHA256 || selected.ID == "" {
+		return nil, ErrBundle
+	}
+	return &VerifiedFile{
+		source: RecoverySource{
+			Tenant: report.Manifest.SourceTenant, Partner: report.Manifest.SourcePartner, Revision: selected,
+			ArchiveSHA256: report.ArchiveSHA256, ManifestSHA256: report.ManifestSHA256,
+		},
+		bytes: io.NewSectionReader(input, offset, selected.Size),
+	}, nil
 }

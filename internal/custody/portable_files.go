@@ -7,7 +7,20 @@ import (
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 	"github.com/ctlplne/freightctl/internal/portability"
 	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/ctlplne/freightctl/internal/vpath"
 )
+
+// RestorePortableFile accepts an independently verified member through ordinary
+// create-only intake and attaches the archive provenance to that acceptance.
+func (s *Service) RestorePortableFile(ctx context.Context, scope store.Scope, key, path string, member *portability.VerifiedFile) (*store.File, bool, error) {
+	p, err := vpath.Canonical(path)
+	if err != nil || p != path || p == "/" || vpath.ControlPath(p) || member == nil || !store.ValidID(member.Source().Revision.ID) {
+		return nil, false, ErrInput
+	}
+	origin := member.Source()
+	return s.accept(ctx, scope, key, origin.Revision.Size, origin.Revision.SHA256,
+		contextReader{ctx, member.Bytes()}, acceptanceOptions{target: &UploadTarget{Path: path}, recovery: &origin})
+}
 
 // PreparePortableFiles writes only to private staging. Its event records
 // preparation of exact bytes and does not claim publication on the caller's disk.

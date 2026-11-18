@@ -100,23 +100,32 @@ func portableFilesVerify(args []string, output io.Writer) error {
 	} else if err != nil || flags.NArg() != 0 || *path == "" {
 		return errors.New(usage)
 	}
-	info, err := os.Lstat(*path)
-	if err != nil || !info.Mode().IsRegular() || info.Size() > portability.MaxArchiveBytes {
-		return portability.ErrBundle
-	}
-	file, err := os.Open(*path)
+	file, _, err := openBundleFile(*path)
 	if err != nil {
-		return portability.ErrBundle
+		return err
 	}
 	defer file.Close()
-	opened, err := file.Stat()
-	if err != nil || !os.SameFile(info, opened) || !opened.Mode().IsRegular() || opened.Size() > portability.MaxArchiveBytes ||
-		protectedfs.ValidateFile(file) != nil {
-		return portability.ErrBundle
-	}
 	report, err := portability.VerifyFiles(file)
 	if err != nil {
 		return err
 	}
 	return json.NewEncoder(output).Encode(report)
+}
+
+func openBundleFile(path string) (*os.File, int64, error) {
+	info, err := os.Lstat(path)
+	if err != nil || !info.Mode().IsRegular() || info.Size() > portability.MaxArchiveBytes {
+		return nil, 0, portability.ErrBundle
+	}
+	file, err := os.Open(path)
+	if err != nil {
+		return nil, 0, portability.ErrBundle
+	}
+	opened, err := file.Stat()
+	if err != nil || !os.SameFile(info, opened) || !opened.Mode().IsRegular() || opened.Size() > portability.MaxArchiveBytes ||
+		protectedfs.ValidateFile(file) != nil {
+		file.Close()
+		return nil, 0, portability.ErrBundle
+	}
+	return file, opened.Size(), nil
 }

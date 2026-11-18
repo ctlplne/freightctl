@@ -1,0 +1,49 @@
+{
+  "schema_version": 1,
+  "id": "F477",
+  "observed_at": "2026-11-18",
+  "base_candidate": "04b1b5a",
+  "source_evidence": "docs/qualification/evidence/F476-portable-file-bundle.json",
+  "scope": "CLI restore of one exact source archive member with transactional origin and ordinary destination intake",
+  "qualification_claim": false,
+  "red": {
+    "observation": "The previous CLI rejects bundle-restore as an unknown command.",
+    "log_sha256": "79908aeb415dc166736adf47256be9a83108a48556683e9b8cdf330d6cd63ce2"
+  },
+  "native": {
+    "platform": "darwin/arm64, bsdtar 3.5.3 and Linux arm64 PostgreSQL",
+    "go_version": "go1.27.4",
+    "consumer_executable_sha256": "eeddbe7294bc2d81b12d3977179329b1c24ad109033cc93dd015b2c143a2728d",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "memory_limit_bytes": 201326592,
+    "cpu_limit": 1,
+    "original_unchanged_archive_sha256": "5df93bb0a87d11ff621bc5aef1ed2714d451767ab96d07978ee0206922c53ab8",
+    "original_manifest_sha256": "7c48f5a7bc3a4fd513e20bd43117c0b4a9f86e1670d957e50fd61833b39b26a8",
+    "readback_sha256": "82f617e5422978dc5860b6adf3016f6b339a27ffef85a0c6283f6d8c73635666",
+    "readback_archive_sha256": "d6ad4870a9bd4dd3508633bff2c2b37f3bc6607dc990a9126cec4ab165676bce",
+    "private_witness_directory": ".private/freightctl-f477-witness",
+    "witness_driver_sha256": "92adff29b2ea3664ccbeb2e435b6778f8b07447d45955a5f46f9482a8ed9011c",
+    "witness_result_sha256": "4e68c6fc36564c19c5af6e47b12573b1d2e1db5b2ab8ff1965d556162597b9b3",
+    "ordinary_destination_intake_issued_new_revision_with_exact_origin": true,
+    "same_key_exact_receipt_and_one_recovery_event": true,
+    "changed_target_and_fresh_key_overwrite_refused": true,
+    "wrong_archive_digest_and_tampered_bytes_refused": true,
+    "governed_destination_holds_recovery_and_refuses_export": true,
+    "stock_tar_readback_matches_original_bytes": true,
+    "exact_task_containers_removed_verified": true
+  },
+  "checks": {
+    "focused_portability_and_existing_download_race": "pass",
+    "focused_log_sha256": "05ff231b9e060e27f06f8415b9c4d2c8ac935e077cdf5b7cdc0f7724306bc263",
+    "live_postgresql_restore_and_mid_export_revocation_race": "pass",
+    "live_log_sha256": "184d1deec33165935ae6e921785fbd956ce7978ab86a5d285a860de9a8712466",
+    "affected_tagged_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Native Linux original matrix replay",
+    "Whole-estate portable configuration, credential re-enrollment, receipts, access mappings, controlled cutover and rollback",
+    "Independent operator adoption and complete journey J12"
+  ]
+}

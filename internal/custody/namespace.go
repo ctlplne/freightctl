@@ -315,7 +315,7 @@ func (s *Service) AcceptAt(ctx context.Context, scope store.Scope, key string, s
 		normalized := target.Modified.UTC().Truncate(time.Microsecond)
 		target.Modified = &normalized
 	}
-	return s.accept(ctx, scope, key, size, digest, body, &target, nil, nil)
+	return s.accept(ctx, scope, key, size, digest, body, acceptanceOptions{target: &target})
 }
 func pathMeaning(size int64, digest, actual string, target *UploadTarget) string {
 	b, _ := json.Marshal(struct {
