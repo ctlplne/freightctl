@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "id": "F555",
+  "observed_at": "2026-11-19",
+  "candidate": "5525129f428eeea91d569cfec659205e42009589",
+  "qualification_claim": false,
+  "scope": "Exact original native browser integrity, generated lineage, and direct DAV custody and reconciliation steps",
+  "launch_record": "docs/qualification/evidence/F551-guarded-browser-integrity-dav-batch.json",
+  "originals": [
+    {
+      "id": 44415734893,
+      "attempt": 1,
+      "jobs_metadata": {
+        "sha256": "231bd5ad87e0612c7823e9933f38da407b2214a4859660ee6dc180dbf48a5083",
+        "bytes": 3675
+      },
+      "jobs": [
+        {
+          "id": 135195415085,
+          "name": "receive-browser",
+          "conclusion": "failure",
+          "selected_successes": [
+            "Generated artifact lineage in separate sender and recipient browser sessions",
+            "Verify saved artifact in the browser and recover the original integrity report"
+          ],
+          "failures": [
+            "Actual recipient UI, exact bytes, unrelated user and endpoint revocation"
+          ]
+        }
+      ]
+    },
+    {
+      "id": 44415735115,
+      "attempt": 1,
+      "jobs_metadata": {
+        "sha256": "038b1315c7b9f3c0251e1068191e612dd9836a4b766807f5e22c75a5711241e1",
+        "bytes": 7854
+      },
+      "jobs": [
+        {
+          "id": 135195415843,
+          "name": "Native stock rclone DAV (amd64)",
+          "conclusion": "failure",
+          "selected_successes": [
+            "Actual PostgreSQL DAV lost MOVE response and read-only reconciliation",
+            "Direct DAV delivery between separate freightctl custody instances"
+          ],
+          "failures": [
+            "Actual independent DAV application,exact bytes,conditional writes and current authority",
+            "Actual direct DAV delivery,independent stock receiver,CLI and approvals"
+          ]
+        },
+        {
+          "id": 135195416387,
+          "name": "Native stock rclone DAV (arm64)",
+          "conclusion": "failure",
+          "selected_successes": [
+            "Actual PostgreSQL DAV lost MOVE response and read-only reconciliation",
+            "Direct DAV delivery between separate freightctl custody instances"
+          ],
+          "failures": [
+            "Actual independent DAV application,exact bytes,conditional writes and current authority",
+            "Actual direct DAV delivery,independent stock receiver,CLI and approvals"
+          ]
+        }
+      ]
+    }
+  ],
+  "observations": [
+    "Native Linux Chrome passed saved-byte verification, committed report recovery and generated-artifact lineage.",
+    "Both native Linux architectures passed the two-custody conditional DAV journey and read-only recovery after losing a MOVE reply.",
+    "The original long recipient-browser workflow still failed its separate recipient UI step. Its safe result exposed only the proof digest, leaving exact authority behavior unverified. The independent stock rclone application and delivery steps still failed on both architectures.",
+    "The results describe this exact earlier candidate. The later v4 copy edge, portable v4 test and check-constraint restore comparison are local changes."
+  ],
+  "original_browser_red_log": {
+    "sha256": "c06bfe57b59caee1605f93d89b4a6b7b86f31675ad2d4257b9740cc1500076bf",
+    "bytes": 34128
+  },
+  "remaining": [
+    "Record the complete terminal inventory for this original batch.",
+    "Replay and qualify the separate stock DAV and recipient UI failures and the later v4 and restore changes."
+  ]
+}

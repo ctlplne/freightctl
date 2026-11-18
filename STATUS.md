@@ -461,6 +461,12 @@ verifies the protected v4 CLI export before and after source closure. The
 archive matches its receipt hash and length. Wrong actor, direction and
 request hash produce no file.
 
+[F555](docs/qualification/evidence/F555-native-browser-integrity-dav-originals.json)
+records that Linux Chrome passed browser integrity recovery at `5525129`.
+Both native Linux architectures passed conditional delivery between
+freightctl custody instances and read-only recovery after a lost DAV MOVE
+reply. The separate recipient UI and stock DAV checks remain red.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
