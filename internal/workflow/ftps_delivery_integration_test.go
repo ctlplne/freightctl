@@ -184,7 +184,7 @@ func snapshotReceiverReads(t *testing.T, r *fixture) receiverReadSnapshot {
 	}
 	err = rows.Err()
 	rows.Close()
-	if err != nil || len(tables) != 77 {
+	if err != nil || len(tables) != 78 {
 		t.Fatal("receiver table observation incomplete", len(tables), err)
 	}
 	for _, name := range tables {

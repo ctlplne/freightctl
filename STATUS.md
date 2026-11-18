@@ -378,6 +378,11 @@ tools. The native CLI verified the local bytes, the stock MCP SDK committed
 the report, and CLI and HTTPS recovered the exact receipt after retry or
 restart. Native Linux replay and the browser report flow remain due.
 
+[F541](docs/qualification/evidence/F541-stock-mcp-tls-boundary.json)
+moves the stock MCP fixture's client TLS setup into `internal/crypto` and
+updates the exact schema-68 fixture counts. The core import guard, stock
+OpenSSH journeys and governed FTPS recovery checks pass locally.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

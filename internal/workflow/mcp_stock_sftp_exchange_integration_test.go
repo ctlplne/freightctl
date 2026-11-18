@@ -4,13 +4,10 @@ package workflow
 
 import (
 	"context"
-	"crypto/tls"
-	"crypto/x509"
 	"encoding/json"
 	"errors"
 	"net/http"
 	"net/url"
-	"os"
 	"reflect"
 	"testing"
 	"time"
@@ -44,9 +41,8 @@ func (c stockExchangeHTTPS) tools(t *testing.T, ctx context.Context, tokenFile s
 	if err != nil || endpoint.Scheme != "https" || endpoint.Hostname() != "127.0.0.1" {
 		t.Fatal("stock MCP fixture must use the task-owned HTTPS listener", err)
 	}
-	pem, err := os.ReadFile(c.certificate)
-	pool := x509.NewCertPool()
-	if err != nil || !pool.AppendCertsFromPEM(pem) {
+	trust, err := secure.NativeProofClientTLS(c.certificate)
+	if err != nil {
 		t.Fatal("read the task-owned HTTPS certificate", err)
 	}
 	token, err := secure.ReadSecret(tokenFile, 64)
@@ -54,7 +50,7 @@ func (c stockExchangeHTTPS) tools(t *testing.T, ctx context.Context, tokenFile s
 		t.Fatal("read the MCP fixture identity", err)
 	}
 	t.Cleanup(token.Close)
-	transport := &http.Transport{TLSClientConfig: &tls.Config{RootCAs: pool, MinVersion: tls.VersionTLS13}}
+	transport := &http.Transport{TLSClientConfig: trust}
 	t.Cleanup(transport.CloseIdleConnections)
 	httpClient := &http.Client{Transport: stockExchangeMCPTransport{transport, endpoint, token}, Timeout: 15 * time.Second,
 		CheckRedirect: func(*http.Request, []*http.Request) error { return http.ErrUseLastResponse }}

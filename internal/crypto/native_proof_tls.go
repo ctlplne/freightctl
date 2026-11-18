@@ -30,18 +30,28 @@ func NativeProofTLS(certFile, keyFile string) (client, server *TLSConfiguration,
 	if err != nil {
 		return nil, nil, err
 	}
+	client, err = NativeProofClientTLS(certFile)
+	if err != nil {
+		return nil, nil, err
+	}
+	server = TLSConfig()
+	server.Certificates = []tls.Certificate{identity.certificate}
+	return client, server, nil
+}
+
+// NativeProofClientTLS establishes TLS 1.3 trust for a stock-client fixture
+// without opening the server's private key.
+func NativeProofClientTLS(certFile string) (*TLSConfiguration, error) {
 	certificate, err := ReadSecret(certFile, 128<<10)
 	if err != nil {
-		return nil, nil, errors.New("native TLS proof requires a protected certificate reference")
+		return nil, errors.New("native TLS proof requires a protected certificate reference")
 	}
 	defer certificate.Close()
 	pool := x509.NewCertPool()
 	if !pool.AppendCertsFromPEM(certificate.Bytes) {
-		return nil, nil, errors.New("native TLS proof certificate cannot establish trust")
+		return nil, errors.New("native TLS proof certificate cannot establish trust")
 	}
-	client = TLSConfig()
+	client := TLSConfig()
 	client.RootCAs = pool
-	server = TLSConfig()
-	server.Certificates = []tls.Certificate{identity.certificate}
-	return client, server, nil
+	return client, nil
 }
