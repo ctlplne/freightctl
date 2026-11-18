@@ -1,0 +1,102 @@
+{
+  "schema_version": 1,
+  "id": "F505",
+  "observed_at": "2026-11-18",
+  "base_candidate": "8fc1d5850f391c3ebc14b25eaa50ab477d45de4c",
+  "base_evidence": "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json",
+  "qualification_claim": false,
+  "scope": "Operator provisioning and revocation of an exact registered SFTP route for an ordinary recipient actor",
+  "runtime": {
+    "go_host": "darwin/arm64",
+    "go_version": "1.27.4",
+    "race_enabled": true,
+    "postgres_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgres_container_max_mib": 192,
+    "postgres_container_max_cpus": 1,
+    "stock_https": "Apple curl 8.7.1",
+    "stock_receiver_and_readback": "OpenSSH 10.5p1",
+    "inference_enabled": false,
+    "exact_task_databases_removed": true
+  },
+  "first_failures": [
+    {
+      "observation": "The prior CLI rejected connection-provision as an unknown command. Existing F503 required temporary agent administration.",
+      "log_sha256": "f3d6969a0e011117ee41f1f28efb452215529ef6d5a7a5d5f5d4302ac28bc747"
+    },
+    {
+      "observation": "The first real projection refused because the PostgreSQL local event_id variable was ambiguous against the event column.",
+      "repair": "Give the bound local event identity a distinct name.",
+      "test_log_sha256": "8f3fa0938115284166b0cd5a0ad3531099cd5eda5aa626b0563de46d0d836c01"
+    },
+    {
+      "observation": "The narrow writer lacked execution permission for the immutable DAV constraint helper referenced on connection_revisions.",
+      "repair": "Grant the writer exactly the existing immutable local and DAV connection validation helpers while retaining the table constraints.",
+      "test_log_sha256": "b51acc8f3364d9e3218c17435dbdbdccac0f94bcc845e0bca694c8ef18f66997"
+    }
+  ],
+  "original_journey_replayed": {
+    "test_log_sha256": "24b14bd19931d236bb80bc9cf0718e925655ca92184bed5f71da7a20d4428a21",
+    "test_log_bytes": 1606,
+    "new_mode_subcases_passed": 2,
+    "original_collection_subcases_passed": 4,
+    "conditions_verified": [
+      "An ordinary root agent lacked admin and connection management throughout provisioning, use and revocation. Its authority revision was unchanged by both route commands.",
+      "Only an authorized operator published an exact active source revision for the named live same-partner actor. Stale authority, an unrelated partner and an unprivileged caller were refused.",
+      "The immutable event names the operator and the projection names the recipient. Each actor retains private lookup boundaries. The new reference retains the stock SSH host pin and client key fingerprint.",
+      "Same-key CLI replay retained the exact provision and revoke receipts. Changed meaning was refused. The exact event and receipt could not bypass operator authority, and an event without a receipt rolled back.",
+      "Both FTPS modes reached the independent stock SFTP receiver under ordinary approval and verified exact bytes. The operator then revoked each recipient route and the queued transfer could not start or contact the receiver."
+    ]
+  },
+  "retained_migration": {
+    "schema_from": 66,
+    "schema_to": 67,
+    "original_migrations_preserved": 66,
+    "old_binary_sha256": "56ef3125716edb282ff712b0bd98b9369ed1d18f6e65ee191ceedd3934091f04",
+    "new_binary_sha256": "b64fffa1f722f5deb90ec6157ccd49d2610e9a82622c11052fbccef1c51b0895",
+    "original_runtime_connection_sha256": "417fec5e8bfd43f8c51b9f02f3e1e0316001bb792d855d8fed2d6fa8e4c3973c",
+    "database_transaction_replay": "passed",
+    "original_row_counts_unchanged": true,
+    "forced_rls_tables": 77,
+    "writer_boundary_safe": true,
+    "old_binary_refused_newer_schema": true,
+    "new_migration_sha256": "9a188ce38cefccf79d4b7bc44a638052e5183078e33c38192413d74f3bfcc6c9",
+    "operations_log_sha256": "cbac14fef3e412a6044193c6b33628529e5f2551683a002a385d346fb12b049c"
+  },
+  "static": {
+    "format": "passed",
+    "tagged_vet": "passed",
+    "metadata_contracts_passed": 7,
+    "ftps_evidence_contracts_passed": 74
+  },
+  "source_files": [
+    {
+      "path": "internal/store/067_operator_connection_provisioning.sql",
+      "sha256": "9a188ce38cefccf79d4b7bc44a638052e5183078e33c38192413d74f3bfcc6c9"
+    },
+    {
+      "path": "internal/store/connection_provision.go",
+      "sha256": "60ab79247cebe3e5bf5694facda8d746e7dac73e7998ddab533fec81e87d4c1c"
+    },
+    {
+      "path": "internal/workflow/connection_provision.go",
+      "sha256": "c78a812a459b996260cc680fc627b49c19d0a16968f506e3170060a9bf338e19"
+    },
+    {
+      "path": "internal/workflow/connection_provision_integration_test.go",
+      "sha256": "f93aa6afcbe8b1cbed0a926a4a2648041d8961508b5dec4122e1c4529f79cdfe"
+    },
+    {
+      "path": "internal/workflow/ftps_collection_exchange_integration_test.go",
+      "sha256": "ef80be9a204d0e43995b69c969bf0a2cb44b4b3a3ac194b09c620e840dd30d81"
+    },
+    {
+      "path": "cmd/freightctl/workflow.go",
+      "sha256": "bff17e248318520d1f4c23c23b37eec17bdba3e73583262a257d68124f08a4ed"
+    }
+  ],
+  "remaining": [
+    "Run the new SFTP local management command and the retained migration under the native Linux source matrix.",
+    "Add authorized operator surfaces and other connection profiles. Preserve the independent recipient registration lifecycle where the original authoring route is explicitly retired.",
+    "Finish independent FTPS producer, required adapter profiles and whole-product readiness."
+  ]
+}

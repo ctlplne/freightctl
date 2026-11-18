@@ -50,10 +50,10 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 
 	service := &workflow.Service{Custody: custodyService, Processor: &checks.Service{Custody: custodyService}}
 	decode := func(v any) error {
-		if command == "onward-preview" || command == "onward-start" || command == "onward-receipt" {
+		if command == "onward-preview" || command == "onward-start" || command == "onward-receipt" || command == "connection-provision" {
 			request, err := secure.ReadSecret(input, 32<<10)
 			if err != nil {
-				return errors.New("onward request must be a protected bounded regular file")
+				return errors.New("workflow request must be a protected bounded regular file")
 			}
 			defer request.Close()
 			return workflow.Decode(request.Bytes, v)
@@ -102,6 +102,12 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 			return err
 		}
 		result, err = service.RegisterConnection(ctx, scope, key, r)
+	case "connection-provision":
+		var request workflow.ConnectionProvisionCommand
+		if err = decode(&request); err != nil {
+			return err
+		}
+		result, err = service.ProvisionConnection(ctx, scope, key, request)
 	case "connection-status":
 		result, err = service.Connection(ctx, scope, connectionID, version)
 	case "connection-revoke":

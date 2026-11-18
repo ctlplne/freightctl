@@ -321,6 +321,13 @@ copy with committed provenance, and the agent sends it to stock OpenSSH
 after receiving separate workflow permissions. Source collection and onward
 retries leave the producer and receiver untouched.
 
+[F505](docs/qualification/evidence/F505-operator-connection-provisioning.json)
+lets the operator provision and revoke an exact SFTP route for the agent.
+Both FTPS source modes passed stock delivery without elevating the agent.
+Route revocation stopped queued work before receiver contact. A seeded
+schema 66 database retained its original connection and all forced-RLS
+tables through migration 67. Native Linux replay remains due.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

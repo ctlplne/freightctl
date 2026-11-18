@@ -63,6 +63,11 @@ temporary provisioning grants before the agent approved and executed its own
 workflow. A stock OpenSSH receiver and stock SFTP client verify the output.
 The receipt retains unknown business acceptance. [F503 replay](../qualification/evidence/F503-ftps-agent-stock-sftp.json)
 
+The same journey now supports [operator provisioning](operator-connection-provisioning.md)
+without granting the agent administrative or connection-management privileges.
+The operator can withdraw the exact assigned route and stop queued work before
+receiver contact.
+
 Independent FTPS server interoperability, the native Linux matrix, the full
 SFTP pair, additional actor and transport pairs, process-death recovery and
 restore remain open.

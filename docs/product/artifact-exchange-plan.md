@@ -197,6 +197,11 @@ an agent-owned copy and separately approved delivery to stock OpenSSH. It
 passes for explicit and implicit FTPS. Independent FTPS producer coverage,
 native Linux replay and derivation lineage remain owed. [F503](../qualification/evidence/F503-ftps-agent-stock-sftp.json)
 
+An operator can now provision the exact SFTP route directly for the agent. The
+agent keeps its existing permissions, and each ordinary workflow approval and
+dispatch check still applies. The local replay verifies that withdrawing the
+route blocks queued work before it contacts the receiver. [Provisioning contract](../protocols/operator-connection-provisioning.md)
+
 The [ordinary upload descriptor](../protocols/artifact-ingress-descriptor.md)
 lets an agent's trusted host discover exact upload metadata while keeping bytes
 outside model context. It reuses ordinary root-custody acceptance and supplies no

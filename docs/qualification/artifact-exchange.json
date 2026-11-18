@@ -144,7 +144,8 @@
         "docs/qualification/evidence/F130-browser-received-copy.json",
         "docs/qualification/evidence/F185-producer-projection-outputs.json",
         "docs/qualification/evidence/F461-dav-custody-peer.json",
-        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json"
+        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json",
+        "docs/qualification/evidence/F505-operator-connection-provisioning.json"
       ]
     },
     {
@@ -209,7 +210,8 @@
         "docs/qualification/evidence/F200-browser-proposals-terminal-ci.json",
         "docs/qualification/evidence/F201-finish-original-failure-repairs.json",
         "docs/qualification/evidence/F209-runtime-credential-read-fence.json",
-        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json"
+        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json",
+        "docs/qualification/evidence/F505-operator-connection-provisioning.json"
       ]
     },
     {
@@ -248,7 +250,8 @@
         "docs/qualification/evidence/F129-mcp-received-copy.json",
         "docs/qualification/evidence/F130-browser-received-copy.json",
         "docs/qualification/evidence/F497-portable-exchange-evidence.json",
-        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json"
+        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json",
+        "docs/qualification/evidence/F505-operator-connection-provisioning.json"
       ]
     },
     {
@@ -315,7 +318,8 @@
         "docs/qualification/evidence/F201-finish-original-failure-repairs.json",
         "docs/qualification/evidence/F209-runtime-credential-read-fence.json",
         "docs/qualification/evidence/F461-dav-custody-peer.json",
-        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json"
+        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json",
+        "docs/qualification/evidence/F505-operator-connection-provisioning.json"
       ]
     },
     {
@@ -382,7 +386,8 @@
         "docs/qualification/evidence/F201-finish-original-failure-repairs.json",
         "docs/qualification/evidence/F209-runtime-credential-read-fence.json",
         "docs/qualification/evidence/F474-overlapping-operator-text-redaction.json",
-        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json"
+        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json",
+        "docs/qualification/evidence/F505-operator-connection-provisioning.json"
       ]
     },
     {
@@ -492,7 +497,8 @@
         "docs/qualification/evidence/F116-mcp-resumable-artifact-ingress.json",
         "docs/qualification/evidence/F118-mcp-workflow-review-proposals.json",
         "docs/qualification/evidence/F123-authorized-exchange-evidence.json",
-        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json"
+        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json",
+        "docs/qualification/evidence/F505-operator-connection-provisioning.json"
       ]
     },
     {

@@ -206,33 +206,41 @@ func TestFTPSCollectionToAgentAndSeparatelyApprovedStockSFTP(t *testing.T) {
 				t.Fatal("owned copy receipt has no exact committed origin", err)
 			}
 
-			// Connection registration requires operator authority. Grant it only
-			// for the setup step, then use a narrower execution policy.
 			grant := store.AccountCommand{Operation: "update", ID: account.ID, ExpectedRevision: 1,
-				Policy: &store.AccountPolicy{Label: "Onward route provisioning", Root: "/", Permissions: []string{"admin", "connections_manage", "read", "list", "write"}}}
-			if _, err = service.DB.ChangeAccount(f.ctx, f.scope, "explicit-provisioning-grant", grant); err != nil {
+				Policy: &store.AccountPolicy{Label: "Receiving and sending agent", Root: "/", Permissions: []string{
+					"read", "list", "write", "deliver", "workflow_manage", "workflow_approve", "workflow_execute",
+				}}}
+			if _, err = service.DB.ChangeAccount(f.ctx, f.scope, "explicit-onward-execution-grant", grant); err != nil {
 				t.Fatal(err)
 			}
 			curl(receive, 404)
 			agentFixture := *f
 			agentFixture.scope = agent
-			stock := newMixedStockReceiver(t, &agentFixture)
-			grant.ExpectedRevision = 2
-			grant.Policy = &store.AccountPolicy{Label: "Receiving and sending agent", Root: "/", Permissions: []string{
-				"read", "list", "write", "deliver", "workflow_manage", "workflow_approve", "workflow_execute",
-			}}
-			if _, err = service.DB.ChangeAccount(f.ctx, f.scope, "explicit-onward-execution-grant", grant); err != nil {
-				t.Fatal(err)
-			}
-			identity, err := service.DB.Identity(f.ctx, agent)
-			if err != nil || slices.Contains(identity.Permissions, "admin") || slices.Contains(identity.Permissions, "connections_manage") {
-				t.Fatal("onward execution retained route provisioning privileges", err)
-			}
+			stock := newMixedStockReceiver(t, f)
+			provisioned, control := provisionStockRoute(t, f, binary, agent, account.ID, stock)
 			ownedReplay := copyArtifact()
 			if !ownedReplay.Replayed || ownedReplay.Artifact != owned.Artifact || ownedReplay.EventID != owned.EventID {
 				t.Fatal("recovering owned copy reopened or replaced the original view")
 			}
-			requireAgentStockOnward(t, &agentFixture, stock, source.Artifact, owned.Artifact)
+			queued := requireAgentStockOnward(t, &agentFixture, stock, provisioned.Connection, source.Artifact, owned.Artifact)
+			beforeRevoke := stock.sessions(t)
+			revoke := ConnectionProvisionCommand{Operation: "revoke", Connection: &provisioned.Connection, ProvisionEvent: provisioned.EventID}
+			revoked, first := control("revoke-agent-route", revoke)
+			if first.Replayed || revoked.State != "revoked" || revoked.Revision != 2 || revoked.Connection != provisioned.Connection || revoked.ProvisionEvent != provisioned.EventID {
+				t.Fatal("operator revoke did not preserve the original route binding")
+			}
+			repeat, again := control("revoke-agent-route", revoke)
+			if !again.Replayed || repeat != revoked {
+				t.Fatal("operator revoke retry changed the original receipt")
+			}
+			if _, err = f.s.Work(f.ctx, agent, queued, "work-after-provision-revoked"); !errors.Is(err, store.ErrState) || stock.sessions(t) != beforeRevoke {
+				t.Fatal("revoked route permitted queued work or receiver contact", err)
+			}
+			after, err := service.DB.Identity(f.ctx, agent)
+			if err != nil || after.AuthorityRevision != provisioned.RecipientAuthority || slices.Contains(after.Permissions, "admin") || slices.Contains(after.Permissions, "connections_manage") {
+				t.Fatal("connection provisioning changed agent authority", err)
+			}
+
 			if x.listener.contacts.Load() != contacts || !bytes.Equal(readReceiverBytes(t, x.producer, "/inbox/one.csv"), body) {
 				t.Fatal("review, receipt recovery or onward delivery contacted or changed the producer")
 			}
@@ -304,10 +312,9 @@ func collectedExchangeStockClient(t *testing.T, f *fixture, binary, header strin
 	}
 }
 
-func requireAgentStockOnward(t *testing.T, agent *fixture, stock *mixedStockReceiver, original, owned store.ExchangeArtifact) {
+func requireAgentStockOnward(t *testing.T, agent *fixture, stock *mixedStockReceiver, connection Reference, original, owned store.ExchangeArtifact) string {
 	t.Helper()
 	scope := agent.scope
-	connection := Reference{ID: stock.connection.ID, Version: stock.connection.Version, Hash: stock.connection.Hash}
 	definition := Definition{Schema: 1, Name: "Send separately approved owned artifact", Steps: []Step{{
 		ID: "send", Kind: "sftp.deliver", Connection: connection, Filename: "agent-owned.csv",
 	}}}
@@ -353,4 +360,10 @@ func requireAgentStockOnward(t *testing.T, agent *fixture, stock *mixedStockRece
 		t.Fatal("original worker key resent bytes to the receiver", err)
 	}
 	stock.requireBytes(t, agent, resultingDelivery.ID+"-agent-owned.csv")
+	waiting, err := agent.s.StartOnward(agent.ctx, scope, "queued-before-operator-revoke", start)
+	var pending OnwardRunReceipt
+	if err != nil || json.Unmarshal(waiting.Resource, &pending) != nil || pending.ID == run.ID || pending.State != "queued" {
+		t.Fatal("could not leave one ordinary intent queued for the revocation check", err)
+	}
+	return pending.ID
 }
