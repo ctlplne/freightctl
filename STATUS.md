@@ -208,6 +208,12 @@ result and archive checksum. Namespace reads now encode their saved
 modification instant in UTC. The complete original CLI journey passed
 in the non-UTC environment that exposed the mismatch.
 
+[F489](docs/qualification/evidence/F489-portable-delivery-receipt.json)
+exports the original receiver observation for an exact successful
+delivery. Stock OpenSSH transferred and independently read the payload.
+After the receiver stopped and its client key was removed, the CLI
+exported the same observation and the original completion event.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

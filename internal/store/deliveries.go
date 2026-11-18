@@ -71,6 +71,21 @@ func (t *Transaction) Delivery(ctx context.Context, id string, lock bool) (*Deli
 	}
 	return d, err
 }
+
+func (t *Transaction) CompletedDeliveryEvent(ctx context.Context, d *Delivery) (string, error) {
+	var event string
+	err := t.Tx.QueryRow(ctx, `SELECT e.event_id::text FROM delivery_intents i
+		JOIN events e ON (i.tenant_id,i.partner_id,i.actor_id,i.changed_event_id,i.delivery_id)=(e.tenant_id,e.partner_id,e.actor_id,e.event_id,e.resource_id)
+		WHERE i.delivery_id=$1 AND i.actor_id=$2 AND i.revision=$3 AND i.definition_hash=$4 AND i.state='succeeded'
+		AND e.kind='DeliveryTransitioned' AND e.payload->>'revision'=$3::bigint::text
+		AND e.payload->>'definition_hash'=$4 AND e.payload->>'state'='succeeded' AND e.payload->'observation'=$5::jsonb`,
+		d.ID, t.Actor, d.Revision, d.DefinitionHash, d.Observation).Scan(&event)
+	if errors.Is(err, pgx.ErrNoRows) {
+		return "", ErrRevision
+	}
+	return event, err
+}
+
 func (t *Transaction) DatabaseTime(ctx context.Context) (time.Time, error) {
 	var now time.Time
 	err := t.Tx.QueryRow(ctx, `SELECT clock_timestamp()`).Scan(&now)

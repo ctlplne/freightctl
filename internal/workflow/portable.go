@@ -2,12 +2,11 @@ package workflow
 
 import (
 	"context"
-	"encoding/json"
 	"io"
 	"time"
 
 	"github.com/ctlplne/freightctl/internal/calendar"
-	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/portability"
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
@@ -43,11 +42,7 @@ type PortableSchedule struct {
 	Selection      ScheduleSelection   `json:"destination_preview_selection"`
 }
 
-type PortableExportReceipt struct {
-	Source Reference `json:"source"`
-	SHA256 string    `json:"sha256"`
-	Size   int       `json:"size_bytes"`
-}
+type PortableExportReceipt = portability.JSONExportReceipt[Reference]
 
 func portableDependencies(d Definition) []PortableWorkflowDependency {
 	dependencies := make([]PortableWorkflowDependency, 0)
@@ -160,30 +155,5 @@ func (s *Service) PreparePortableSchedule(ctx context.Context, scope store.Scope
 // WritePortableExport writes a bounded protected staging artifact, then checks
 // current authority and commits its exact checksum as a preparation event.
 func WritePortableExport(ctx context.Context, tx *store.Transaction, event string, ref Reference, manifest any, output io.Writer) (*PortableExportReceipt, error) {
-	payload, err := json.Marshal(manifest)
-	if err != nil {
-		return nil, err
-	}
-	payload = append(payload, '\n')
-	if len(payload) > 48<<10 {
-		return nil, store.ErrLimit
-	}
-	written, err := output.Write(payload)
-	if err != nil {
-		return nil, err
-	}
-	if written != len(payload) {
-		return nil, io.ErrShortWrite
-	}
-	if err = tx.Reauthorize(ctx); err != nil {
-		return nil, err
-	}
-	receipt := &PortableExportReceipt{Source: ref, SHA256: secure.Digest(payload), Size: written}
-	if _, err = tx.Append(ctx, event, ref.ID, receipt); err != nil {
-		return nil, err
-	}
-	if err = tx.Tx.Commit(ctx); err != nil {
-		return nil, err
-	}
-	return receipt, nil
+	return portability.WritePreparedJSON(ctx, tx, event, ref.ID, ref, manifest, output)
 }

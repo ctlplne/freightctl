@@ -258,3 +258,27 @@ result. Keep the event reference with the relevant signed audit export
 for independent verification. A reader can inspect the JSON offline.
 The historical receipt describes what committed at that time. Consult
 ordinary status for current paths or availability.
+
+## Preserve a delivery's recorded receiver observation
+
+Take the delivery ID, definition hash and exact completed revision from
+`delivery-status`. Use the original participant with current permission
+to read the delivery and its source file.
+
+```sh
+umask 077
+freightctl delivery-receipt-export --tenant "$TENANT" --partner "$PARTNER" \
+  --delivery-id "$DELIVERY_ID" --definition-hash "$DEFINITION_SHA256" \
+  --expected-revision "$REVISION" --output .private/delivery-receipt.json
+shasum -a 256 .private/delivery-receipt.json
+jq '.observation' .private/delivery-receipt.json
+```
+
+Compare the SHA-256 with the export response. The
+`freightctl-portable-delivery-receipt-v1` record links the exact local
+file revision, completed delivery event and receiver readback
+observation. The export reads PostgreSQL and works after a receiver
+goes offline. It keeps the protocol's original integrity and durability
+fields, including any unknown business acceptance. Preserve the source
+completion event with its signed audit export. Confirm business
+acceptance separately with the receiver's business system.

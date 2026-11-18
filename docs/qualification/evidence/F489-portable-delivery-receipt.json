@@ -1,0 +1,52 @@
+{
+  "schema_version": 1,
+  "id": "F489",
+  "observed_at": "2026-11-18",
+  "base_candidate": "233de12",
+  "base_evidence": "docs/qualification/evidence/F486-portable-namespace-receipt.json",
+  "scope": "Exact completed delivery observation exported after a stock OpenSSH receiver shut down",
+  "qualification_claim": false,
+  "red": {
+    "cli_observation": "The prior executable rejects delivery-receipt-export without writing an artifact.",
+    "cli_log_sha256": "79908aeb415dc166736adf47256be9a83108a48556683e9b8cdf330d6cd63ce2",
+    "first_fixture_observation": "The initial fixture supplied incorrect ordinary upload field names and was refused before custody accepted a file.",
+    "first_fixture_log_sha256": "36f221bcc3d29ede1a2c08723e7917eb3fd7e2e3ba2946d6c026e4e185ff656e",
+    "stock_client_fixture_observation": "The next fixture transferred the bytes but asked stock SFTP for the bare filename. Replay verifies and reads the exact delivery-ID-prefixed receiver path.",
+    "stock_client_fixture_log_sha256": "9b003ed6c1028a39fe1dc9e51a345d417afe3d4d87e2dba1fb505a64a0402282"
+  },
+  "green": {
+    "platform": "darwin/arm64 CLI and stock OpenSSH 10.5p1 with Linux arm64 PostgreSQL",
+    "go_version": "go1.27.4",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "memory_limit_bytes": 201326592,
+    "cpu_limit": 1,
+    "private_witness_directory": ".private/freightctl-f489-live",
+    "executable_sha256": "3231ede149e2be96c5c807cf8ed4381ad5744c96e8846985805f31bc3be36bfb",
+    "fixture_sha256": "c89de0ecd05205dead3984751db68855d4f8ba7817feb5368f77ef1df1040bd2",
+    "summary_sha256": "0d1644882788edbc8525e8d9f60d51e3426fee1d7c782e69a47327eb84fdc2fd",
+    "operation_log_sha256": "061c94561b7cc63a63729420d4a47f6a4701fa85250a2788ece0c55ee382279f",
+    "definition_sha256": "1d8bb0a91482c7e755cb052938de7dba871ba509993a94174db67a97557f27b4",
+    "archive_sha256": "8ca063b32e0c494984ce810b59e3193f518128472fa6ee42411f40b49cf4df95",
+    "stock_retrieved_payload_sha256": "ae463408afc3283e3133309afc31e9bdad8fd3b02bc9162f7a26f1276dffd098",
+    "exact_source_file_completion_event_and_historical_observation_preserved": true,
+    "receiver_down_old_private_key_unavailable_and_custody_unopened_during_export": true,
+    "draft_stale_revision_and_cross_workspace_refused_without_output": true,
+    "delivery_status_unchanged_after_export": true,
+    "receiver_business_acceptance_observed": "unknown",
+    "receiver_directory_power_loss_durability": "not established",
+    "exact_task_containers_removed_and_stock_receiver_terminated": true
+  },
+  "checks": {
+    "focused_protocol_observation_and_existing_portability_regressions_with_race": "pass",
+    "focused_log_sha256": "4db8f33346122c766ad9e32a0760f5115fe9451522660f9d2599e01d4ec3afe7",
+    "original_artifact_exchange_and_namespace_receipt_cli_parent_with_shared_writer": "pass",
+    "original_replay_log_sha256": "4704ad6b7057f00c943c4fcfed4b2795d4ba23f9d0ffae33a55a4ab536b31930",
+    "affected_tagged_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Native Linux matrix replay and independent FTPS, WebDAV and encrypted receipt export",
+    "Historical bulk receipts, downstream business acceptance and independently operated whole-estate recovery"
+  ]
+}

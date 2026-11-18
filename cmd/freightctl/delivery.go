@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"io"
 	"os"
 	"strings"
 
@@ -13,9 +14,14 @@ import (
 	"github.com/ctlplne/freightctl/internal/store"
 )
 
-func runDelivery(ctx context.Context, command, dsn, token, tenant, partner, storage, input, key, id, hash string, revision, maxFile, maxStored int64) error {
+func runDelivery(ctx context.Context, command, dsn, token, tenant, partner, storage, input, key, id, hash, output string, revision, maxFile, maxStored int64) error {
 	if maxFile < 1 || maxFile > 1<<30 {
 		return errors.New("invalid delivery file budget")
+	}
+	if command == "delivery-receipt-export" {
+		if err := validatePortableOutput(output); err != nil {
+			return err
+		}
 	}
 	secret, err := secure.ReadSecret(token, 64)
 	if err != nil {
@@ -57,6 +63,11 @@ func runDelivery(ctx context.Context, command, dsn, token, tenant, partner, stor
 		result, err = service.Create(ctx, scope, key, request)
 	case "delivery-status":
 		result, err = service.Status(ctx, scope, id)
+	case "delivery-receipt-export":
+		ref := delivery.ReceiptReference{ID: id, Revision: revision, Hash: hash}
+		return writePortableArtifact(ctx, output, "delivery-receipt", func(staged io.Writer) (*delivery.PortableExportReceipt, error) {
+			return service.PreparePortableReceipt(ctx, scope, ref, staged)
+		}, os.Stdout)
 	case "delivery-approve", "delivery-cancel":
 		result, err = service.Command(ctx, scope, id, key, strings.TrimPrefix(command, "delivery-"), hash, revision)
 	case "delivery-work":

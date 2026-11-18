@@ -64,13 +64,13 @@ func portableConfigurationExport(ctx context.Context, dsn, token, tenant, partne
 	}, output)
 }
 
-func writePortableArtifact(ctx context.Context, path, resource string, prepare func(io.Writer) (*workflow.PortableExportReceipt, error), output io.Writer) error {
+func writePortableArtifact[Receipt any](ctx context.Context, path, resource string, prepare func(io.Writer) (*Receipt, error), output io.Writer) error {
 	root, err := os.OpenRoot(filepath.Dir(path))
 	if err != nil {
 		return err
 	}
 	defer root.Close()
-	var receipt *workflow.PortableExportReceipt
+	var receipt *Receipt
 	stage, err := stageProtectedOutputAt(ctx, root, ".freightctl-"+resource+"-", resource+" export", func(staged io.Writer) error {
 		var err error
 		receipt, err = prepare(staged)
