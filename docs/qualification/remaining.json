@@ -140,7 +140,8 @@
         "docs/qualification/evidence/F521-guarded-sftp-console-batch.json",
         "docs/qualification/evidence/F525-native-operator-browser-and-source-scans.json",
         "docs/qualification/evidence/F528-original-batch-and-native-ftps.json",
-        "docs/qualification/evidence/F529-guarded-onward-recovery-batch.json"
+        "docs/qualification/evidence/F529-guarded-onward-recovery-batch.json",
+        "docs/qualification/evidence/F532-native-source-security-reviewed-onward.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -239,7 +240,8 @@
         "F511 retains all 17 terminal originals at 2e14bef. Twelve workflows passed. Both native PostgreSQL jobs, both JSON custody jobs, both DAV jobs and the receive browser failed. The macOS source scan was canceled before runner assignment. Linux ARM and Windows source scans passed. Native runtime failures remain due for FINISH.",
         "F514 retains all 15 terminal original workflows at 0d1e20d. The three source security scans and both independent OpenPGP peer gates passed. Seven original broad PostgreSQL, JSON custody, DAV and browser jobs remain red under S003.",
         "F520 records the three terminal original workflows at 8403038. Both enforcing independent OpenPGP scans passed. The stock FTPS source passed on native ARM. Native x86 failed the exact TLS 1.2 policy witness and both broad PostgreSQL jobs remain red.",
-        "F525 records the passing native Linux x86 operator browser at 8219fd9. Original Linux ARM and Windows source scans passed. GitHub canceled the macOS ARM source job before assigning a runner, leaving its scan unverified."
+        "F525 records the passing native Linux x86 operator browser at 8219fd9. Original Linux ARM and Windows source scans passed. GitHub canceled the macOS ARM source job before assigning a runner, leaving its scan unverified.",
+        "F532 binds all three original default source scans to 2c19ff2. macOS ARM, Linux ARM and Windows x86 each report zero reachable findings under their enforcing converters. This source scan scope and the separate original browser/live FTPS runtime failure remain visible."
       ],
       "current_item": {
         "id": "F425",

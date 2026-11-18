@@ -325,6 +325,11 @@ An explicit check under the original reviewed run reads the exact bytes from
 OpenSSH in read-only mode. It keeps the original attempt, fence and inode.
 Native Linux replay remains due.
 
+[F532](docs/qualification/evidence/F532-native-source-security-reviewed-onward.json)
+records the default source scans for `2c19ff2`. The enforcing converter
+reports zero reachable findings on macOS ARM, Linux ARM and Windows x86.
+The separate native browser and live FTPS governance runtime step failed.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

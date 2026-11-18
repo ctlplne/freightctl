@@ -1,0 +1,103 @@
+{
+  "schema_version": 1,
+  "id": "F532",
+  "observed_at": "2026-11-19",
+  "candidate": "2c19ff2c83c0c13765a14f011dae28f0d8d7f515",
+  "qualification_claim": false,
+  "source_scan": {
+    "run": 44391841718,
+    "attempt": 1,
+    "workflow_conclusion": "success",
+    "tool": "govulncheck v1.9.0",
+    "scope": "Default source ./... on each actual host",
+    "metadata": {
+      "sha256": "d9d65553d19567f2f74e998659a23649f6e8ad27b8ab50ca14075d0b444a3676",
+      "bytes": 5000
+    },
+    "jobs": [
+      {
+        "job": 135111285297,
+        "name": "Native vulnerability source (darwin/arm64)",
+        "step": "Actual native source scan and enforcing original converter",
+        "conclusion": "success",
+        "configuration": {
+          "GOARCH": "arm64",
+          "GOHOSTARCH": "arm64",
+          "GOHOSTOS": "darwin",
+          "GOOS": "darwin",
+          "GOVERSION": "go1.27.4"
+        },
+        "source_report_sha256": "b2e246fce0b56e0b2329fe41231496c745f46f540aaf49f759bec6bbe815f31d",
+        "affected_code_findings": 0,
+        "safe_metadata": {
+          "sha256": "2418fb5b769bf5802ef327258d35b2fcfe7a92c4c63e73195d52c19b46e80274",
+          "bytes": 474
+        },
+        "protected_log": {
+          "sha256": "f6ca10b37295765e1a695b42f041da98758a6df5614c5559e057ffc5740b8341",
+          "bytes": 26948
+        }
+      },
+      {
+        "job": 135111285472,
+        "name": "Native vulnerability source (linux/arm64)",
+        "step": "Actual native source scan and enforcing original converter",
+        "conclusion": "success",
+        "configuration": {
+          "GOARCH": "arm64",
+          "GOHOSTARCH": "arm64",
+          "GOHOSTOS": "linux",
+          "GOOS": "linux",
+          "GOVERSION": "go1.27.4"
+        },
+        "source_report_sha256": "8752510280af3219b6a791e701538fc0d988696de3a9f033b2165a197f770546",
+        "affected_code_findings": 0,
+        "safe_metadata": {
+          "sha256": "33ab340d2bb39208e6d6fd0fc9a07413571da9f99c5db8b97adb89bad4699326",
+          "bytes": 472
+        },
+        "protected_log": {
+          "sha256": "8f1f65a8ed7fd70aee2844bdc57d74962d122bb447431040f78106f55569afb2",
+          "bytes": 26173
+        }
+      },
+      {
+        "job": 135111285698,
+        "name": "Native vulnerability source (windows/amd64)",
+        "step": "Actual native source scan and enforcing original converter",
+        "conclusion": "success",
+        "configuration": {
+          "GOARCH": "amd64",
+          "GOHOSTARCH": "amd64",
+          "GOHOSTOS": "windows",
+          "GOOS": "windows",
+          "GOVERSION": "go1.27.4"
+        },
+        "source_report_sha256": "57386c3e72a43d5f270ce0e7f03bcbcbfbbe26ed33cf97a25d2edf5cf0ab8172",
+        "affected_code_findings": 0,
+        "safe_metadata": {
+          "sha256": "0464b4db15e789a1708415b2b3ddaddce44f532d84bc4452315429167bd769e6",
+          "bytes": 476
+        },
+        "protected_log": {
+          "sha256": "5a962616f25ed4171b1fbd4e6b6b1542c7f540eb13e287cbe4407ab49f9b0f4f",
+          "bytes": 27440
+        }
+      }
+    ]
+  },
+  "observed_open_runtime": {
+    "run": 44391842042,
+    "job": 135111284614,
+    "step": "Real browser policy and credential commands during FTPS transfers",
+    "conclusion": "failure",
+    "metadata": {
+      "sha256": "7596f2643d20b7f3e8488daa6934dcbfb8f20c7e429cbe5a6b63eedd39327b28",
+      "bytes": 2740
+    }
+  },
+  "remaining": [
+    "Complete the exact native runtime, adapter and final-source gates. The native browser and live FTPS governance failure remains recorded in the original run.",
+    "Custom build tags, shipped binaries and images require their own gates."
+  ]
+}
