@@ -28,6 +28,8 @@ For an administrator rule requiring named-account consent for each exact outboun
 
 For reviewed calendars, bounded published-file selection and restartable ordered outbound workflows, see [scheduled workflows](docs/scheduled-workflows.md). Activation, queueing and execution are separate decisions; ordinary file and dispatch approvals still apply.
 
+For a protected SFTPGo Community export, see the [offline migration planner](docs/sftpgo-migration.md). Review its rule/action links and calendar fragments before drafting destination workflows.
+
 For explicit read-only remote inputs with ready manifests, whole-batch custody, intake gates and separate downstream decisions, see [collection workflows](docs/collection-workflows.md). Repeated input claims remain bound to their original workflow revision; scheduled remote admission and full J03 remain open.
 
 - Organization: [ctlplne](https://github.com/ctlplne)

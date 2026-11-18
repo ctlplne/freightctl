@@ -1,0 +1,73 @@
+{
+  "schema_version": 1,
+  "id": "F464",
+  "observed_at": "2026-11-18",
+  "base_candidate": "e5cc2b5",
+  "scope": "Stock SFTPGo Community format-17 dump and read-only native freightctl CLI plan",
+  "qualification_claim": false,
+  "platform": "darwin/arm64",
+  "go_version": "go1.27.4",
+  "red": {
+    "source": "e5cc2b5",
+    "interface": "freightctl migration-plan-sftpgo --source-file <protected fixture>",
+    "exit_code": 1,
+    "observation": "The existing command rejects the source-file flag.",
+    "private_log": ".private/freightctl-f464-cli-red.log",
+    "log_sha256": "39e61e58b99ae1977e2e94994d4c987f94953cb5795264aa50a7cdfe366d383d"
+  },
+  "stock_producer": {
+    "version": "2.7.6-62ae9ba3",
+    "release_assets": "https://github.com/drakkan/sftpgo/releases/expanded_assets/v2.7.6",
+    "asset": "sftpgo_v2.7.6_macOS_arm64.tar.xz",
+    "archive_sha256": "a6417b61789ec5dfb74269a3c9cb94c1c4ce9f2b95831467221e9c75c6fa82f7",
+    "executable_sha256": "4a00de2146fe454b09cc0170d2b825fd3bbda05357315b72f91583934c50e4de",
+    "first_fixture_failure": "The exact standalone binary required upstream email templates even with web interfaces disabled. The original log was retained and the replay supplied them from the verified archive.",
+    "fixture": "Separate task-owned memory provider, numeric loopback REST administration, two disabled rules, one shared backup action",
+    "cpu_seconds_limit": 15,
+    "gomaxprocs": 1,
+    "go_memory_target_mib": 96,
+    "peak_child_rss_bytes": 36716544,
+    "stopped_before_import": true,
+    "export_method": "GET /api/v2/dumpdata?output-data=1",
+    "export_format": 17,
+    "export_bytes": 2165,
+    "private_evidence_directory": ".private/freightctl-f464-stock",
+    "replay_driver_sha256": "c04633ad3e9b1a8ef37b3b307349900686e42312c596ff95bdb6a5b71a57120c"
+  },
+  "native_consumer": {
+    "executable_sha256": "9a055fbae86fe4dd41c903bc18b85965dcad80bfeefbea727f56d1b481fc063e",
+    "source_sha256": "d62de485c9249125bd3e569e000b835ac56d42d5d64e6b1a46a65b4cfc23fd0d",
+    "report_sha256": "031e68517bd8a350fb272a90b56d0907635a2c892943fe002b92af0ae08cfba8",
+    "same_input_byte_identical_replay": true,
+    "source_bytes_unchanged": true,
+    "visible_sections": 11,
+    "visible_rules": 2,
+    "action_definition_count": 1,
+    "rule_action_links": 2,
+    "calendar_fragment": {
+      "time_zone": "UTC",
+      "local_times": ["07:00:00"],
+      "weekdays": [2],
+      "disposition": "needs_input"
+    },
+    "unsupported_schedule_rows": 1,
+    "group_readable_source_refused": true,
+    "symlink_refused": true,
+    "malformed_typed_value_refused_without_echo": true,
+    "stock_fixture_labels_absent_from_report": true
+  },
+  "checks": {
+    "focused_race_parent_tests": 3,
+    "focused_race_cases_including_parents": 17,
+    "focused_race_log_sha256": "8c491b47df2a3dc71907f1318f79a229f12821cce21109100407e3a38ebbd904",
+    "affected_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Partner, identity, storage, permission and workflow translation with a complete dependency inventory",
+    "Enterprise and other incumbent, shell, scheduler and PowerShell profiles",
+    "Ordinary reviewed adoption, isolated behavior comparison, rollback, cutover and export evidence",
+    "Private model profiles, independent operator adoption, and the remaining baseline and artifact exchange gates"
+  ]
+}

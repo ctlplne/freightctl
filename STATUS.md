@@ -74,6 +74,12 @@ native execution.
 fast-forward to `2d10f84` under the owner identity. Gitleaks found no leaks
 in the nine outgoing commits. Native replay is in progress.
 
+[F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
+protected SFTPGo Community export and reports rule/action links and proposed
+calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
+export and left its bytes unchanged. Other mapping, workflow adoption,
+comparison and cutover remain open.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an
