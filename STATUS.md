@@ -58,7 +58,17 @@ commits. [F457](docs/qualification/evidence/F457-patched-native-replay.json)
 records passing Go source security gates on all tested platforms. Both native
 DAV jobs pass PostgreSQL recovery and bearer/Basic collection. Stock rclone
 application and delivery remain failed. Both x86 FTPS receiver sandbox
-failures recurred. Other native work is still running.
+failures recurred.
+
+[F462](docs/qualification/evidence/F462-verified-terminal-batch.json)
+records all 19 original workflows at `6412db0`. Thirty-five of 43 jobs
+passed. Both PostgreSQL suites passed, including the AI disclosure refusal.
+Both peer-image gates still block on the two Debian glibc advisories.
+
+[F461](docs/qualification/evidence/F461-dav-custody-peer.json) binds DAV PUT
+and MOVE to separate receiver receipt keys. Nine loopback TLS tests pass,
+including the lost-reply check. The direct custody-to-custody test awaits
+native execution.
 
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
