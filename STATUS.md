@@ -298,6 +298,13 @@ later cancellation trace. Both artifacts cite the original events and
 retain unknown retrieval, persistence and business outcomes. The complete
 real PostgreSQL artifact exchange CLI replay passed.
 
+[F503](docs/qualification/evidence/F503-ftps-agent-stock-sftp.json)
+replays explicit and implicit FTPS collection into a scoped HTTPS receive
+view. Stock curl returns the original bytes. The CLI creates an agent-owned
+copy with committed provenance, and the agent sends it to stock OpenSSH
+after receiving separate workflow permissions. Source collection and onward
+retries leave the producer and receiver untouched.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

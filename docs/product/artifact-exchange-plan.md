@@ -191,8 +191,11 @@ The governed-source bridge pins `governed-collection-exchange-source-v1` for
 already captured exact inputs. Its [contract](../protocols/artifact-collection-source.md)
 correlates original input/manifest custody and separately checks current ordinary
 source permission through API,CLI,MCP and browser review. Stock SFTP collection
-to separately authorized custody-poll offer is the first pinned source pair;
-its native outcomes,FTPS pair and complete onward/derivation lineage remain owed.
+to separately authorized custody-poll offer is the first pinned source pair.
+The local FTPS pair uses a separate freightctl producer, stock HTTPS retrieval,
+an agent-owned copy and separately approved delivery to stock OpenSSH. It
+passes for explicit and implicit FTPS. Independent FTPS producer coverage,
+native Linux replay and derivation lineage remain owed. [F503](../qualification/evidence/F503-ftps-agent-stock-sftp.json)
 
 The [ordinary upload descriptor](../protocols/artifact-ingress-descriptor.md)
 lets an agent's trusted host discover exact upload metadata while keeping bytes

@@ -1,0 +1,99 @@
+{
+  "schema_version": 1,
+  "id": "F503",
+  "observed_at": "2026-11-18",
+  "base_candidate": "79907c4bd9f1488c65957586a357f92dfbea8139",
+  "base_evidence": "docs/qualification/evidence/F108-governed-collection-artifact-source.json",
+  "qualification_claim": false,
+  "scope": "AX-J02 governed FTPS from a separate freightctl producer, scoped HTTPS retrieval, owned copy, and separately approved onward delivery to stock SFTP",
+  "environment": {
+    "host": "macOS 27.2 ARM64",
+    "timezone": "Asia/Kolkata",
+    "go_version": "1.27.4",
+    "race_enabled": true,
+    "inference_enabled": false,
+    "postgres_version": "16.15",
+    "postgres_architecture": "linux/arm64",
+    "postgres_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgres_task_memory_mib": 192,
+    "postgres_task_cpus": 1,
+    "stock_https_peer": {
+      "version": "curl 8.7.1 with SecureTransport and LibreSSL 3.3.6",
+      "binary_sha256": "73818a620a43bb56d123b7bde48faa2eff67fea5738e653d34378d9f1ed8820b",
+      "server_minimum_and_negotiated_tls": "1.3",
+      "fixture_certificate_verification": "passed"
+    },
+    "stock_sftp_peer": {
+      "version": "OpenSSH 10.5p1 with LibreSSL 3.3.6",
+      "sshd_sha256": "76e57c44e0e2fc592bb9dbc9b54ad76f0075e6957bdc3d290de3947fb7b3fa30",
+      "sftp_sha256": "e830dfe46baa8c1ae36c627455c2d688948a27190d94500e86e92eaca14bde8a"
+    }
+  },
+  "first_native_failures": [
+    {
+      "state": "failed",
+      "case": "Stock client rejected the explicit TLS version override with exit code 4 before HTTP.",
+      "repair": "Keep the HTTPS server at TLS 1.3. Confirm this stock client negotiates TLS 1.3 without the override and require certificate verification.",
+      "test_log_sha256": "4edcc502955de5512aae66d0c11e49d065b14fa917c12755fe469e8904ef552f",
+      "independent_tls_probe_sha256": "479e51e33d34d9bd320c42cba5d0fbd13cab8648ac61869071525b19e45ea95a"
+    },
+    {
+      "state": "failed",
+      "case": "The initial same-partner account could read the collection path through its ordinary permissions.",
+      "repair": "Use the normal namespace command to restrict the captured entry to the owner and confirm the recipient lacked that access before the offer.",
+      "test_log_sha256": "6138fe70b419876648c53b113c3b969a681083e409e128a68e15168999185548"
+    },
+    {
+      "state": "failed",
+      "case": "Registering the actor-owned stock receiver was refused with connection management permission alone.",
+      "repair": "Use explicit temporary operator provisioning and remove both admin and connection management before approval or delivery. Keep the ordinary product authorization rule.",
+      "test_log_sha256": "e945c85390fde7d43d4087f6f080e5c78dd4be69feaedc82945df01fa48a6ff4"
+    }
+  ],
+  "cli_discoverability": {
+    "original_help": "missing exchange-copy",
+    "current_help": "lists exchange-copy",
+    "before_sha256": "965381d7cd2963eee7cdd10c99657246baea5d46f0d574c7e39ef35cd50a2c9c",
+    "after_sha256": "71217855e3a2536f8c5a9eec68261c135cc93e0cc1a483cd4a186d9623d66367"
+  },
+  "verification": {
+    "test_log_sha256": "eaf7d5d32f06fa922925968ac64c003deefbdde5025abb839b7cc6c4cc816c4d",
+    "test_log_bytes": 1603,
+    "exit_code": 0,
+    "stock_fixture_bytes": 3,
+    "stock_fixture_sha256": "ba7816bf8f01cfea414140de5dae2223b00361a396177a9cb410ff61f20015ad",
+    "ftps_modes_passed": [
+      "explicit",
+      "implicit"
+    ],
+    "original_collection_subcases_passed": 4,
+    "go_tagged_vet": "passed",
+    "exact_task_db_containers_removed": true,
+    "targets": [
+      "TestFTPSCollectionToAgentAndSeparatelyApprovedStockSFTP",
+      "TestFTPSCollectionCopiesExactSourceAndReplaysWithoutAnotherContact"
+    ],
+    "assertions": [
+      "One producer connection for each governed manifest capture, with exact immutable bytes preserved in a different database and disk. Approvals, review, copy and onward retry produce no extra producer connection.",
+      "The ordinary CLI verifies collection, manifest, batch, input and file bindings without source contact or a new journal event. The recipient cannot inspect the private source.",
+      "The participant polls over verified HTTPS and retrieves the exact artifact. The ordinary file path stays inaccessible, onward sending fails under the original grants, and the availability trace retains unknown retrieval, persistence and business processing.",
+      "The ordinary copy CLI creates a different owner-only immutable revision. PostgreSQL FileAccepted records its precise parent view, pinned request hash and artifact. The same key recovers the same result after authority changes close the old receive view.",
+      "An explicit workflow approval still requires a separately owned file and an active exact connection. The final execution account has no admin or connection management grant. Stock SFTP independently reads the expected bytes. One successful attempt and fence, fsync acknowledgment, unknown business acceptance, and no repeated transfer on either original key."
+    ]
+  },
+  "source_files": [
+    {
+      "path": "cmd/freightctl/main.go",
+      "sha256": "c79534a0fa5108481f1758f32145be7502c3f2f938e0fffb6e15e19af21ea8c2"
+    },
+    {
+      "path": "internal/workflow/ftps_collection_exchange_integration_test.go",
+      "sha256": "5a8499613e334fe23556a61d31fb2c099229a5a73be48032813e45c9bb7ecb60"
+    }
+  ],
+  "remaining": [
+    "Run the exact new regression on native Linux and qualify an independent FTPS producer separately. The current source is a separately provisioned freightctl FTPS endpoint.",
+    "Qualify how operators provision recipient-owned routes without temporary administration, plus the full human/browser, SFTP and FTPS adapter set and process-death/restore behavior.",
+    "Continue the full AX-J02 evidence, all original platform failures, and independent operator and enterprise readiness."
+  ]
+}

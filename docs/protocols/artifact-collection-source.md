@@ -47,10 +47,22 @@ That form requires a fresh source check and an explicitly approved receive
 endpoint before an offer can be confirmed. The navigation itself creates none.
 Held,unpublished or incomplete input snapshots show no review action.
 
-The first governed-source adapter pair is frozen as stock SFTP ready-manifest
-collection -> this source review -> separately authorized custody HTTPS poll
-offer. Original stock-source/API/CLI/modern-MCP/browser and real PG incomplete-
-batch/private-input/no-effect profiles are extended. Focused pure checks and
-native compilation do not qualify these runtime outcomes. Complete two-agent
-onward/independent receiver,FTPS source pair,process-death/restore and all remaining
-AX/baseline acceptance remain owed. No schema or retained environment change.
+The governed-source profiles cover both SFTP and FTPS ready manifests. The
+stock SFTP profile uses this source review and a separately authorized custody
+HTTPS poll offer. Its full stock-source, API, MCP, browser and recovery proof
+remains due.
+
+The FTPS profile uses explicit AUTH TLS or implicit FTPS from a separately
+provisioned freightctl producer. A collector reads the ready manifest and pins
+each file's digest. The ordinary CLI reviews the captured, owner-only revision.
+A separately enrolled recipient polls a pinned HTTPS view with stock curl and
+checks the exact bytes. It may create a new owner-only custody copy through the
+CLI under an explicit write grant. To send the copy onward, an operator must
+provision the actor's pinned SFTP connection. The local replay removed the
+temporary provisioning grants before the agent approved and executed its own
+workflow. A stock OpenSSH receiver and stock SFTP client verify the output.
+The receipt retains unknown business acceptance. [F503 replay](../qualification/evidence/F503-ftps-agent-stock-sftp.json)
+
+Independent FTPS server interoperability, the native Linux matrix, the full
+SFTP pair, additional actor and transport pairs, process-death recovery and
+restore remain open.
