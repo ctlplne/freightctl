@@ -120,7 +120,8 @@
         "docs/qualification/evidence/F475-guarded-native-batch.json",
         "docs/qualification/evidence/F483-x86-native-peer-advisories.json",
         "docs/qualification/evidence/F485-arm-native-peer-advisories.json",
-        "docs/qualification/evidence/F487-original-native-batch-terminal.json"
+        "docs/qualification/evidence/F487-original-native-batch-terminal.json",
+        "docs/qualification/evidence/F488-guarded-portability-native-batch.json"
       ],
       "remaining_details": [
         "F006 adds immutable checkpoints, exact receipts and persistent storage/parent/authority binding. Finish approved cleanup/recovery/rebinding, scalable reservations/fairness, protected retention, journal chaining/rebuild, larger exports and remaining crash/commit boundaries.",
@@ -204,7 +205,8 @@
         "F475 records the guarded fast-forward from 2d10f84 to b1145f2 after every original was terminal. All twelve outgoing commits use the owner as both author and committer, and Gitleaks finds no leaks. The verified head includes migration planning, live preview evidence and the disclosure repair. The first 17 original attempt-one runs are tracked and their outcomes remain due.",
         "F483 preserves the original b1145f2 x86 job. The whole PostgreSQL step and the precise mixed-delivery disclosure regression pass. The independent peer image blocks on glibc CVE-2026-100290, CVE-2026-115819, CVE-2026-121757, CVE-2026-121758 and CVE-2026-124024. The fresh report gives no fixed version and Debian lists all five as vulnerable for trixie. The gate remains enforcing and native ARM replay and the remaining original workflows are outstanding at this observation.",
         "F485 captures the original b1145f2 ARM job, including the passing whole PostgreSQL step and exact mixed-delivery disclosure case. The independent image gate blocks on the same five Debian advisories as x86 using the same fresh feed and zero suppressions. At this observation 16 of 17 original workflows are terminal and the Windows/macOS run remains queued.",
-        "F487 closes the original b1145f2 run inventory with 17 terminal workflows and 37 jobs. Native Windows and macOS pass. Both original Linux PostgreSQL and source security checks pass. The two peer-image scans, two DAV jobs and receive browser remain red. No original was cancelled or replaced. The next guarded source batch is eligible."
+        "F487 closes the original b1145f2 run inventory with 17 terminal workflows and 37 jobs. Native Windows and macOS pass. Both original Linux PostgreSQL and source security checks pass. The two peer-image scans, two DAV jobs and receive browser remain red. No original was cancelled or replaced. The next guarded source batch is eligible.",
+        "F488 records the verified owner-only fast-forward from b1145f2 to b7b0eb5 after all originals became terminal. The enabled hook scans all 13 outgoing commits with zero leaks. The 19 new original attempt-one workflows are linked to the exact portability candidate and their runtime results are pending."
       ],
       "current_item": {
         "id": "F425",

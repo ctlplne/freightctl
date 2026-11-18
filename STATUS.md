@@ -105,6 +105,11 @@ suites and the Windows and macOS checks passed. Five of 37 jobs failed
 across the two peer-image scans, two DAV jobs and the receive browser.
 Each original remains in the record.
 
+[F488](docs/qualification/evidence/F488-guarded-portability-native-batch.json)
+records the guarded fast-forward to `b7b0eb5`. All 13 outgoing commits
+use the owner identity. The pre-push Gitleaks check found zero leaks.
+Nineteen original workflows are now tracking the portability candidate.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
