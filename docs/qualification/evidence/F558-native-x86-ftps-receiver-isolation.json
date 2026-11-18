@@ -1,0 +1,36 @@
+{
+  "schema_version": 1,
+  "id": "F558",
+  "observed_at": "2026-11-19",
+  "candidate": "5525129f428eeea91d569cfec659205e42009589",
+  "qualification_claim": false,
+  "scope": "First-attempt native independent stock FTPS receiver on x86 and ARM",
+  "original_run": 44415734898,
+  "attempt": 1,
+  "job_metadata": {"sha256": "9b80e8b487121270c6b09c011683073df71c89bcdde89856c60d21e3a2daeccb", "bytes": 11454},
+  "results": [
+    {
+      "job": 135195415376,
+      "architecture": "x86_64",
+      "library_profile": "system",
+      "conclusion": "failure",
+      "original_observation": "The required TLS 1.2 refusal alerts were missing in both modes. The client failed before the control connection was usable.",
+      "follow_up_trace": {"signal": "SIGSYS", "last_syscall": 54, "setsockopt": {"level": 6, "option": 31, "size": 4}},
+      "protected_job_log": {"sha256": "ea1be9d825397ff35e0b35309e8dfdc9ab00e6df390de186601d726dcdd99d23", "bytes": 25326}
+    },
+    {
+      "job": 135195415145,
+      "architecture": "x86_64",
+      "library_profile": "no-ktls",
+      "conclusion": "failure",
+      "original_observation": "Both TLS 1.2 probes received the required protocol-version alert. The native client then failed its store operation in both modes, with zero native pass records.",
+      "follow_up_trace": {"signal": "SIGSYS", "last_syscall": 54, "setsockopt": {"level": 1, "option": 2, "size": 4}},
+      "protected_job_log": {"sha256": "3be9858ae9a787172403d63d5c107938a9b13317bffde7ac81f7a587f52a2031", "bytes": 26553}
+    },
+    {"job": 135195414814, "architecture": "aarch64", "library_profile": "system", "conclusion": "success"},
+    {"job": 135195415220, "architecture": "aarch64", "library_profile": "no-ktls", "conclusion": "success"}
+  ],
+  "interpretation": "The follow-up traces reproduce both receiver sandbox failures from F437. The observed calls immediately precede the reported signals in both modes. The traces locate the failure inside the receiver and leave the x86 client journey unqualified. F542 records the separate supervised producer journey.",
+  "prior_record": "docs/qualification/evidence/F437-native-security-failure-recurrence.json",
+  "remaining": "Keep the original x86 checks red until the stock receiver completes both TLS modes, required refusal alerts, isolation and independently observed exact bytes. The transport policy and receiver sandbox stay enforced."
+}

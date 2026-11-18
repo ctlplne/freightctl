@@ -479,6 +479,12 @@ passed with real PostgreSQL, sandboxed Chromium and separate stock OpenSSH
 peers. It recovered the lost work reply with one delivery. Native Linux
 Chrome replay remains due.
 
+[F558](docs/qualification/evidence/F558-native-x86-ftps-receiver-isolation.json)
+records both original ARM stock receiver profiles passing. The x86 system
+profile stopped before a usable control connection. The x86 no-KTLS profile
+returned the required TLS 1.2 refusal alerts, then failed during upload.
+Both x86 traces repeated separate receiver sandbox failures.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
