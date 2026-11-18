@@ -2085,7 +2085,8 @@
         "docs/qualification/evidence/F549-original-integrity-batch-terminal.json",
         "docs/qualification/evidence/F550-portable-workflow-authority-fixtures.json",
         "docs/qualification/evidence/F551-guarded-browser-integrity-dav-batch.json",
-        "docs/qualification/evidence/F552-schema68-restore-check-parser.json"
+        "docs/qualification/evidence/F552-schema68-restore-check-parser.json",
+        "docs/qualification/evidence/F553-authorized-received-copy-lineage.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -2289,7 +2290,8 @@
         "F549 records all 18 original workflows and 41 jobs at 7fda192. Stock HTTPS and native CLI/MCP integrity steps passed on both Linux architectures. The broad PostgreSQL suites, both restore jobs and the separate stock peer and recipient UI failures remain visible.",
         "F550 fixes the portable workflow test destinations that stopped the original native processing CLI checks. With private outputs under umask 022, the full native test passed the original revision, isolation, approval, history, policy and equal-output assertions. Exact Linux PostgreSQL replay remains due.",
         "F551 records the guarded fast-forward from 7fda192 to 5525129 after all 18 prior originals became terminal. Gitleaks found zero leaks across eight owner-authored and owner-committed commits. Nineteen new original workflows were queued at the first observation.",
-        "F552 reproduces the schema-68 restore comparison failure. PostgreSQL rewrote redundant parentheses in one CHECK and two policies. The corrected observer reparses the original check inside the restored database and compares it exactly before rollback. The scratch replay passed all 79 table and 78 forced-RLS conditions and rejected a changed predicate. Exact native Linux restore remains due."
+        "F552 reproduces the schema-68 restore comparison failure. PostgreSQL rewrote redundant parentheses in one CHECK and two policies. The corrected observer reparses the original check inside the restored database and compares it exactly before rollback. The scratch replay passed all 79 table and 78 forced-RLS conditions and rejected a changed predicate. Exact native Linux restore remains due.",
+        "F553 adds v4 exchange evidence for a separately owned copy. PostgreSQL, HTTPS, the stock MCP SDK and Chromium showed the exact source link only to its author under current receive authority. Closing or locking the parent hid the link. The child retained its own authorized exact bytes. Native Linux and full journey qualification remain due."
       ],
       "current_item": {
         "id": "F425",

@@ -47,7 +47,8 @@
         "docs/qualification/evidence/F200-browser-proposals-terminal-ci.json",
         "docs/qualification/evidence/F201-finish-original-failure-repairs.json",
         "docs/qualification/evidence/F209-runtime-credential-read-fence.json",
-        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json"
+        "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json",
+        "docs/qualification/evidence/F553-authorized-received-copy-lineage.json"
       ]
     },
     {
@@ -265,7 +266,8 @@
         "docs/qualification/evidence/F539-native-generated-lineage-original.json",
         "docs/qualification/evidence/F540-native-cli-mcp-integrity-report.json",
         "docs/qualification/evidence/F544-native-browser-integrity-report.json",
-        "docs/qualification/evidence/F545-authorized-integrity-evidence.json"
+        "docs/qualification/evidence/F545-authorized-integrity-evidence.json",
+        "docs/qualification/evidence/F553-authorized-received-copy-lineage.json"
       ]
     },
     {

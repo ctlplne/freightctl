@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { ExchangeReceiveApi } from "./artifact-exchanges-api";
 import { IntegrityReportStatement } from "./artifact-integrity";
 import {
-  evidenceV3,
+  evidenceV4,
   type EvidenceDirection,
   type EvidenceExpectation,
   type ExchangeEvidence,
@@ -66,7 +66,7 @@ export function ArtifactEvidence({
         direction,
         expected,
         controller.signal,
-        evidenceV3,
+        evidenceV4,
       );
       if (
         generation === serial.current &&
@@ -162,6 +162,32 @@ export function ArtifactEvidence({
                   This reference grants no parent access and proves no byte
                   derivation.
                 </p>
+              )}
+              {trace.received_copy && (
+                <section aria-label="Received copy source">
+                  <h5>Received copy source</h5>
+                  <p>
+                    This revision was copied from file{" "}
+                    <code>
+                      {trace.received_copy.source.artifact.file_revision_id}
+                    </code>{" "}
+                    under exchange{" "}
+                    <code>{trace.received_copy.source.exchange_id}</code>. The
+                    length and SHA-256 match the original.
+                  </p>
+                  <dl>
+                    <dt>Source acceptance event</dt>
+                    <dd>
+                      <code>
+                        {trace.received_copy.source_accepted_event_id}
+                      </code>
+                    </dd>
+                    <dt>Source offer event</dt>
+                    <dd>
+                      <code>{trace.received_copy.source_offer_event_id}</code>
+                    </dd>
+                  </dl>
+                </section>
               )}
             </>
           )}

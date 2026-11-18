@@ -28,6 +28,7 @@ const summary = {
   runtime_errors: 0,
   blocked: 0,
   accessibility: 0,
+  copy_lineage_checks: 0,
   event: "",
 };
 const writes = [];
@@ -102,7 +103,7 @@ async function recorded(panel) {
   return (await statement.getByRole("code").textContent()).trim();
 }
 
-async function inspectEvidence(page, direction, event) {
+async function readEvidence(page, direction, id = config.exchange) {
   const scope = page.getByRole("region", {
     name: "Recorded exchange evidence",
     exact: true,
@@ -113,11 +114,15 @@ async function inspectEvidence(page, direction, event) {
   ]);
   assert.equal(response.status(), 200);
   assert.deepEqual(response.request().postDataJSON(), {
-    exchange_id: config.exchange,
+    exchange_id: id,
     direction,
-    profile: "authorized-exchange-evidence-v3",
+    profile: "authorized-exchange-evidence-v4",
   });
-  assert.equal(await recorded(scope), event);
+  return scope;
+}
+
+async function inspectEvidence(page, direction, event) {
+  assert.equal(await recorded(await readEvidence(page, direction)), event);
 }
 
 async function accessibility(page, panel) {
@@ -268,6 +273,25 @@ try {
     summary.event,
   );
   await accessibility(page, panel);
+  await button(page, "Inspect " + config.copied_exchange.slice(0, 8)).click();
+  const inboundCopy = await readEvidence(
+    page,
+    "incoming",
+    config.copied_exchange,
+  );
+  await inboundCopy.getByText(/Source accepted into custody/).waitFor();
+  assert.equal(
+    await inboundCopy
+      .getByRole("region", { name: "Received copy source" })
+      .count(),
+    0,
+  );
+  assert.ok(
+    !(await inboundCopy.innerText()).includes(
+      config.copy_lineage.source.exchange_id,
+    ),
+  );
+  summary.copy_lineage_checks++;
   await recipient.context.close();
 
   summary.phase = "sender-history";
@@ -288,6 +312,27 @@ try {
   );
   assert.deepEqual(denied, [404, 404]);
   await accessibility(sender.page, history);
+  await button(
+    sender.page,
+    "Inspect sent " + config.copied_exchange.slice(0, 8),
+  ).click();
+  const sentCopy = await readEvidence(
+    sender.page,
+    "outgoing",
+    config.copied_exchange,
+  );
+  const lineage = sentCopy.getByRole("region", {
+    name: "Received copy source",
+  });
+  await lineage.waitFor();
+  assert.deepEqual(await lineage.getByRole("code").allTextContents(), [
+    config.copy_lineage.source.artifact.file_revision_id,
+    config.copy_lineage.source.exchange_id,
+    config.copy_lineage.source_accepted_event_id,
+    config.copy_lineage.source_offer_event_id,
+  ]);
+  await accessibility(sender.page, lineage);
+  summary.copy_lineage_checks++;
   await sender.context.close();
   summary.phase = "complete";
 } finally {

@@ -1,0 +1,128 @@
+{
+  "schema_version": 1,
+  "id": "F553",
+  "observed_at": "2026-11-19",
+  "base_candidate": "6ec362a8b593f1eb36b4a48d047b9fcbcd45e78a",
+  "qualification_claim": false,
+  "scope": "Scoped direct evidence of the source of a separately owned copy in an outgoing exchange",
+  "first_failure": {
+    "observation": "The original HTTPS evidence preview refused v4 with status 400 after creating and separately offering the exact custody copy.",
+    "log": {
+      "sha256": "64aa541c19e11a5a9004ef951cea416c0eb7318141a1f51183b5c6055a1e46c6",
+      "bytes": 339
+    }
+  },
+  "local_replay": {
+    "environment": "Native macOS ARM, Go 1.27.4 race build, PostgreSQL 16.15, disk custody, pinned TLS, stock Go MCP SDK and sandboxed Chromium 151.0.7922.34 with Node 26.13.0. Inference disabled.",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "focused_https_green": {
+      "sha256": "da5f3a3b10216e6ee847c2d865508021b974983908d5bcd355f3a5f5b8dd6d90",
+      "bytes": 222
+    },
+    "combined_replay": {
+      "sha256": "63c7c151eb42cbc8e22dd798e67bfb78d6ad3340f29caf6a1c366167f175577a",
+      "bytes": 1144
+    },
+    "observations": [
+      "V4 showed the exact immutable source exchange, request hash and artifact together with its original acceptance and offer events under the copy author’s current parent receive authority.",
+      "HTTPS and the stock Go MCP SDK agreed. Chromium showed the edge to the copy author and hid it from the downstream recipient. The outgoing panel passed its focused accessibility check.",
+      "When a concurrent parent change held its lock, the child history remained readable and the parent edge was hidden. Closing the parent also hid the edge. The downstream recipient still retrieved the exact owned copy.",
+      "The prior v3 profile and unrelated actors could not learn the parent. The author never obtained ambient source-file access. Browser projection and integrity receipt regressions passed."
+    ]
+  },
+  "static_checks": {
+    "focused_browser_contract_tests": 15,
+    "browser_typecheck_and_built_assets": "pass",
+    "tagged_go_vet": "pass",
+    "actionlint_1_7_12": "pass",
+    "qualification_record_references": "pass"
+  },
+  "sources": [
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "b939ebe300c2b9bbba98d3d5b955937c1e9dae4627b4088d45ad2204dbfb9848",
+      "bytes": 17754
+    },
+    {
+      "path": "docs/api/artifact-evidence.openapi.json",
+      "sha256": "e2b673dcfdd19dca625c3a55fd7650c136bc49a40b7d59c91407a574c99d71b3",
+      "bytes": 16926
+    },
+    {
+      "path": "docs/protocols/artifact-exchange-evidence.md",
+      "sha256": "274cb24a695b5efbde411cde74afd3e27271df93cb97106fad52080aa5ba243b",
+      "bytes": 4640
+    },
+    {
+      "path": "internal/api/exchange_copy_integration_test.go",
+      "sha256": "16d4ad4ba9337ef1d819c46c0c8b0ee41ac79878d953d7f7d101c040438bfb29",
+      "bytes": 13289
+    },
+    {
+      "path": "internal/api/exchange_integrity_browser_integration_test.go",
+      "sha256": "5f9e095001968b86d246665d1dc9c31a9e21f816d321c3b13f5e6c54a3900a7c",
+      "bytes": 8995
+    },
+    {
+      "path": "internal/api/mcp-tools.json",
+      "sha256": "0878a41fec679f0b6b13a4b89f6a0f1115e7d543e038856feee8cfcef9fc2420",
+      "bytes": 141663
+    },
+    {
+      "path": "internal/browser/assets/app.js",
+      "sha256": "ba9522986ea850a630687a6628329fab0929780c9b1803d456eb46c7a9a6fae8",
+      "bytes": 938074
+    },
+    {
+      "path": "internal/browser/assets/manifest.json",
+      "sha256": "071ccb1b55423219ad71a52d8254290f45ec0db6f89a7159ee51829fc1c2ffaa",
+      "bytes": 14561
+    },
+    {
+      "path": "internal/checks/exchange_lineage_browser_integration_test.go",
+      "sha256": "dcd9e6ffadcf17ade2180a4cda1040f1320799c423117f8197685db84071bb7a",
+      "bytes": 9039
+    },
+    {
+      "path": "internal/store/exchange_copy.go",
+      "sha256": "6970d66f74c25b054e96372dd074cd7baad128cf4afac58ff1c5d7da7a2915f3",
+      "bytes": 4444
+    },
+    {
+      "path": "internal/store/exchange_trace.go",
+      "sha256": "2faaa4637faaa573d16ee46edf043ac5b79465bd81bff582d54ae42fc054b1e0",
+      "bytes": 10690
+    },
+    {
+      "path": "scripts/exchange-integrity-browser.mjs",
+      "sha256": "23abde5efedfe4ab14ad0b666982c8ee40767a8d36c6d7584c156addda7c7d1f",
+      "bytes": 11599
+    },
+    {
+      "path": "scripts/projection-lineage-browser.mjs",
+      "sha256": "10f18b6f98a485cd859f7515fa3aae84d2bb802178285aa5066f3f850499e1eb",
+      "bytes": 9158
+    },
+    {
+      "path": "web/src/artifact-evidence-types.ts",
+      "sha256": "8764bd4c5afc19517621bf7dc4c701b43f6df4599bba26975f625a9530e2750e",
+      "bytes": 12658
+    },
+    {
+      "path": "web/src/artifact-evidence.tsx",
+      "sha256": "cc788fd7ac2be8f2f9b5a6b43abbd35677bc8d13bcd5ac2430641f339fbfb6be",
+      "bytes": 6792
+    },
+    {
+      "path": "web/tests/artifact-evidence.test.mjs",
+      "sha256": "ebcce8a811012ec06da728c40839a95fe96a36f36bed9812bd7f6a3e6c5677dd",
+      "bytes": 13715
+    }
+  ],
+  "remaining": [
+    "Replay v4 and the focused native browser proof on the exact Linux source.",
+    "Verify the v4 copy edge through the native CLI export and prove the remaining full artifact-exchange journeys."
+  ]
+}

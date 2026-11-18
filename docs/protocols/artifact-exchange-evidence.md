@@ -45,9 +45,9 @@ paths and storage references stay private.
 
 Select `authorized-exchange-evidence-v3` to include the exact
 `recipient-sha256-report-v1` receipt once the recipient has committed one. The
-browser's **Read recorded evidence** action selects v3. The same profile works
-in the API preview, native CLI, explicit CLI export and MCP tool. V3 retains the
-v2 sender lineage rule. A recipient needs the live receive grant, and the
+same profile works in the API preview, native CLI, explicit CLI export and
+MCP tool. V3 retains the v2 sender lineage rule. A recipient needs the live
+receive grant, and the
 original sender can inspect the receipt in authorized history after closure.
 Held incoming views stay opaque.
 
@@ -55,6 +55,18 @@ The nested report binds the same exchange, request hash and artifact. It carries
 the eligible read authorization ID and the report's own event and time. The
 report records the recipient's statement about length and SHA-256. Receiver
 persistence and business processing stay unknown.
+
+The browser's **Read recorded evidence** action selects
+`authorized-exchange-evidence-v4`. V4 includes the v3 records and adds
+`received_copy` for the outgoing sender's own custody copy. The committed
+copy acceptance identifies the original receive view, its request hash and
+exact source revision. The preview shows that single link and the original
+acceptance and offer events while the sender can still read the original
+receive view. A closed, held, expired or changing view hides the link. The
+outgoing offer and the independently owned copy continue to use their own
+permissions. The downstream recipient sees only its authorized offer and
+records. The preview exposes no local path or copy operation key and gives
+no ordinary source-file access.
 
 Current metadata state and its observation time stay separate from immutable
 records. Physical storage verification is `not-checked`;retrieval,receiver

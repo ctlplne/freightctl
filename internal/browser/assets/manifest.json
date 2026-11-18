@@ -47,11 +47,11 @@
     },
     {
       "path": "web/src/artifact-evidence-types.ts",
-      "sha256": "ab15734764d19c121029a2a05f854ae8d954290e0a7b467d3498da8e0d0e490d"
+      "sha256": "8764bd4c5afc19517621bf7dc4c701b43f6df4599bba26975f625a9530e2750e"
     },
     {
       "path": "web/src/artifact-evidence.tsx",
-      "sha256": "1c322450939054b5e3090a703f0eb29649a7154f09311f2fb3bbd9e5bc9137fd"
+      "sha256": "cc788fd7ac2be8f2f9b5a6b43abbd35677bc8d13bcd5ac2430641f339fbfb6be"
     },
     {
       "path": "web/src/artifact-exchanges-api.ts",
@@ -374,8 +374,8 @@
     },
     {
       "name": "app.js",
-      "sha256": "03a3075a27713bd29f86239bb9f244494c51a2d2df1c6addca2b6056c869f8c2",
-      "size": 936602
+      "sha256": "ba9522986ea850a630687a6628329fab0929780c9b1803d456eb46c7a9a6fae8",
+      "size": 938074
     },
     {
       "name": "app.js.LEGAL.txt",

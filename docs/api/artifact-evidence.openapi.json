@@ -111,7 +111,8 @@
             "enum": [
               "authorized-exchange-evidence-v1",
               "authorized-exchange-evidence-v2",
-              "authorized-exchange-evidence-v3"
+              "authorized-exchange-evidence-v3",
+              "authorized-exchange-evidence-v4"
             ],
             "default": "authorized-exchange-evidence-v1"
           }
@@ -239,7 +240,8 @@
             "enum": [
               "authorized-exchange-evidence-v1",
               "authorized-exchange-evidence-v2",
-              "authorized-exchange-evidence-v3"
+              "authorized-exchange-evidence-v3",
+              "authorized-exchange-evidence-v4"
             ]
           },
           "tenant_id": {
@@ -332,6 +334,24 @@
           "record_projection": {
             "$ref": "#/components/schemas/RecordProjectionLineage"
           },
+          "received_copy": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["source", "source_accepted_event_id", "source_offer_event_id"],
+            "properties": {
+              "source": { "$ref": "received-artifact-copy.openapi.json#/components/schemas/Origin" },
+              "source_accepted_event_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+              },
+              "source_offer_event_id": {
+                "type": "string",
+                "format": "uuid",
+                "pattern": "^[0-9a-f]{8}(?:-[0-9a-f]{4}){3}-[0-9a-f]{12}$"
+              }
+            }
+          },
           "integrity_report": {
             "$ref": "artifact-exchange.openapi.json#/components/schemas/IntegrityReport"
           },
@@ -353,7 +373,7 @@
         "then": {
           "properties": {
             "profile": {
-              "enum": ["authorized-exchange-evidence-v2", "authorized-exchange-evidence-v3"]
+              "enum": ["authorized-exchange-evidence-v2", "authorized-exchange-evidence-v3", "authorized-exchange-evidence-v4"]
             },
             "direction": { "const": "outgoing" },
             "details": { "const": "authorized-records" }
@@ -424,9 +444,20 @@
             "if": { "required": ["integrity_report"] },
             "then": {
               "properties": {
-                "profile": { "const": "authorized-exchange-evidence-v3" },
+                "profile": { "enum": ["authorized-exchange-evidence-v3", "authorized-exchange-evidence-v4"] },
                 "details": { "const": "authorized-records" }
               }
+            }
+          },
+          {
+            "if": { "required": ["received_copy"] },
+            "then": {
+              "properties": {
+                "profile": { "const": "authorized-exchange-evidence-v4" },
+                "direction": { "const": "outgoing" },
+                "details": { "const": "authorized-records" }
+              },
+              "not": { "required": ["record_projection"] }
             }
           },
           {

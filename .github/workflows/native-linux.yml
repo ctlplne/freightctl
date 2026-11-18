@@ -232,7 +232,7 @@ jobs:
         run: |
           curl --version
           sh scripts/go.sh test -tags=integration -timeout=120s -count=1 -p 1 -race -v \
-            -run '^TestExchangeRecipientIntegrityReportBindsStockHTTPSDownload$' ./internal/api
+            -run '^Test(ExchangeRecipientIntegrityReportBindsStockHTTPSDownload|ExchangeEvidenceIncludesOwnedCopyOnlyWhileSourceViewIsReadable)$' ./internal/api
       - name: Recipient integrity report across the native CLI and stock MCP SDK
         if: ${{ !cancelled() && steps.postgres.outcome == 'success' && steps.stock_xlsx.outcome == 'success' }}
         env:

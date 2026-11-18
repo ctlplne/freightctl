@@ -81,6 +81,46 @@ const response = () => ({
   receiver_persistence: "unknown",
   business_processing: "unknown",
 });
+test("v4 binds an outgoing copy to a distinct source with equal bytes", () => {
+  const receivedCopy = {
+    source: {
+      exchange_id: id(12),
+      request_hash: "c".repeat(64),
+      artifact: { ...artifact(), file_revision_id: id(13) },
+    },
+    source_accepted_event_id: id(14),
+    source_offer_event_id: id(15),
+  };
+  const original = {
+    ...response(),
+    profile: p.evidenceV4,
+    direction: "outgoing",
+    received_copy: receivedCopy,
+  };
+  const parse = (wire, direction = "outgoing", profile = p.evidenceV4) =>
+    p.asExchangeEvidence(wire, scope, id(4), direction, expected(), profile);
+  assert.deepEqual(parse(original).received_copy, receivedCopy);
+  assert.throws(() => parse({ ...original, direction: "incoming" }, "incoming"));
+  assert.throws(() =>
+    parse({ ...original, profile: p.evidenceV3 }, "outgoing", p.evidenceV3),
+  );
+  const bad = [
+    { ...receivedCopy, source_accepted_event_id: id(6) },
+    { ...receivedCopy, source_offer_event_id: id(14) },
+    { ...receivedCopy, source: { ...receivedCopy.source, exchange_id: id(4) } },
+    { ...receivedCopy, source: { ...receivedCopy.source, artifact: artifact() } },
+    ...[{ size_bytes: 9 }, { sha256: "e".repeat(64) }].map((change) => ({
+      ...receivedCopy,
+      source: {
+        ...receivedCopy.source,
+        artifact: { ...receivedCopy.source.artifact, ...change },
+      },
+    })),
+    { ...receivedCopy, virtual_path: "/private" },
+  ];
+  for (const copy of bad)
+    assert.throws(() => parse({ ...original, received_copy: copy }));
+});
 test("integrity commands and receipts stay bound to the exact offer and reported outcomes", () => {
   const pinned = expected();
   const command = {

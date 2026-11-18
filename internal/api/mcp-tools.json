@@ -3009,7 +3009,7 @@
   },
   {
     "name": "freightctl.exchange_trace",
-    "description": "Read authorized custody, offer and closure records. Select v2 for authorized sender projection lineage, or v3 to also see an existing recipient integrity report. Held incoming views remain opaque. Receiver persistence and business processing remain unknown.",
+    "description": "Read authorized custody, offer and closure records. Select v2 for sender projection lineage, v3 for the recipient integrity report, or v4 for the sender's owned copy lineage while its original view is readable. Held incoming views remain opaque. Receiver persistence and business processing remain unknown.",
     "inputSchema": {
       "type": "object",
       "additionalProperties": false,
@@ -3034,7 +3034,8 @@
           "enum": [
             "authorized-exchange-evidence-v1",
             "authorized-exchange-evidence-v2",
-            "authorized-exchange-evidence-v3"
+            "authorized-exchange-evidence-v3",
+            "authorized-exchange-evidence-v4"
           ]
         }
       }

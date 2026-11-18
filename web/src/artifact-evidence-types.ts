@@ -8,8 +8,9 @@ export type EvidenceDirection = "incoming" | "outgoing";
 export const evidenceV1 = "authorized-exchange-evidence-v1";
 export const evidenceV2 = "authorized-exchange-evidence-v2";
 export const evidenceV3 = "authorized-exchange-evidence-v3";
+export const evidenceV4 = "authorized-exchange-evidence-v4";
 export type EvidenceProfile =
-  typeof evidenceV1 | typeof evidenceV2 | typeof evidenceV3;
+  typeof evidenceV1 | typeof evidenceV2 | typeof evidenceV3 | typeof evidenceV4;
 export interface EvidenceExpectation {
   request_hash: string;
   artifact: ExchangeArtifact;
@@ -22,6 +23,15 @@ interface RecordProjectionLineage {
   source_accepted_event_id: string;
   completed_event_id: string;
   completed_at: string;
+}
+interface ReceivedCopyLineage {
+  source: {
+    exchange_id: string;
+    request_hash: string;
+    artifact: ExchangeArtifact;
+  };
+  source_accepted_event_id: string;
+  source_offer_event_id: string;
 }
 export interface ExchangeEvidence {
   profile: EvidenceProfile;
@@ -47,6 +57,7 @@ export interface ExchangeEvidence {
     recorded_at: string;
   }[];
   record_projection?: RecordProjectionLineage;
+  received_copy?: ReceivedCopyLineage;
   integrity_report?: ExchangeIntegrityReport;
   storage_verification: "not-checked";
   retrieval: "unknown";
@@ -211,6 +222,7 @@ export function asExchangeEvidence(
     "reply_reference_only",
     "recorded_events",
     "record_projection",
+    "received_copy",
     "integrity_report",
     "storage_verification",
     "retrieval",
@@ -219,7 +231,7 @@ export function asExchangeEvidence(
   ]);
   if (
     o.profile !== profile ||
-    ![evidenceV1, evidenceV2, evidenceV3].includes(profile) ||
+    ![evidenceV1, evidenceV2, evidenceV3, evidenceV4].includes(profile) ||
     o.tenant_id !== scope.tenant ||
     o.partner_id !== scope.partner ||
     o.exchange_id !== id ||
@@ -235,8 +247,14 @@ export function asExchangeEvidence(
     bad();
   const hasLineage = Object.hasOwn(o, "record_projection");
   if (hasLineage && (profile === evidenceV1 || direction !== "outgoing")) bad();
+  const hasCopy = Object.hasOwn(o, "received_copy");
+  if (
+    hasCopy &&
+    (profile !== evidenceV4 || direction !== "outgoing" || hasLineage)
+  )
+    bad();
   const hasReport = Object.hasOwn(o, "integrity_report");
-  if (hasReport && profile !== evidenceV3) bad();
+  if (hasReport && profile !== evidenceV3 && profile !== evidenceV4) bad();
   const state = o.current_metadata_state;
   if (
     typeof state !== "string" ||
@@ -369,6 +387,35 @@ export function asExchangeEvidence(
     });
     if (events.some((event) => event.event_id === report.event)) bad();
     result.integrity_report = report;
+  }
+  if (hasCopy) {
+    const copy = object(o.received_copy);
+    keys(copy, ["source", "source_accepted_event_id", "source_offer_event_id"]);
+    const source = object(copy.source);
+    keys(source, ["exchange_id", "request_hash", "artifact"]);
+    const original = asExchangeArtifact(source.artifact);
+    const parent = identifier(source.exchange_id);
+    const accepted = identifier(copy.source_accepted_event_id);
+    const offer = identifier(copy.source_offer_event_id);
+    if (
+      !digest(source.request_hash) ||
+      parent === id ||
+      original.file_revision_id === artifact.file_revision_id ||
+      original.sha256 !== artifact.sha256 ||
+      original.size_bytes !== artifact.size_bytes ||
+      accepted === offer ||
+      events.some((e) => e.event_id === accepted || e.event_id === offer)
+    )
+      bad();
+    result.received_copy = {
+      source: {
+        exchange_id: parent,
+        request_hash: source.request_hash,
+        artifact: original,
+      },
+      source_accepted_event_id: accepted,
+      source_offer_event_id: offer,
+    };
   }
   return result;
 }

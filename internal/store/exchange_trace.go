@@ -12,6 +12,7 @@ const (
 	ExchangeEvidenceV1 = "authorized-exchange-evidence-v1"
 	ExchangeEvidenceV2 = "authorized-exchange-evidence-v2"
 	ExchangeEvidenceV3 = "authorized-exchange-evidence-v3"
+	ExchangeEvidenceV4 = "authorized-exchange-evidence-v4"
 )
 
 type ExchangeTraceRequest struct {
@@ -37,7 +38,7 @@ func ValidateExchangeTraceRequest(r ExchangeTraceRequest) error {
 		return ErrExchangeInput
 	}
 	switch r.Profile {
-	case "", ExchangeEvidenceV1, ExchangeEvidenceV2, ExchangeEvidenceV3:
+	case "", ExchangeEvidenceV1, ExchangeEvidenceV2, ExchangeEvidenceV3, ExchangeEvidenceV4:
 		return nil
 	default:
 		return ErrExchangeInput
@@ -72,6 +73,7 @@ type ExchangeTrace struct {
 	ReplyTo             string                     `json:"reply_reference_only,omitempty"`
 	Events              []ExchangeTraceEvent       `json:"recorded_events"`
 	Projection          *ExchangeProjectionLineage `json:"record_projection,omitempty"`
+	ReceivedCopy        *ExchangeCopyLineage       `json:"received_copy,omitempty"`
 	IntegrityReport     *ExchangeIntegrityReport   `json:"integrity_report,omitempty"`
 	StorageVerification string                     `json:"storage_verification"`
 	Retrieval           string                     `json:"retrieval"`
@@ -90,6 +92,7 @@ func emptyExchangeTrace(scope Scope, r ExchangeTraceRequest, state string, at ti
 // Direction chooses the existing incoming view or original sender authority.
 // V2 can correlate one completed record projection for its original actor.
 // V3 also includes the exact stored integrity report when one is available.
+// V4 adds the sender's own copy provenance while the original view is readable.
 func (s *Store) TraceExchange(ctx context.Context, scope Scope, r ExchangeTraceRequest, limits ExchangeLimits) (*ExchangeTrace, error) {
 	if err := ValidateExchangeTraceRequest(r); err != nil {
 		return nil, err
@@ -191,13 +194,19 @@ func (t *Transaction) TraceExchange(ctx context.Context, r ExchangeTraceRequest,
 				return nil, err
 			}
 		}
-		if (r.Profile == ExchangeEvidenceV2 || r.Profile == ExchangeEvidenceV3) && r.Direction == "outgoing" {
+		if (r.Profile == ExchangeEvidenceV2 || r.Profile == ExchangeEvidenceV3 || r.Profile == ExchangeEvidenceV4) && r.Direction == "outgoing" {
 			result.Projection, err = t.exchangeProjectionLineage(ctx, file)
 			if err != nil {
 				return nil, err
 			}
 		}
-		if r.Profile == ExchangeEvidenceV3 {
+		if r.Profile == ExchangeEvidenceV4 && r.Direction == "outgoing" {
+			result.ReceivedCopy, err = t.exchangeCopyLineage(ctx, file, limits)
+			if err != nil {
+				return nil, err
+			}
+		}
+		if r.Profile == ExchangeEvidenceV3 || r.Profile == ExchangeEvidenceV4 {
 			result.IntegrityReport, err = t.exchangeIntegrityReport(ctx, e)
 			if err != nil && !errors.Is(err, ErrNotFound) {
 				return nil, err

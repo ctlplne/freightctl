@@ -450,6 +450,12 @@ with PostgreSQL’s parser. The disposable restore passed with all 79 tables
 and 78 forced-RLS tables. A changed predicate failed. The comparison rolled
 back its temporary changes. Exact Linux restore and full recovery remain due.
 
+[F553](docs/qualification/evidence/F553-authorized-received-copy-lineage.json)
+adds the original source and event IDs to the outgoing evidence for an owned
+copy. HTTPS, the stock MCP SDK and Chromium verified the scoped link. A
+closed or changing source view hid it, and the downstream recipient could
+still read the independently authorized copy. Native Linux replay remains due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
