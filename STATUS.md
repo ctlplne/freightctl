@@ -439,6 +439,11 @@ policy export tests. The full native processing CLI test passed under
 umask `022`, including the workspace and approval checks. Native Linux
 PostgreSQL replay remains due.
 
+[F551](docs/qualification/evidence/F551-guarded-browser-integrity-dav-batch.json)
+records the guarded fast-forward to `5525129` after all prior originals
+became terminal. Gitleaks scanned eight owner-authored and owner-committed
+commits and found zero leaks. Nineteen new original workflows were queued.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

@@ -1,0 +1,160 @@
+{
+  "schema_version": 1,
+  "id": "F551",
+  "observed_at": "2026-11-19",
+  "candidate": "5525129f428eeea91d569cfec659205e42009589",
+  "qualification_claim": false,
+  "preceding_terminal_record": "docs/qualification/evidence/F549-original-integrity-batch-terminal.json",
+  "push": {
+    "previous": "7fda19225e0650fc325bf8b6ad31bfe72fde1423",
+    "remote_ref": "refs/heads/main",
+    "remote_head_verified": true,
+    "fast_forward": true,
+    "owner_author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+    "commits": [
+      "6a2236fcae88259e84a64cf6e449e71bebcdc650",
+      "15d5ad999eda895bbc1ade17f1f0124d6fee5864",
+      "7a2aa4b9fc2e41be554112b53005a3cbd4c24fb2",
+      "e4e1f547c3f4678153a7f328b34c8833d77829fa",
+      "84fe54d869c50e08dbf4f377637c6f1d96913e11",
+      "77cd24e7f5fe768e445c2581c9ffa617be03b37f",
+      "4e790fa4a4cdacbc828b31a67b80c9fe213cead3",
+      "5525129f428eeea91d569cfec659205e42009589"
+    ],
+    "previous_attempt_one_workflows_terminal": 18,
+    "pre_push_guard": ".githooks/pre-push",
+    "gitleaks_version": "8.30.1",
+    "gitleaks_commits_scanned": 8,
+    "gitleaks_reported_bytes": 1996129,
+    "gitleaks_leaks": 0,
+    "redacted_log": {
+      "sha256": "98b9d750e80533b4d2ff93a06f7cdd1f7dd285a1c4f30d551413cc695c6e3da6",
+      "bytes": 185
+    }
+  },
+  "first_observation_metadata": {
+    "sha256": "075a24f94f92e8b8b2bc1651525c045c35bc21a0b533120622a9f2eb03f426ee",
+    "bytes": 233292
+  },
+  "originals_at_first_recorded_observation": [
+    {
+      "id": 44415734917,
+      "name": "Core correctness and security",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734898,
+      "name": "Native FTPS client and independent stock receiver",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734778,
+      "name": "Native FTPS dispatch approval qualification",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734762,
+      "name": "Native FTPS stock clients and custody",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734864,
+      "name": "Native FTPS workflow consent qualification",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415735114,
+      "name": "Native JSON intake and custody interfaces",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734794,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734788,
+      "name": "Native Windows and macOS unit checks",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734893,
+      "name": "Native artifact receive browser",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734743,
+      "name": "Native browser and FTPS operator qualification",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734808,
+      "name": "Native document container contracts",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734731,
+      "name": "Native first enrollment and browser exchange",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415735105,
+      "name": "Native immutable HTTPS stock resume",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415735115,
+      "name": "Native independent DAV application",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734797,
+      "name": "Native legacy SCP regular-file custody",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734781,
+      "name": "Native reproducible core binaries",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734925,
+      "name": "Native source vulnerability configurations",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734862,
+      "name": "Native tus stock client and custody checkpoints",
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "id": 44415734828,
+      "name": "Stock peer and browser qualification",
+      "attempt": 1,
+      "status": "queued"
+    }
+  ],
+  "remaining": [
+    "Record exact original browser integrity, v3 evidence, private DAV and native PostgreSQL outcomes.",
+    "Resolve restore and independent stock receiver failures under their own original gates.",
+    "No release, artifact publication or external deployment occurred."
+  ]
+}

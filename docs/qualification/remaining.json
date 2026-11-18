@@ -2083,7 +2083,8 @@
         "docs/qualification/evidence/F547-private-dav-custody-stage.json",
         "docs/qualification/evidence/F548-dav-stage-vacancy-worker-slot.json",
         "docs/qualification/evidence/F549-original-integrity-batch-terminal.json",
-        "docs/qualification/evidence/F550-portable-workflow-authority-fixtures.json"
+        "docs/qualification/evidence/F550-portable-workflow-authority-fixtures.json",
+        "docs/qualification/evidence/F551-guarded-browser-integrity-dav-batch.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -2285,7 +2286,8 @@
         "F547 pins the staging-directory revision in the two-custody DAV fixture. Its real PostgreSQL and TLS replay delivered exact bytes, kept staging private, preserved existing destination bytes and blocked resend after an ambiguous collision. The original Linux gate remains intact and its replay is due. The separate stock DAV overwrite failure remains open.",
         "F548 blocks a DAV worker when its exact staging path is already occupied. The conditional PUT remains required. Concurrent upload and response checks reproduced a pgx connection race, so the held liveness connection now serializes checks and release. Three real PostgreSQL and TLS race runs passed, including lost-MOVE recovery. Native Linux and stock receiver qualification remain open.",
         "F549 records all 18 original workflows and 41 jobs at 7fda192. Stock HTTPS and native CLI/MCP integrity steps passed on both Linux architectures. The broad PostgreSQL suites, both restore jobs and the separate stock peer and recipient UI failures remain visible.",
-        "F550 fixes the portable workflow test destinations that stopped the original native processing CLI checks. With private outputs under umask 022, the full native test passed the original revision, isolation, approval, history, policy and equal-output assertions. Exact Linux PostgreSQL replay remains due."
+        "F550 fixes the portable workflow test destinations that stopped the original native processing CLI checks. With private outputs under umask 022, the full native test passed the original revision, isolation, approval, history, policy and equal-output assertions. Exact Linux PostgreSQL replay remains due.",
+        "F551 records the guarded fast-forward from 7fda192 to 5525129 after all 18 prior originals became terminal. Gitleaks found zero leaks across eight owner-authored and owner-committed commits. Nineteen new original workflows were queued at the first observation."
       ],
       "current_item": {
         "id": "F425",
