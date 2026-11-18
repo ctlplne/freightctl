@@ -14,9 +14,14 @@ import (
 	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
-func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, storage, input, key, workflowID, connectionID, runID, hash string, version, againstVersion int, revision, maxFile, maxStored int64) error {
+func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, storage, input, key, workflowID, connectionID, runID, hash, output string, version, againstVersion int, revision, maxFile, maxStored int64) error {
 	if maxFile < 1 || maxFile > 1<<30 {
 		return errors.New("invalid workflow file budget")
+	}
+	if command == "workflow-run-history-export" {
+		if err := validatePortableOutput(output); err != nil {
+			return err
+		}
 	}
 	secret, err := secure.ReadSecret(token, 64)
 	if err != nil {
@@ -31,7 +36,7 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 	defer db.Pool.Close()
 	custodyService := &custody.Service{DB: db, MaxFile: maxFile, MaxStored: maxStored}
 	requiredStorage := command == "workflow-run" || command == "workflow-work" || command == "onward-preview" || command == "onward-start"
-	inspectStorage := command == "workflow-run-status" || command == "workflow-refresh" || command == "workflow-cancel" || command == "workflow-validate" || command == "workflow-run-preview"
+	inspectStorage := command == "workflow-run-status" || command == "workflow-run-history-export" || command == "workflow-refresh" || command == "workflow-cancel" || command == "workflow-validate" || command == "workflow-run-preview"
 	if requiredStorage || (inspectStorage && storage != "") {
 		disk, err := custody.OpenExisting(storage)
 		if err != nil && requiredStorage {
@@ -133,6 +138,19 @@ func runWorkflow(ctx context.Context, command, dsn, token, tenant, partner, stor
 		result, err = service.PreviewRun(ctx, scope, r)
 	case "workflow-run-status":
 		result, err = service.Status(ctx, scope, runID)
+	case "workflow-run-history-export":
+		request, err := secure.ReadSecret(input, 4096)
+		if err != nil {
+			return err
+		}
+		defer request.Close()
+		var selection workflow.RunHistorySelection
+		if err = workflow.Decode(request.Bytes, &selection); err != nil {
+			return err
+		}
+		return writePortableArtifact(ctx, output, "workflow-run-history", func(staged io.Writer) (*workflow.RunHistoryExportReceipt, error) {
+			return service.PreparePortableRunHistory(ctx, scope, selection, staged)
+		}, os.Stdout)
 	case "workflow-refresh":
 		result, err = service.RefreshRun(ctx, scope, runID, key)
 	case "workflow-work":

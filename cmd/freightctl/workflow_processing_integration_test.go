@@ -193,6 +193,8 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 	if err != nil || json.Unmarshal(raw, &created) != nil || json.Unmarshal(created.Resource, &r) != nil {
 		t.Fatal("CLI processing run", err)
 	}
+	pinnedQueued := workflow.RunHistorySelection{RunID: r.ID, WorkflowHash: r.WorkflowHash, ThroughRevision: r.Revision, Limit: 1}
+	_, queuedHistory := readPortableRunHistoryCLI(t, pinnedQueued, command, requestFile)
 	raw, err = command("workflow-work", "-run-id", r.ID, "-idempotency-key", "cli-processing-work")
 	var work workflow.WorkResult
 	if err != nil || json.Unmarshal(raw, &work) != nil || work.Processing == nil || work.Status.ObservedReason != "output_held" || work.Processing.Attempts != 1 {
@@ -228,6 +230,9 @@ func TestProcessingWorkflowCLIUsesApprovedTaskAndSeparateOutputRelease(t *testin
 	if err != nil || json.Unmarshal(raw, &status) != nil || status.ObservedState != "succeeded" || status.ObservedReason != "transformed_output_released" {
 		t.Fatal("CLI separate release not observed", err)
 	}
+	t.Run("export immutable workflow run history in ordered pages", func(t *testing.T) {
+		qualifyPortableRunHistory(t, ctx, service, scope, status, pinnedQueued, queuedHistory, command, requestFile)
+	})
 	t.Run("independent review controls", func(t *testing.T) {
 		reviewerToken := filepath.Join(t.TempDir(), "reviewer.token")
 		if err := secure.WriteToken(reviewerToken); err != nil {

@@ -289,3 +289,36 @@ goes offline. It keeps the protocol's original integrity and durability
 fields, including any unknown business acceptance. Preserve the source
 completion event with its signed audit export. Confirm business
 acceptance separately with the receiver's business system.
+
+## Export a workflow run's committed history
+
+Take the run ID, workflow hash and run revision from
+`workflow-run-status`. Put those values in a protected request file.
+The first page starts after revision zero.
+
+```json
+{
+  "run_id": "33333333-3333-4333-8333-333333333333",
+  "workflow_hash": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "through_revision": 5,
+  "after_revision": 0,
+  "limit": 64
+}
+```
+
+```sh
+umask 077
+freightctl workflow-run-history-export --tenant "$TENANT" --partner "$PARTNER" \
+  --request-file .private/run-history-request.json --output .private/run-history-page-1.json
+shasum -a 256 .private/run-history-page-1.json
+jq '.transitions' .private/run-history-page-1.json
+```
+
+The `freightctl-portable-workflow-run-history-v1` page contains committed
+transitions in increasing revision order. Keep the source identifiers
+and `through_revision` fixed. When a page includes `next_after_revision`,
+set `after_revision` to that value and choose a new output file. Keep
+each page's export checksum and event IDs. A request with a gap,
+different workflow hash or uncommitted upper revision fails. Use the
+ordinary status command for live observations. For processing runs,
+use the same source custody root required by status.

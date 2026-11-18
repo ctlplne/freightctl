@@ -365,6 +365,14 @@ func (s *Service) Status(ctx context.Context, scope store.Scope, id string) (*Ru
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	view, err := s.readRunStatus(ctx, t, id)
+	if err != nil {
+		return nil, err
+	}
+	return view, t.Tx.Commit(ctx)
+}
+
+func (s *Service) readRunStatus(ctx context.Context, t *store.Transaction, id string) (*RunView, error) {
 	if !t.Has("workflow_manage") && !t.Has("workflow_approve") && !t.Has("workflow_execute") {
 		return nil, store.ErrForbidden
 	}
@@ -376,10 +384,7 @@ func (s *Service) Status(ctx context.Context, scope store.Scope, id string) (*Ru
 		return nil, err
 	}
 	view, _, _, err := s.runSnapshot(ctx, t, r)
-	if err != nil {
-		return nil, err
-	}
-	return view, t.Tx.Commit(ctx)
+	return view, err
 }
 func setProjection(ctx context.Context, t *store.Transaction, r *store.WorkflowRun, state, reason string) error {
 	if r.State == state && r.Reason == reason {
