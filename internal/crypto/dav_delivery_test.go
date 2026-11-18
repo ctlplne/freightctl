@@ -44,6 +44,46 @@ func TestDAVDeliveryRequiresDistinctPinnedWriteCapability(t *testing.T) {
 	}
 }
 
+func TestDAVDeliveryVacancyRequiresExactUnconditionalMissingStage(t *testing.T) {
+	for _, tc := range []struct {
+		name   string
+		status int
+		header string
+		value  string
+		want   error
+	}{
+		{name: "missing", status: 404},
+		{name: "occupied", status: 200, want: ErrDAVStageOccupied},
+		{name: "forbidden", status: 403, want: ErrDAVDelivery},
+		{name: "redirect", status: 302, header: "Location", value: "/other", want: ErrDAVDelivery},
+		{name: "range", status: 404, header: "Content-Range", value: "bytes 0-3/4", want: ErrDAVDelivery},
+	} {
+		t.Run(tc.name, func(t *testing.T) {
+			var calls atomic.Int32
+			d, _ := httpsReadFixture(t, http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+				calls.Add(1)
+				if r.Method != "HEAD" || r.URL.Path != "/stage/input.partial" || r.URL.RawQuery != "" ||
+					r.Header.Get("Cache-Control") != "no-cache, no-store" ||
+					r.Header.Get("Idempotency-Key") != "" || r.Header.Get("X-Content-SHA256") != "" {
+					t.Error("stage check contacted a different resource or sent mutation metadata")
+				}
+				if tc.header != "" {
+					w.Header().Set(tc.header, tc.value)
+				}
+				w.WriteHeader(tc.status)
+			}))
+			client, err := NewDAVDeliveryClient(t.Context(), d, "/stage/input.partial", "/inbox/input", 1, strings.Repeat("a", 64), func() error { return nil })
+			if err != nil {
+				t.Fatal(err)
+			}
+			defer client.Close()
+			if err = client.RequireVacantStage(t.Context()); !errors.Is(err, tc.want) || calls.Load() != 1 {
+				t.Fatal("stage check did not enforce its exact response contract", err)
+			}
+		})
+	}
+}
+
 func davDeliveryFile(t *testing.T, data []byte) *os.File {
 	t.Helper()
 	path := filepath.Join(t.TempDir(), "custody")

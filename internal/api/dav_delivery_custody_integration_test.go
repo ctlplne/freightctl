@@ -156,5 +156,24 @@ func proveDAVDeliveryFreightctlCustodyPeer(t *testing.T) string {
 	if !bytes.Equal(got, data) {
 		t.Fatal("refused move changed the intact private stage")
 	}
+
+	occupied := queue("custody-occupied-stage")
+	stagePath := "/stage/.freightctl-" + occupied.ID + ".partial"
+	if _, _, err = receiver.AcceptAt(t.Context(), writerScope, "native-dav-existing-stage", int64(len(old)), secure.Digest(old), bytes.NewReader(old), custody.UploadTarget{Path: stagePath}); err != nil {
+		t.Fatal(err)
+	}
+	blocked, err := sender.Work(t.Context(), sourceScope, occupied.ID)
+	if err != nil || blocked.State != "blocked" || blocked.Attempts != 1 || blocked.Fence != 1 ||
+		json.Unmarshal(blocked.Observation, &receipt) != nil || receipt["code"] != "dav_stage_occupied" {
+		t.Fatal("occupied stage did not block the worker before remote write intent", err)
+	}
+	if again, err := sender.Work(t.Context(), sourceScope, occupied.ID); !errors.Is(err, store.ErrState) || again != nil {
+		t.Fatal("blocked staging collision became writable on the same delivery", err)
+	}
+	_, got = exchangeAPIRequest(t, server, http.MethodGet, davRoot+stagePath, nil, writerAuth, nil, 200)
+	if !bytes.Equal(got, old) {
+		t.Fatal("occupied stage bytes changed")
+	}
+	exchangeAPIRequest(t, server, http.MethodGet, davRoot+"/"+occupied.ID+"-input.dat", nil, auth, nil, 404)
 	return digest
 }

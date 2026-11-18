@@ -4,6 +4,7 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
+	"sync"
 	"time"
 
 	"github.com/jackc/pgx/v5"
@@ -43,8 +44,25 @@ func (s *Store) DeliveryWorkerSlot(ctx context.Context) (func() error, func(), e
 			return nil, nil, err
 		}
 		if locked {
-			check := func() error { return conn.Conn().Ping(ctx) }
+			// The HTTP upload and its response can check the slot concurrently.
+			// A PostgreSQL connection handles one command at a time.
+			var mu sync.Mutex
+			released := false
+			check := func() error {
+				mu.Lock()
+				defer mu.Unlock()
+				if released {
+					return ErrState
+				}
+				return conn.Conn().Ping(ctx)
+			}
 			release := func() {
+				mu.Lock()
+				defer mu.Unlock()
+				if released {
+					return
+				}
+				released = true
 				cleanup, cancel := context.WithTimeout(context.Background(), 2*time.Second)
 				defer cancel()
 				if _, err := conn.Exec(cleanup, `SELECT pg_advisory_unlock($1,$2)`, deliveryCapacityNamespace, slot); err != nil {

@@ -535,6 +535,12 @@ policy and adds exact DAV definition/source/effect guards.
 Before any stage byte can leave,the worker commits `publishing` with its ordinary
 lease/fence and current authority. PUT,stage verification,MOVE or final-read
 failure then leaves `ambiguous`;there is no automatic resend or cleanup.
+Before committing `publishing`, the worker sends one read-only HEAD to the
+exact private staging path. A 200 response blocks the delivery with
+`dav_stage_occupied`. A 404 permits the ordinary write-intent check. Other
+responses leave the stage unconfirmed and use the existing bounded retry.
+The receiver still must honor the conditional PUT if another writer creates
+the staging file after HEAD.
 The transport requires a complete exclusive-create response to its own PUT
 before it reads the stage or attempts MOVE. A stage that contains matching
 bytes can predate a failed or refused PUT.

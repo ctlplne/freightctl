@@ -30,6 +30,12 @@ func TestDAVDeliveryNativeFreightctlCustodyPeer(t *testing.T) {
 	t.Logf("native freightctl custody DAV candidate=%s;source-SHA256=%s;conditional-collision-preserved=true;vendor-interoperability=false", commit, digest)
 }
 
+func TestDAVDeliveryNativeLostMoveReplyReconcilesReadOnly(t *testing.T) {
+	commit := requireNativeDAVCandidate(t)
+	digest := proveDAVDeliveryLostMoveReplyReconcilesReadOnly(t)
+	t.Logf("actual PostgreSQL/TLS stand-in loss/recovery candidate=%s;content-SHA256=%s;attempt=1;fence=1;writes=2;read-only-reconciliation=true;independent-vendor-qualification=false", commit, digest)
+}
+
 func TestDAVDeliveryNativeStockReceiverCLIIndependentApprovalAndExactBytes(t *testing.T) {
 	peer := loadNativeDAVStockPeer(t)
 	data := bytes.Repeat([]byte("independent DAV delivery;receipt is not business acceptance\n"), 2000)

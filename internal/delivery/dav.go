@@ -3,6 +3,7 @@ package delivery
 import (
 	"context"
 	"encoding/json"
+	"errors"
 	"os"
 	"path"
 
@@ -67,6 +68,12 @@ func (s *Service) workDAV(ctx context.Context, scope store.Scope, d *store.Deliv
 		return s.transition(ctx, scope, d.ID, owner, fence, "retry", observation("dav_receiver_identity_unavailable"))
 	}
 	defer client.Close()
+	if err = client.RequireVacantStage(ctx); err != nil {
+		if errors.Is(err, secure.ErrDAVStageOccupied) {
+			return s.transition(ctx, scope, d.ID, owner, fence, "blocked", observation("dav_stage_occupied"))
+		}
+		return s.transition(ctx, scope, d.ID, owner, fence, "retry", observation("dav_stage_absence_unconfirmed"))
+	}
 	d, err = s.transition(ctx, scope, d.ID, owner, fence, "publishing", observation("dav_write_intent_committed"))
 	if err != nil {
 		return nil, err

@@ -1,0 +1,108 @@
+{
+  "schema_version": 1,
+  "id": "F548",
+  "observed_at": "2026-11-19",
+  "base_candidate": "84fe54d869c50e08dbf4f377637c6f1d96913e11",
+  "qualification_claim": false,
+  "scope": "Fail-closed DAV staging when an existing object is visible and race-safe PostgreSQL delivery slots",
+  "stock_receiver_bound": "The original stock DAV receiver overwrote its exclusive stage. The independent conformance probe and its prior result remain. A successful HEAD only observes vacancy at that instant. The receiver must still enforce the conditional PUT against a concurrent write.",
+  "first_failures": [
+    {
+      "finding": "The original worker entered remote publication for a stage already present.",
+      "log": {
+        "sha256": "6de2378514d1c65abc1aadaa229dd798e07e8be2a180198b1e00dc43f79a2bed",
+        "bytes": 301
+      }
+    },
+    {
+      "finding": "A combined replay failed before it recovered the lost MOVE reply. Stronger assertions and repeated runs identified an intermittent stage-upload acknowledgement failure, before any MOVE.",
+      "initial_log": {
+        "sha256": "eb2122206a7a0648c2e0ce05d5e6e31c7f1f2ce95b6656b2f4f7bd624e29c753",
+        "bytes": 732
+      },
+      "phase_log": {
+        "sha256": "ef2412363fbc895aa8085494a848d893f2a8ebd6a0f15ce993fcb61fbb044c4b",
+        "bytes": 2261
+      }
+    },
+    {
+      "finding": "Two liveness checks used the same leased pgx connection concurrently. The isolated real PostgreSQL probe reproduced the Go race and conn busy error.",
+      "log": {
+        "sha256": "9903ce950055e17fcc9b5b2ba7f9400179ed800c092b48881f902075badba264",
+        "bytes": 4071
+      }
+    }
+  ],
+  "local_replay": {
+    "environment": "Native macOS ARM, Go 1.27.4 race build, PostgreSQL 16.15, two independent local freightctl custody roots, pinned loopback TLS and a separate lost-MOVE-response fixture. Inference disabled.",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "three_combined_race_replays": {
+      "sha256": "d22d92721d5f2b2ebd4f6833a9a3522f9d5e6042f6388f1bb93dfba7d79eddbb",
+      "bytes": 2878
+    },
+    "observations": [
+      "The worker sends a read-only HEAD to the one approved stage. An existing stage blocks before publishing intent and leaves original bytes and the absent final unchanged. An unconfirmed observation uses the existing bounded retry.",
+      "The worker still commits its publishing intent before the exclusive PUT and still requires its own acknowledgement, exact stage GET, source ETag and non-overwrite MOVE. The independent stock probe continues to exercise the actual conditional PUT.",
+      "Parallel slot checks and slot release use one lock around the held PostgreSQL connection. A late check receives the closed state and repeated release does not touch a later pool borrower.",
+      "All three combined runs passed. The lost-MOVE test observed one HEAD, two writes and two reads with one attempt and fence. No stage check or write was performed during reconciliation."
+    ]
+  },
+  "static_checks": {
+    "focused_go_race_and_import_boundary": "pass",
+    "integration_davpeer_vet": "pass",
+    "record_references": "pass"
+  },
+  "sources": [
+    {
+      "path": "docs/protocols/webdav-read-profile.md",
+      "sha256": "04784a36045988d07f352671304b4bd56927464aa595ca8e6f583fff72091927",
+      "bytes": 41936
+    },
+    {
+      "path": "internal/api/dav_delivery_custody_integration_test.go",
+      "sha256": "cfce4696d963836ca7675fb9a91a487c31bd3543dc5e29bf54d6711896eaf2da",
+      "bytes": 8777
+    },
+    {
+      "path": "internal/api/dav_delivery_integration_test.go",
+      "sha256": "94dc9c0512d2e6743a7048c7be14819c2d221039fb5913ea28e275cf24244c02",
+      "bytes": 14502
+    },
+    {
+      "path": "internal/api/dav_delivery_recovery_integration_test.go",
+      "sha256": "cb37af7ca93079d57f14c6c9f6412bf819fdd7e856c21ba3f8a51029b18a1fed",
+      "bytes": 9290
+    },
+    {
+      "path": "internal/api/dav_recovery_evidence_test.go",
+      "sha256": "1d1fc3a77fac8f40364ad110e9b34654b2e1d55e841b734ed9b10f2ad9a41227",
+      "bytes": 2168
+    },
+    {
+      "path": "internal/crypto/dav_delivery.go",
+      "sha256": "078ee4297e12abb54f02e4859d6d015df4691882d6a03abe75d1156d9be81806",
+      "bytes": 9301
+    },
+    {
+      "path": "internal/crypto/dav_delivery_test.go",
+      "sha256": "7a7fd2c172323e6b3ab2e3876be99661739232a47052c19ed7760dcaadf0cd5e",
+      "bytes": 21077
+    },
+    {
+      "path": "internal/delivery/dav.go",
+      "sha256": "019676064fc69de5f8852649e2171d2f0faf51a69be95f2ac20d09cc0b888eac",
+      "bytes": 5601
+    },
+    {
+      "path": "internal/store/deliveries.go",
+      "sha256": "7503a61cd8adda91813c7ce946870db960e72847503554f9736dc26b104dcb40",
+      "bytes": 7021
+    }
+  ],
+  "remaining": [
+    "Native Linux replay of the same DAV custody and response-loss assertions.",
+    "Independent stock receiver conformance and full qualification remain open."
+  ]
+}

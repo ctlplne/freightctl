@@ -18,6 +18,7 @@ import (
 )
 
 var ErrDAVDelivery = errors.New("DAV delivery identity,authority or protocol acknowledgement failed")
+var ErrDAVStageOccupied = errors.New("DAV staging path already exists")
 
 // DAVDeliveryClient binds one exact source size/hash and two approved paths.
 // It has no arbitrary method,header,recipient,DELETE or overwrite capability.
@@ -104,6 +105,26 @@ func (c *DAVDeliveryClient) mutationHeaders(method string) http.Header {
 	meaning := strings.Join([]string{"freightctl-webdav-delivery-v1", c.stage, c.final, strconv.FormatInt(c.size, 10), c.digest}, "\x00")
 	headers.Set("Idempotency-Key", "dav-"+strings.ToLower(method)+"-"+Digest([]byte(meaning)))
 	return headers
+}
+
+// RequireVacantStage checks the approved staging path without reading bytes.
+// The receiver still has to enforce the conditional PUT against concurrent writes.
+func (c *DAVDeliveryClient) RequireVacantStage(ctx context.Context) error {
+	response, err := c.read.request(ctx, http.MethodHead, c.stage, nil, 0, davDeliveryHeaders())
+	if err != nil {
+		return errors.Join(ErrDAVDelivery, err)
+	}
+	if err = response.Body.Close(); err != nil || !davDeliveryIdentity(response) {
+		return errors.Join(ErrDAVDelivery, err)
+	}
+	switch response.StatusCode {
+	case http.StatusNotFound:
+		return nil
+	case http.StatusOK:
+		return ErrDAVStageOccupied
+	default:
+		return ErrDAVDelivery
+	}
 }
 
 // PutStage attempts exclusive creation once. A failure says nothing about

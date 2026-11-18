@@ -9,7 +9,7 @@ import (
 
 type davRecoveryEvidence struct {
 	MetadataHash, ReceiverHash string
-	Writes, Reads              int
+	Writes, Reads, StageChecks int
 }
 
 func davAmbiguousRepeatWasRefused(returned *store.Delivery, err error, before, after davRecoveryEvidence) bool {
@@ -17,17 +17,18 @@ func davAmbiguousRepeatWasRefused(returned *store.Delivery, err error, before, a
 }
 
 func TestDAVAmbiguousRepeatRequiresExactRefusalAndUnchangedEvidence(t *testing.T) {
-	before := davRecoveryEvidence{MetadataHash: "all-original-domain-rows", ReceiverHash: "exact-retained-receiver-bytes", Writes: 2, Reads: 1}
+	before := davRecoveryEvidence{MetadataHash: "all-original-domain-rows", ReceiverHash: "exact-retained-receiver-bytes", Writes: 2, Reads: 1, StageChecks: 1}
 	if !davAmbiguousRepeatWasRefused(nil, store.ErrState, before, before) {
 		t.Fatal("original proof rejects a repeat-work refusal with unchanged complete state")
 	}
 	for _, bad := range []davRecoveryEvidence{
-		{MetadataHash: "changed-event-or-intent", ReceiverHash: before.ReceiverHash, Writes: 2, Reads: 1},
-		{MetadataHash: before.MetadataHash, ReceiverHash: "changed-receiver", Writes: 2, Reads: 1},
-		{MetadataHash: before.MetadataHash, ReceiverHash: before.ReceiverHash, Writes: 3, Reads: 1},
-		{MetadataHash: before.MetadataHash, ReceiverHash: before.ReceiverHash, Writes: 2, Reads: 2},
-		{ReceiverHash: before.ReceiverHash, Writes: 2, Reads: 1},
-		{MetadataHash: before.MetadataHash, Writes: 2, Reads: 1},
+		{MetadataHash: "changed-event-or-intent", ReceiverHash: before.ReceiverHash, Writes: 2, Reads: 1, StageChecks: 1},
+		{MetadataHash: before.MetadataHash, ReceiverHash: "changed-receiver", Writes: 2, Reads: 1, StageChecks: 1},
+		{MetadataHash: before.MetadataHash, ReceiverHash: before.ReceiverHash, Writes: 3, Reads: 1, StageChecks: 1},
+		{MetadataHash: before.MetadataHash, ReceiverHash: before.ReceiverHash, Writes: 2, Reads: 2, StageChecks: 1},
+		{MetadataHash: before.MetadataHash, ReceiverHash: before.ReceiverHash, Writes: 2, Reads: 1, StageChecks: 2},
+		{ReceiverHash: before.ReceiverHash, Writes: 2, Reads: 1, StageChecks: 1},
+		{MetadataHash: before.MetadataHash, Writes: 2, Reads: 1, StageChecks: 1},
 	} {
 		if davAmbiguousRepeatWasRefused(nil, store.ErrState, before, bad) {
 			t.Fatal("changed,missing or extra state/activity accepted as a no-effect refusal")

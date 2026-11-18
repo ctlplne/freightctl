@@ -1,10 +1,11 @@
-//go:build integration && davpeer
+//go:build integration
 
 package api
 
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"io"
 	"net/http"
 	"net/http/httptest"
@@ -24,8 +25,45 @@ import (
 
 // Actual PostgreSQL and worker with a TLS protocol stand-in that drops the
 // MOVE reply after retaining exact final bytes. This is not a vendor claim.
-func TestDAVDeliveryNativeLostMoveReplyReconcilesReadOnly(t *testing.T) {
-	commit := requireNativeDAVCandidate(t)
+func TestDAVDeliveryLostMoveReplyOnLoopback(t *testing.T) {
+	digest := proveDAVDeliveryLostMoveReplyReconcilesReadOnly(t)
+	t.Logf("loopback DAV lost MOVE reply; source SHA-256 %s; one stage check and two writes; read-only reconciliation", digest)
+}
+
+func TestDAVDeliveryWorkerSlotSerializesConcurrentLivenessChecks(t *testing.T) {
+	consumer, _, _, _ := browserAPI(t, time.Minute)
+	check, release, err := consumer.DB.DeliveryWorkerSlot(t.Context())
+	if err != nil {
+		t.Fatal(err)
+	}
+	defer release()
+	start := make(chan struct{})
+	results := make(chan error, 2)
+	for range 2 {
+		go func() {
+			<-start
+			for range 8 {
+				if err := check(); err != nil {
+					results <- err
+					return
+				}
+			}
+			results <- nil
+		}()
+	}
+	close(start)
+	first, second := <-results, <-results
+	if err = errors.Join(first, second); err != nil {
+		t.Fatal("parallel liveness checks lost the shared PostgreSQL session", err)
+	}
+	release()
+	if err = check(); !errors.Is(err, store.ErrState) {
+		t.Fatal("released slot remained usable", err)
+	}
+}
+
+func proveDAVDeliveryLostMoveReplyReconcilesReadOnly(t *testing.T) string {
+	t.Helper()
 	consumer, scope, _, _ := browserAPI(t, 10*time.Minute)
 	data := bytes.Repeat([]byte("actual uncertain DAV publication;no automatic resend\n"), 1000)
 	file, _, err := consumer.Accept(t.Context(), scope, "dav-recovery-source", int64(len(data)), secure.Digest(data), bytes.NewReader(data))
@@ -45,7 +83,7 @@ func TestDAVDeliveryNativeLostMoveReplyReconcilesReadOnly(t *testing.T) {
 	var intent atomic.Pointer[store.Delivery]
 	var mu sync.Mutex
 	files := map[string][]byte{}
-	writes, reads := 0, 0
+	writes, reads, stageChecks := 0, 0, 0
 	etag := `"stage-` + secure.Digest(data) + `"`
 	server := httptest.NewTLSServer(http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 		d := intent.Load()
@@ -57,6 +95,17 @@ func TestDAVDeliveryNativeLostMoveReplyReconcilesReadOnly(t *testing.T) {
 		mu.Lock()
 		defer mu.Unlock()
 		switch r.Method {
+		case "HEAD":
+			stageChecks++
+			if r.URL.Path != stage || r.Header.Get("Idempotency-Key") != "" || r.Header.Get("Cache-Control") != "no-cache, no-store" {
+				w.WriteHeader(400)
+				return
+			}
+			if files[stage] != nil {
+				w.WriteHeader(200)
+				return
+			}
+			w.WriteHeader(404)
 		case "PUT":
 			tx, e := consumer.DB.Begin(r.Context(), scope)
 			if e != nil {
@@ -135,6 +184,12 @@ func TestDAVDeliveryNativeLostMoveReplyReconcilesReadOnly(t *testing.T) {
 	if err != nil || worked.State != "ambiguous" || worked.Attempts != 1 || worked.Fence != 1 {
 		t.Fatal("lost actual MOVE reply did not preserve one ambiguous attempt", err)
 	}
+	var original struct {
+		Code string `json:"code"`
+	}
+	if json.Unmarshal(worked.Observation, &original) != nil || original.Code != "dav_move_outcome_uncertain" {
+		t.Fatalf("the ambiguous attempt stopped at %q before the MOVE", original.Code)
+	}
 	snapshot := func() davRecoveryEvidence {
 		t.Helper()
 		tx, err := consumer.DB.Begin(t.Context(), scope)
@@ -158,9 +213,13 @@ func TestDAVDeliveryNativeLostMoveReplyReconcilesReadOnly(t *testing.T) {
 		if err != nil {
 			t.Fatal(err)
 		}
-		return davRecoveryEvidence{MetadataHash: secure.Digest(metadata), ReceiverHash: secure.Digest(receiver), Writes: writes, Reads: reads}
+		return davRecoveryEvidence{MetadataHash: secure.Digest(metadata), ReceiverHash: secure.Digest(receiver), Writes: writes, Reads: reads, StageChecks: stageChecks}
 	}
 	beforeRepeat := snapshot()
+	if beforeRepeat.Writes != 2 || beforeRepeat.Reads != 1 || beforeRepeat.StageChecks != 1 {
+		t.Fatalf("original publication made %d writes, %d reads and %d stage checks",
+			beforeRepeat.Writes, beforeRepeat.Reads, beforeRepeat.StageChecks)
+	}
 	again, err := sender.Work(t.Context(), scope, worked.ID)
 	if !davAmbiguousRepeatWasRefused(again, err, beforeRepeat, snapshot()) {
 		t.Fatal("ambiguous repeat lacked exact ErrState refusal or changed complete metadata/receiver state/activity")
@@ -175,8 +234,8 @@ func TestDAVDeliveryNativeLostMoveReplyReconcilesReadOnly(t *testing.T) {
 	}
 	mu.Lock()
 	defer mu.Unlock()
-	if writes != 2 || reads != 2 || len(files) != 1 || !bytes.Equal(files["/inbox/"+worked.ID+"-input.dat"], data) {
+	if writes != 2 || reads != 2 || stageChecks != 1 || len(files) != 1 || !bytes.Equal(files["/inbox/"+worked.ID+"-input.dat"], data) {
 		t.Fatal("reconciliation repeated effects or changed exact receiver bytes")
 	}
-	t.Logf("actual PostgreSQL/TLS stand-in loss/recovery candidate=%s;content-SHA256=%s;attempt=1;fence=1;writes=2;read-only-reconciliation=true;independent-vendor-qualification=false", commit, secure.Digest(data))
+	return secure.Digest(data)
 }

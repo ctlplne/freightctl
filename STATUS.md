@@ -420,6 +420,13 @@ A destination collision preserved the existing bytes and kept the send
 ambiguous through read-only reconciliation. The original Linux run and
 independent stock receiver qualification remain due.
 
+[F548](docs/qualification/evidence/F548-dav-stage-vacancy-worker-slot.json)
+adds a read-only check for an occupied DAV stage before upload. Concurrent
+upload and response checks also raced on the same PostgreSQL connection.
+Serializing those checks and slot release fixed the reproduced race.
+Three combined runs passed, including lost-reply recovery. Native Linux
+replay and stock receiver conformance remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
