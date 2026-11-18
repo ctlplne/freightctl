@@ -196,9 +196,11 @@ The local FTPS pair uses a separate freightctl producer, stock HTTPS retrieval,
 an agent-owned copy and separately approved delivery to stock OpenSSH. It
 passes for explicit and implicit FTPS. The same local chain passes from a
 read-only stock Alpine vsftpd producer over resumed TLS 1.3 data sessions. The
-listener exited with status 139 after the completed downloads. Listener
-continuity, native Linux freightctl replay and derivation lineage remain owed.
-[F503](../qualification/evidence/F503-ftps-agent-stock-sftp.json) [F509](../qualification/evidence/F509-stock-ftps-producer-exchange.json)
+standalone listener exited with status 139 after the completed downloads. A
+stock `inetd` listener passed two complete serial journeys per mode by starting
+vsftpd per connection. Standalone stability, native Linux freightctl replay
+and derivation lineage remain owed.
+[F503](../qualification/evidence/F503-ftps-agent-stock-sftp.json) [F509](../qualification/evidence/F509-stock-ftps-producer-exchange.json) [F510](../qualification/evidence/F510-supervised-stock-ftps-producer.json)
 
 An operator can now provision the exact SFTP route directly for the agent. The
 agent keeps its existing permissions, and each ordinary workflow approval and

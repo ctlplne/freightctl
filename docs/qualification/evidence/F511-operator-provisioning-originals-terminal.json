@@ -1,0 +1,235 @@
+{
+  "schema_version": 1,
+  "id": "F511",
+  "observed_at": "2026-11-18",
+  "candidate": "2e14befa305f2f297dee0a9f723651dbaeabcf24",
+  "qualification_claim": false,
+  "scope": "Original operator-provisioning candidate CI completion and native source security runner triage",
+  "launch_record": "docs/qualification/evidence/F508-guarded-operator-provisioning-batch.json",
+  "workflow_totals": {
+    "completed": 17,
+    "success": 12,
+    "failure": 5
+  },
+  "job_totals": {
+    "completed": 37,
+    "success": 29,
+    "failure": 7,
+    "cancelled": 1
+  },
+  "all_workflows_original_attempt_one": true,
+  "terminal_matrix": {
+    "sha256": "83e838cf4bd29b4112c9da1e203e700a09c034d38ef15595ffe5261b7be18cb9",
+    "bytes": 138536
+  },
+  "runs": [
+    {
+      "run": 44349618534,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "conclusion": "failure",
+      "jobs": 5
+    },
+    {
+      "run": 44349618554,
+      "name": "Native JSON intake and custody interfaces",
+      "conclusion": "failure",
+      "jobs": 3
+    },
+    {
+      "run": 44349618634,
+      "name": "Native independent DAV application",
+      "conclusion": "failure",
+      "jobs": 2
+    },
+    {
+      "run": 44349618697,
+      "name": "Stock peer and browser qualification",
+      "conclusion": "success",
+      "jobs": 5
+    },
+    {
+      "run": 44349618715,
+      "name": "Native FTPS stock clients and custody",
+      "conclusion": "success",
+      "jobs": 2
+    },
+    {
+      "run": 44349618749,
+      "name": "Native first enrollment and browser exchange",
+      "conclusion": "success",
+      "jobs": 1
+    },
+    {
+      "run": 44349618821,
+      "name": "Native Windows and macOS unit checks",
+      "conclusion": "success",
+      "jobs": 2
+    },
+    {
+      "run": 44349618830,
+      "name": "Native source vulnerability configurations",
+      "conclusion": "failure",
+      "jobs": 3
+    },
+    {
+      "run": 44349618898,
+      "name": "Native reproducible core binaries",
+      "conclusion": "success",
+      "jobs": 2
+    },
+    {
+      "run": 44349618971,
+      "name": "Native FTPS dispatch approval qualification",
+      "conclusion": "success",
+      "jobs": 1
+    },
+    {
+      "run": 44349619001,
+      "name": "Native legacy SCP regular-file custody",
+      "conclusion": "success",
+      "jobs": 2
+    },
+    {
+      "run": 44349619033,
+      "name": "Native FTPS workflow consent qualification",
+      "conclusion": "success",
+      "jobs": 2
+    },
+    {
+      "run": 44349619063,
+      "name": "Core correctness and security",
+      "conclusion": "success",
+      "jobs": 1
+    },
+    {
+      "run": 44349619295,
+      "name": "Native tus stock client and custody checkpoints",
+      "conclusion": "success",
+      "jobs": 2
+    },
+    {
+      "run": 44349619312,
+      "name": "Native artifact receive browser",
+      "conclusion": "failure",
+      "jobs": 1
+    },
+    {
+      "run": 44349619338,
+      "name": "Native immutable HTTPS stock resume",
+      "conclusion": "success",
+      "jobs": 2
+    },
+    {
+      "run": 44349619573,
+      "name": "Native browser and FTPS operator qualification",
+      "conclusion": "success",
+      "jobs": 1
+    }
+  ],
+  "failed_and_cancelled_jobs": [
+    {
+      "run": 44349618534,
+      "job": 134961342543,
+      "name": "Native Go and PostgreSQL (arm64)",
+      "conclusion": "failure",
+      "failed_steps": [
+        "All implemented real PostgreSQL integration and migration tests"
+      ]
+    },
+    {
+      "run": 44349618534,
+      "job": 134961342929,
+      "name": "Native Go and PostgreSQL (x86_64)",
+      "conclusion": "failure",
+      "failed_steps": [
+        "All implemented real PostgreSQL integration and migration tests"
+      ]
+    },
+    {
+      "run": 44349618554,
+      "job": 134961344629,
+      "name": "Native JSON custody (arm64)",
+      "conclusion": "failure",
+      "failed_steps": [
+        "Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes"
+      ]
+    },
+    {
+      "run": 44349618554,
+      "job": 134961345497,
+      "name": "Native JSON custody (x86_64)",
+      "conclusion": "failure",
+      "failed_steps": [
+        "Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes"
+      ]
+    },
+    {
+      "run": 44349618634,
+      "job": 134961343555,
+      "name": "Native stock rclone DAV (arm64)",
+      "conclusion": "failure",
+      "failed_steps": [
+        "Actual independent DAV application,exact bytes,conditional writes and current authority",
+        "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+        "Actual PostgreSQL DAV lost MOVE response and read-only reconciliation",
+        "Direct DAV delivery between separate freightctl custody instances"
+      ]
+    },
+    {
+      "run": 44349618634,
+      "job": 134961344227,
+      "name": "Native stock rclone DAV (amd64)",
+      "conclusion": "failure",
+      "failed_steps": [
+        "Actual independent DAV application,exact bytes,conditional writes and current authority",
+        "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+        "Direct DAV delivery between separate freightctl custody instances"
+      ]
+    },
+    {
+      "run": 44349618830,
+      "job": 134961344717,
+      "name": "Native vulnerability source (darwin/arm64)",
+      "conclusion": "cancelled",
+      "failed_steps": []
+    },
+    {
+      "run": 44349619312,
+      "job": 134961347114,
+      "name": "receive-browser",
+      "conclusion": "failure",
+      "failed_steps": [
+        "Actual recipient UI, exact bytes, unrelated user and endpoint revocation"
+      ]
+    }
+  ],
+  "security_triage": {
+    "run": 44349618830,
+    "linux_arm64": {
+      "job": 134961344329,
+      "conclusion": "success"
+    },
+    "windows_amd64": {
+      "job": 134961344828,
+      "conclusion": "success"
+    },
+    "darwin_arm64": {
+      "job": 134961344717,
+      "completed_at": "2026-11-18T16:56:39Z",
+      "conclusion": "cancelled",
+      "recorded_steps": 0,
+      "runner_assigned": false,
+      "started_at": "2026-11-18T16:38:47Z",
+      "status": "completed",
+      "job_record": {
+        "sha256": "2f5ba35e5da5d76732442959393058c8589b0e58646f6f1c5d5f7922d5f889c7",
+        "bytes": 165
+      }
+    },
+    "result": "The macOS scan never recorded a runner or a scan step. Its candidate result remains unverified. Linux ARM and Windows passed their original source scans."
+  },
+  "remaining": [
+    "Retain both native PostgreSQL, both JSON custody, both DAV and the receive browser failures. Investigate their nonsecurity causes and rerun required affected journeys at FINISH under S003.",
+    "Run the required macOS source scan and all final-source gates. Preserve the original cancellation and earlier independent receiver failures."
+  ]
+}

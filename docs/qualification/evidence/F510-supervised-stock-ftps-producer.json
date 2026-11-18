@@ -1,0 +1,168 @@
+{
+  "schema_version": 1,
+  "id": "F510",
+  "observed_at": "2026-11-18",
+  "candidate": "71d263d692f60bbcb2f89ce154e62f9b952c9c1a",
+  "qualification_claim": false,
+  "scope": "Independent supervised FTPS producer continuity across repeated full exchange journeys",
+  "original": "docs/qualification/evidence/F509-stock-ftps-producer-exchange.json",
+  "production_changes": [],
+  "standalone_isolation": {
+    "client": "OpenSSL 3.6.5 s_client on the original bounded stock fixture",
+    "observation": "After TLS 1.2 refusal, an ordinary verified TLS 1.3 login returned 230 and QUIT returned 221. The stock server then ended the control stream and the standalone container exited with status 139. Freightctl did not open these connections.",
+    "stock_client_log": {
+      "sha256": "d3daa25a8aa0c9dad0af171d86250bf5f3ee0e0eb0f5dcea7b383b4832d7f729",
+      "bytes": 381
+    },
+    "native_log": {
+      "sha256": "f9fc38c4af510526ecebfb2fc86054b82c25b3dcb51032b1bdb09b9c8e607d50",
+      "bytes": 203
+    },
+    "exit_record": {
+      "sha256": "5568f3f3e47d413a9aea65769d6b8649197d80c17402cc566756059f6c65ca0f",
+      "bytes": 226
+    },
+    "remaining": "Standalone producer process failure remains open on this exact Alpine image and fixture. Its code-level cause was not established."
+  },
+  "supervised_profile": {
+    "mechanism": "Stock BusyBox inetd accepts each control socket and starts a separate copy of the unchanged vsftpd executable in its documented per-connection mode.",
+    "vsftpd_configuration_reference": "https://security.appspot.com/vsftpd/vsftpd_conf.html",
+    "inetd_package": "busybox-extras-1.37.0-r31.apk",
+    "inetd_package_identity": {
+      "sha256": "64a2c66f44f2218473f56dd63355d988c3da0bdae6384d6d94d32587328ccea3",
+      "bytes": 66358
+    },
+    "inetd_binary_sha256": "ec3127316a53372ae3052cf3fa34c75108f2e391f2bfe49f49eb1c5cc0a86ce6",
+    "producer_binary_sha256": "edb450c4e263459666f6b2139b16793a6a6df040b21d531f00ac978da903c8ce",
+    "package_install_witness": {
+      "sha256": "c362518d46b31f3d852b4c3fc56d8909145594131ba0ae4e06374bde09ced41e",
+      "bytes": 260
+    },
+    "local_test_image_id": "sha256:bfa2d50844e01cbbd738fbaeca45a7832c86cff4db0150ee1d69132b1240cc19",
+    "configuration": {
+      "vsftpd": [
+        "listen=NO",
+        "listen_ipv6=NO"
+      ],
+      "inetd": "/bin/busybox-extras inetd -f -R 8 /fixture/inetd.conf",
+      "inetd_service": "2121 stream tcp nowait.8 root /usr/sbin/vsftpd vsftpd /fixture/vsftpd.conf",
+      "retained": "All F509 TLS, passive range, chroot, no-new-privileges, seccomp, read-only transfer, credential, capability and other container bounds."
+    },
+    "independent_stock_client": {
+      "log_0": {
+        "sha256": "d3daa25a8aa0c9dad0af171d86250bf5f3ee0e0eb0f5dcea7b383b4832d7f729",
+        "bytes": 381
+      },
+      "log_1": {
+        "sha256": "d3daa25a8aa0c9dad0af171d86250bf5f3ee0e0eb0f5dcea7b383b4832d7f729",
+        "bytes": 381
+      },
+      "post_client_state": {
+        "sha256": "f0993b49e1d8062c2fd62a9d6a9f66fcfd09beb6fce29185569cabc75b26ec79",
+        "bytes": 218
+      },
+      "observation": "Two ordinary verified stock logins each reached 230 and QUIT reached 221. The supervised listener was still running afterward."
+    }
+  },
+  "witnessed_replays": {
+    "explicit": {
+      "authorized_full_journeys": 2,
+      "independent_postgresql_databases": 2,
+      "stock_control_connections": 3,
+      "authenticated_control_connections": 2,
+      "complete_binary_downloads": 4,
+      "manifest_then_payload_per_session": true,
+      "source_bytes_before_and_after_equal": true,
+      "tls12": "refused with TLS protocol_version alert",
+      "post_replay_listener": "same container and init process running with zero restarts",
+      "workflow_log": {
+        "sha256": "b90b894272f9d4fcd2811326bf701b43ca8250aa8a85f85229e121001f31be93",
+        "bytes": 698
+      },
+      "tls12_log": {
+        "sha256": "3160ef90bc80fecf3945869e08182565ba84565015dd83e1f833a3326415fb3f",
+        "bytes": 265
+      },
+      "native_log": {
+        "sha256": "e45df12d38bd78c2120d87dd16160874c98d1336a1dca861968dcb73f79c2c27",
+        "bytes": 1121
+      },
+      "transfer_log": {
+        "sha256": "2e6405f1d7cffebdf22fd43c028a7ae9e020725e224596657bfa64cc7d73ae7b",
+        "bytes": 368
+      },
+      "producer_files": {
+        "sha256": "fdeb7231cd533be7997e48011846dae67a2989dc53267f49a20c3c91ba3c6457",
+        "bytes": 194
+      },
+      "state": {
+        "sha256": "f5a451d2999ebf6c41fd3ac1ca6476cf0a1e7d500e92ccaff6934501444f2899",
+        "bytes": 217
+      },
+      "launcher": {
+        "sha256": "7fee25919642ff7e77c2eb74df5ea9f5a56fb44fc3f858c5f61ff63562495301",
+        "bytes": 54
+      }
+    },
+    "implicit": {
+      "authorized_full_journeys": 2,
+      "independent_postgresql_databases": 2,
+      "stock_control_connections": 3,
+      "authenticated_control_connections": 2,
+      "complete_binary_downloads": 4,
+      "manifest_then_payload_per_session": true,
+      "source_bytes_before_and_after_equal": true,
+      "tls12": "refused with TLS protocol_version alert",
+      "post_replay_listener": "same container and init process running with zero restarts",
+      "workflow_log": {
+        "sha256": "fdd45ad614c9314b5468d0c7995a2e22b19f8fe49605f02c84f68ef899535d34",
+        "bytes": 698
+      },
+      "tls12_log": {
+        "sha256": "3160ef90bc80fecf3945869e08182565ba84565015dd83e1f833a3326415fb3f",
+        "bytes": 265
+      },
+      "native_log": {
+        "sha256": "4830be9672667191849f588009596a592791c5f5210544872d46d76a48612233",
+        "bytes": 1121
+      },
+      "transfer_log": {
+        "sha256": "f03945bed4cb7c166d530e494a34605b287bef08628851d4caff52d6ccd6c5ac",
+        "bytes": 368
+      },
+      "producer_files": {
+        "sha256": "fdeb7231cd533be7997e48011846dae67a2989dc53267f49a20c3c91ba3c6457",
+        "bytes": 194
+      },
+      "state": {
+        "sha256": "00fdb0c13559bd793858312340aa121eb180bfae076469e6cc1d0766146a750a",
+        "bytes": 218
+      },
+      "launcher": {
+        "sha256": "7fee25919642ff7e77c2eb74df5ea9f5a56fb44fc3f858c5f61ff63562495301",
+        "bytes": 54
+      }
+    }
+  },
+  "protected_harness_references": [
+    {
+      "file": "freightctl-f510-inetd-proof.sh",
+      "sha256": "f6d688e83365901617b42cde5e0aec2be0eb41ba7cc81aac0f4f7c937479d379",
+      "bytes": 8671
+    },
+    {
+      "file": "freightctl-f510-prove.sh",
+      "sha256": "7a819c566adf26b3ae169bd19d28800a00b7d3da108419afcee26e080af02519",
+      "bytes": 534
+    },
+    {
+      "file": "freightctl-f510-postgres.sh",
+      "sha256": "74cc14242b3dafcd529f16e5edb151377d7e1bdb31f159809001950932adfaab",
+      "bytes": 2704
+    }
+  ],
+  "remaining": [
+    "Retain the open standalone Alpine producer failure. The supported inetd profile demonstrates continuous listening for two witnessed serial collections, with no claim about long-running availability or other configurations.",
+    "Run the required native Linux freightctl profile, remaining adapter pairs, interruption and restore, and the final full-product gates."
+  ]
+}

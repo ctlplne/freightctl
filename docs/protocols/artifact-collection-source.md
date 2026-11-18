@@ -72,12 +72,18 @@ An independent replay replaced the producer with stock Alpine vsftpd 3.0.5-r3.
 Both modes rejected TLS 1.2 and required resumed TLS 1.3 data sessions. Each
 producer recorded one authenticated control session and two completed downloads
 in order, first the ready manifest and then its file. The producer files were
-unchanged after capture, retries and onward delivery. The stock listener then
-exited with status 139 in both witnessed runs. Listener continuity remains open.
+unchanged after capture, retries and onward delivery. The standalone stock
+listener then exited with status 139 in both witnessed runs.
 [F509 replay](../qualification/evidence/F509-stock-ftps-producer-exchange.json)
 
+The supervised profile runs BusyBox `inetd` as the listener. Each accepted
+control socket starts a separate stock vsftpd process with `listen=NO`. The
+same listener survived two full journeys in each TLS mode with no container
+restarts. The standalone failure remains open.
+[vsftpd configuration manual](https://security.appspot.com/vsftpd/vsftpd_conf.html) [F510 replay](../qualification/evidence/F510-supervised-stock-ftps-producer.json)
+
 To replay this profile, run a read-only loopback stock producer with the exact
-fixture and configuration in F509. Give the test a `0600` JSON file matching
+fixture in F509 and the supervisor configuration in F510. Give the test a `0600` JSON file matching
 the `destination` object of a registered FTPS connection, with the CA and
 password kept in separate referenced files. Use a fresh producer for each mode
 and set `FREIGHTCTL_TEST_STOCK_FTPS_PRODUCER_FILE` to that JSON file. Supply the
@@ -86,7 +92,7 @@ The registered connection reads from remote `/inbox`. The collection definition
 uses `/` as its local custody directory.
 
 ```sh
-sh scripts/go.sh test -race -tags=integration,stockftpsproducer -count=1 \
+sh scripts/go.sh test -race -tags=integration,stockftpsproducer -count=2 \
   -run '^TestStockFTPSProducerToAgentAndSeparatelyApprovedStockSFTP$' -v ./internal/workflow
 ```
 

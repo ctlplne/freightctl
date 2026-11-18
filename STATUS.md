@@ -176,8 +176,20 @@ independent Alpine vsftpd producer. Explicit and implicit TLS 1.3 both pass
 with real PostgreSQL and stock curl. Each producer records one authenticated
 session and two complete downloads, and its original bytes remain unchanged.
 The stock listener exited with status 139 after serving the bytes in both
-witnessed runs. Listener continuity, native Linux freightctl replay and the
-other AX-J02 profiles remain open.
+witnessed standalone runs.
+
+[F510](docs/qualification/evidence/F510-supervised-stock-ftps-producer.json)
+reproduces the standalone exit with an independent OpenSSL client after FTP
+login and `QUIT`. Stock BusyBox `inetd` then starts one stock vsftpd process per
+connection. That listener stays up across two complete journeys per TLS mode
+with the same TLS and read-only controls. Standalone stability, native Linux
+freightctl replay and the other AX-J02 profiles remain open.
+
+[F511](docs/qualification/evidence/F511-operator-provisioning-originals-terminal.json)
+records all 17 original workflows at `2e14bef`. Twelve passed. Both native
+PostgreSQL, both JSON custody, both independent DAV and the receive browser
+jobs failed. The Linux ARM and Windows source scans passed. GitHub canceled the
+macOS scan before it assigned a runner or recorded a step.
 
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
