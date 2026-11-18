@@ -74,7 +74,7 @@ Known file names become destination aliases, so “second.csv then first.csv”
 becomes “d2 then d1”. Transport paths, key references and other known private
 labels are removed. Duplicate names remain ambiguous.
 
-Jobs with freeform text prepared under the previous disclosure policy are
+Jobs with freeform text prepared under an older disclosure policy are
 stale. To continue, prepare new requirements with a fresh request key and
 approve the new preview. The previous job remains in authorized history.
 
@@ -96,7 +96,18 @@ When a properly authorized deployment explicitly enables endpoint calls, generat
 
 The [Ollama generate contract](https://docs.ollama.com/api/generate) is the first implemented adapter. It requests non-streaming [structured JSON](https://docs.ollama.com/capabilities/structured-outputs), no thinking output, fixed decoding settings and no resident-model keep-alive. It performs no runtime management or model pull. Response framing, total bytes, completed-generation status, model identity and reported token budgets are checked. Unknown or invalid output is rejected; invalid response text and private reasoning are not stored or returned. Only a response digest, bounded result and explicitly labelled endpoint-reported usage enter records.
 
-For proposals, the model may select an ordering of **all and only** the prepared destination aliases, or report missing/unsupported requirements. It cannot add a connection, path, key, permission, approval, task type or tool. The server expands accepted aliases using the existing authorized bindings and validates the normal typed workflow. This first representation covers the current ordered SFTP task set. It does not silently translate scanning, encryption, schedules or business receipts into a plain delivery.
+For proposals, the model may order the prepared destination aliases or report
+missing or unsupported requirements. Each alias refers to an exact active
+connection version. The preview lists FTPS aliases in `ftps_destinations`.
+The other aliases use SFTP. The server chooses the task for each connection,
+keeps the approved version and filename, and validates the normal typed
+workflow. A collection-only connection is refused before a context is saved.
+Connection and credential references are scrubbed from optional requirements
+before the preview is saved.
+
+The result becomes an unapproved draft. Scanning, encryption, schedules and
+business receipt requirements need supported tasks and separate review.
+Preparing, generating or adopting a draft grants no execution authority.
 
 `ai-adopt` requires the succeeded proposal's exact context hash/state revision and `workflow_manage`. It stages an **unapproved** workflow draft through the same `workflow.StageDraft` checks as ordinary creation. The draft, adoption provenance and idempotency receipt commit together; a failed receipt rolls the whole adoption back. Adoption creates no run, delivery intent or workflow approval. Ordinary explicit workflow review, approval and execution still follow.
 

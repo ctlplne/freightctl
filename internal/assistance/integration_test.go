@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/delivery"
 	"github.com/ctlplne/freightctl/internal/store"
 	"github.com/ctlplne/freightctl/internal/workflow"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -144,6 +145,85 @@ func TestAssistancePriorOperatorTextApprovalCannotContactEndpoint(t *testing.T) 
 	generated, err := s.Generate(f.ctx, f.scope, fresh.ID, "current-generate")
 	if err != nil || generated.Job.State != "succeeded" || generated.Job.Attempts != 1 || p.Requests.Load() != 2 {
 		t.Fatal("fresh review did not follow the normal endpoint contract", err)
+	}
+}
+
+func TestAssistancePreparesAndAdoptsMixedDeliveryAsDraftOnly(t *testing.T) {
+	f := setup(t)
+	responder := peer(t, `{"status":"ready","order":["d2","d1"],"missing":[]}`)
+	s, profile := register(t, f, responder, true)
+	private := t.TempDir()
+	pin := strings.Repeat("a", 64)
+	receiver := secure.FTPSDestination{Address: "127.0.0.1:2341", ServerName: "receiver.example", Mode: "explicit", User: "receiver-principal", CAFile: filepath.Join(private, "receiver.pem"), CASHA256: pin, PasswordFile: filepath.Join(private, "protected-ref"), PasswordSHA256: pin}
+	registerConnection := func(key string, request workflow.ConnectionRequest) workflow.Reference {
+		t.Helper()
+		registered, err := f.wf.RegisterConnection(f.ctx, f.scope, key, request)
+		if err != nil {
+			t.Fatal(err)
+		}
+		var view workflow.ConnectionView
+		if err := json.Unmarshal(registered.Resource, &view); err != nil {
+			t.Fatal(err)
+		}
+		return workflow.Reference{ID: view.ID, Version: view.Version, Hash: view.Hash}
+	}
+	ftps := registerConnection("assistance-ftps", workflow.ConnectionRequest{Directory: "/delivery", FTPS: &delivery.FTPSDefinition{
+		Destination: receiver, StagingDirectory: "/private-stage",
+		ReceiverContract: store.FTPSReceiverContract{Schema: 1, DocumentSHA256: pin, StagingVisibility: "receiver-private", Rename: "may-replace", Duplicates: "receiver-deduplicates-delivery-id", Receipt: "exact-readback"},
+	}})
+	readOnly := registerConnection("assistance-dav-source", workflow.ConnectionRequest{Directory: "/inbox", DAV: &delivery.DAVCollectionSource{Schema: 1,
+		Destination: secure.HTTPSReadDestination{Address: "127.0.0.1:2342", ServerName: "source.example", CAFile: receiver.CAFile, CASHA256: pin, TokenFile: receiver.PasswordFile, TokenSHA256: pin},
+	}})
+	sftp := workflow.Reference{ID: f.connection.ID, Version: f.connection.Version, Hash: f.connection.Hash}
+	request := PrepareRequest{
+		Profile: workflow.Reference{ID: profile.ID, Version: profile.Version, Hash: profile.Hash}, Kind: "propose", Name: "ordered exports",
+		Destinations: []Destination{{Connection: sftp, Filename: "first.csv"}, {Connection: readOnly, Filename: "second.csv"}},
+	}
+	if result, err := s.Prepare(f.ctx, f.scope, "deny-read-only-destination", request); !errors.Is(err, workflow.ErrInput) || result != nil || responder.Requests.Load() != 0 {
+		t.Fatal("collection source acquired sending authority through an AI proposal", err)
+	}
+	request.Destinations[1].Connection = ftps
+	request.Requirements = "Send second.csv then first.csv. References " + receiver.PasswordFile + " " + receiver.Address + " " + receiver.User
+	prepared, err := s.Prepare(f.ctx, f.scope, "prepare-mixed", request)
+	if err != nil {
+		t.Fatal(err)
+	}
+	var job store.AIJob
+	var preview Context
+	if json.Unmarshal(prepared.Resource, &job) != nil || json.Unmarshal(job.Context, &preview) != nil ||
+		len(preview.FTPSDestinations) != 1 || preview.FTPSDestinations[0] != "d2" ||
+		preview.Requirements != "Send d2 then d1. References [label redacted] [label redacted] [label redacted]" || responder.Requests.Load() != 0 {
+		t.Fatal("mixed preview changed the bound protocol or disclosed a private label")
+	}
+	approved := approve(t, f, s, &job)
+	s.Enabled = true // This peer only returns fixed, synthetic JSON.
+	generated, err := s.Generate(f.ctx, f.scope, approved.ID, "generate-mixed")
+	if err != nil || generated.Job.State != "succeeded" {
+		t.Fatal("synthetic mixed ordering failed", err)
+	}
+	adopted, err := s.Adopt(f.ctx, f.scope, approved.ID, "adopt-mixed", Decision{Hash: job.ContextHash, Revision: generated.Job.Revision})
+	if err != nil {
+		t.Fatal(err)
+	}
+	var draft store.Configuration
+	var definition workflow.Definition
+	if json.Unmarshal(adopted.Resource, &draft) != nil || draft.State != "draft" || json.Unmarshal(draft.Definition, &definition) != nil || len(definition.Steps) != 2 {
+		t.Fatal("mixed proposal did not become an unapproved ordinary draft")
+	}
+	for i, expected := range []struct {
+		kind, filename string
+		connection     workflow.Reference
+	}{
+		{"ftps.deliver", "second.csv", ftps}, {"sftp.deliver", "first.csv", sftp},
+	} {
+		step := definition.Steps[i]
+		if step.Kind != expected.kind || step.Connection != expected.connection || step.Filename != expected.filename {
+			t.Fatal("stored draft lost the exact reviewed connection binding")
+		}
+	}
+	var effects int
+	if err := f.admin.QueryRow(f.ctx, "SELECT (SELECT count(*) FROM workflow_runs) + (SELECT count(*) FROM delivery_intents)").Scan(&effects); err != nil || effects != 0 {
+		t.Fatal("draft creation triggered an execution or delivery", err)
 	}
 }
 

@@ -1,0 +1,80 @@
+{
+  "schema_version": 1,
+  "id": "F455",
+  "observed_at": "2026-11-18",
+  "base_candidate": "718ac8061c4fc33fc020f9b7f47ed4396fe4d9fa",
+  "qualification_claim": false,
+  "changed": "Preserve the exact SFTP and FTPS transport bound to each authorized connection alias. The responder can choose order or report missing requirements. The system validates ordinary delivery connection definitions, excludes collection sources, and replaces FTPS connection and protected reference labels before disclosure. The draft still requires normal separate approval.",
+  "local_red": "The earlier proposal compiler yielded sftp.deliver for an FTPS-bound alias in the mixed ordering regression.",
+  "local_green": "The same fixture compiles to exact ftps.deliver and sftp.deliver steps with correct order, connection versions and filenames. Model output cannot set the protocol. Affected redaction, diagnosis, FTPS definition, formatting, tagged vet and architecture checks pass.",
+  "compatibility": "SFTP-only metadata contexts retain their old representation. Text policy v3 requires a new review for older freeform-text jobs because FTPS labels now enter the protection set.",
+  "source_files": [
+    {
+      "reference": "STATUS.md",
+      "bytes": 7155,
+      "sha256": "fa90a6193c5669f4cb43e0a79b560420273c30e1c965d2cb3ca6c8962fb35099"
+    },
+    {
+      "reference": "docs/assistance.md",
+      "bytes": 15089,
+      "sha256": "b9239490b1dd7490579e41d181de3beba91fba7ade81be4a7bac3139f86ff238"
+    },
+    {
+      "reference": "docs/qualification/remaining.json",
+      "bytes": 720980,
+      "sha256": "e96dcf71c6c807417cbd102b1500249205c377fc39b92734e82e7e9c62379e15"
+    },
+    {
+      "reference": "internal/assistance/backend.go",
+      "bytes": 5902,
+      "sha256": "b357237f830aa7acf190d0fe0099543395c16618b4281b5c8ef6e0f2413908c0"
+    },
+    {
+      "reference": "internal/assistance/context.go",
+      "bytes": 16568,
+      "sha256": "c3e1ed3f293a1aa0fe34731827ff766ec16f8539900f45b4672049f858803e24"
+    },
+    {
+      "reference": "internal/assistance/integration_test.go",
+      "bytes": 23031,
+      "sha256": "c2f3327da86f67bbd0ef66c57db5585d60f7886bedddd97192975739c7effb5a"
+    },
+    {
+      "reference": "internal/assistance/types.go",
+      "bytes": 7410,
+      "sha256": "d0b3fcd06a9467208a65ed5bbd8206501ce6e1a9a972f4ce9179a25ed32da398"
+    },
+    {
+      "reference": "internal/assistance/validation_test.go",
+      "bytes": 6482,
+      "sha256": "a3be0933a93286f5d50fcce861ab17375392422a3f19c90b9c412e44e5b294f5"
+    },
+    {
+      "reference": "internal/workflow/configuration.go",
+      "bytes": 23566,
+      "sha256": "367dcabd2fbea00ac2e96ea5ae00470d2d5325340518ccdbad723fb6414052d6"
+    }
+  ],
+  "private_proofs": [
+    {
+      "reference": ".private/freightctl-f455-mixed-proposal-red.log",
+      "bytes": 287,
+      "sha256": "ddc6dda451b8d76288e0b10e1972b8aad362021e7628f6712721403f5bd95b25"
+    },
+    {
+      "reference": ".private/freightctl-f455-mixed-proposal-green.log",
+      "bytes": 3347,
+      "sha256": "6a35aab06e64a5723d725f8ea208e1f456833bfb3130aed6947e4e9003d6c19d"
+    },
+    {
+      "reference": ".private/freightctl-f455-final-compile.log",
+      "bytes": 118,
+      "sha256": "89ebb6dae3738933de2436f220c3061b4cd1390b5fbd89536c6f77e7588649a3"
+    }
+  ],
+  "owed": [
+    "Execute the compiled real PostgreSQL plus synthetic responder proof on native CI",
+    "Real model quality, broader typed tasks, full workflow/interface and final-source qualification"
+  ],
+  "inference_run": false
+}

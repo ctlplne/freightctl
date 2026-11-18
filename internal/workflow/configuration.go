@@ -118,6 +118,19 @@ func connectionDefinition(c *store.Configuration) (*ConnectionDefinition, error)
 	return nil, store.ErrState
 }
 
+// DeliveryConnectionDefinition validates the stored revision's exact shape
+// and refuses collection-only profiles. Callers load the row in their scope.
+func DeliveryConnectionDefinition(c *store.Configuration) (*ConnectionDefinition, error) {
+	d, err := connectionDefinition(c)
+	if err != nil {
+		return nil, err
+	}
+	if d.Local != nil || d.DAV != nil {
+		return nil, ErrInput
+	}
+	return d, nil
+}
+
 func ftpsConnectionView(f *delivery.FTPSDefinition) *FTPSConnectionView {
 	return &FTPSConnectionView{Mode: f.Destination.Mode, ServerName: f.Destination.ServerName, CASHA256: f.Destination.CASHA256, CAReferenceHash: secure.Digest([]byte(f.Destination.CAFile)), PasswordReferenceHash: secure.Digest([]byte(f.Destination.PasswordFile)), StagingDirectory: f.StagingDirectory, ReceiverContract: f.ReceiverContract}
 }
@@ -363,11 +376,11 @@ func connections(ctx context.Context, t *store.Transaction, d Definition) ([]Con
 		if c.State != "active" {
 			return nil, store.ErrState
 		}
-		definition, err := connectionDefinition(c)
+		definition, err := DeliveryConnectionDefinition(c)
 		if err != nil {
 			return nil, err
 		}
-		if definition.Local != nil || definition.DAV != nil || (step.Kind == "ftps.deliver") != (definition.FTPS != nil) {
+		if (step.Kind == "ftps.deliver") != (definition.FTPS != nil) {
 			return nil, ErrInput
 		}
 		if step.Encryption != nil {

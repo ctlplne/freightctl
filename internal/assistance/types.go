@@ -78,12 +78,13 @@ type Finding struct {
 	NextCheck string   `json:"next_check"`
 }
 type Context struct {
-	Schema       int       `json:"schema_version"`
-	Kind         string    `json:"kind"`
-	Requirements string    `json:"operator_text,omitempty"`
-	Destinations []string  `json:"destinations,omitempty"`
-	Facts        []Fact    `json:"facts,omitempty"`
-	Supported    []Finding `json:"supported_findings,omitempty"`
+	Schema           int       `json:"schema_version"`
+	Kind             string    `json:"kind"`
+	Requirements     string    `json:"operator_text,omitempty"`
+	Destinations     []string  `json:"destinations,omitempty"`
+	FTPSDestinations []string  `json:"ftps_destinations,omitempty"`
+	Facts            []Fact    `json:"facts,omitempty"`
+	Supported        []Finding `json:"supported_findings,omitempty"`
 }
 type Bindings struct {
 	Request            PrepareRequest        `json:"request"`
@@ -169,7 +170,7 @@ func normalizeProfile(p Profile) (Profile, error) {
 }
 
 // Bump this version whenever a change affects which operator text can leave.
-const operatorTextPolicy = "credential-guard-v2"
+const operatorTextPolicy = "credential-guard-v3"
 
 var credentialField = regexp.MustCompile(`(?i)\b(?:[a-z0-9]+[-_])*(?:authorization|cookie|password|passwd|secret|api[-_ ]?key|access[-_ ]?key|token)["']?\s*[:=]`)
 

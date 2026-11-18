@@ -6,6 +6,7 @@ import (
 	"testing"
 
 	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
 func TestRedactionPrecedesPersistenceAndDisclosure(t *testing.T) {
@@ -62,6 +63,7 @@ func TestProposalCannotGrantAuthorityOrAddRecipients(t *testing.T) {
 		`{"status":"ready","order":["d1","d1"],"missing":[]}`,
 		`{"status":"ready","order":["d1","d2"],"missing":[],"approved":true}`,
 		`{"status":"ready","order":["d1","d2"],"missing":[],"tools":["execute"]}`,
+		`{"status":"ready","order":["d1","d2"],"missing":[],"ftps_destinations":["d1"]}`,
 		`{"status":"ready","status":"unsupported","order":[],"missing":["supported_task"]}`,
 		`{"status":"needs_input","order":["d1"],"missing":["filename"]}`,
 	} {
@@ -73,6 +75,39 @@ func TestProposalCannotGrantAuthorityOrAddRecipients(t *testing.T) {
 		t.Fatal(err)
 	}
 }
+
+func TestProposalOrderKeepsTheReviewedDeliveryProtocol(t *testing.T) {
+	const sftp = "00000000-0000-4000-8000-000000000001"
+	const ftps = "00000000-0000-4000-8000-000000000002"
+	bindings, _, err := canonical(Bindings{Request: PrepareRequest{
+		Name: "ordered exports",
+		Destinations: []Destination{
+			{Connection: workflow.Reference{ID: sftp, Version: 1, Hash: strings.Repeat("a", 64)}, Filename: "first.csv"},
+			{Connection: workflow.Reference{ID: ftps, Version: 2, Hash: strings.Repeat("b", 64)}, Filename: "second.csv"},
+		},
+	}})
+	if err != nil {
+		t.Fatal(err)
+	}
+	job := &store.AIJob{
+		Kind: "propose", Bindings: bindings,
+		Context: json.RawMessage(`{"schema_version":1,"kind":"propose","destinations":["d1","d2"],"ftps_destinations":["d2"]}`),
+		Result:  json.RawMessage(`{"proposal":{"status":"ready","order":["d2","d1"],"missing":[]}}`),
+	}
+	def, err := proposedDefinition(job)
+	if err != nil || len(def.Steps) != 2 {
+		t.Fatal("reviewed delivery order was not compiled", err)
+	}
+	for i, expected := range []struct{ id, kind, filename string }{
+		{ftps, "ftps.deliver", "second.csv"}, {sftp, "sftp.deliver", "first.csv"},
+	} {
+		step := def.Steps[i]
+		if step.Connection.ID != expected.id || step.Kind != expected.kind || step.Filename != expected.filename {
+			t.Fatalf("step %d changed its reviewed protocol, receiver or filename", i+1)
+		}
+	}
+}
+
 func TestDiagnosisMustMatchExactSupportedEvidence(t *testing.T) {
 	c := Context{Schema: 1, Kind: "diagnose", Facts: []Fact{{Alias: "e1", Code: "uncertain_delivery"}}, Supported: []Finding{{Code: "uncertain_delivery", Evidence: []string{"e1"}, NextCheck: "read_only_reconcile"}}}
 	b := Bindings{Evidence: map[string][]Citation{"e1": {{EventID: "recorded-event", Kind: "DeliveryTransitioned", ResourceID: "recorded-delivery"}}}}

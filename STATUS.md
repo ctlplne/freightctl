@@ -54,6 +54,12 @@ failure, Go source failures and stock DAV security failures remain recorded.
 fast-forward to `6412db0`. Gitleaks passed across all seven outgoing
 commits. The 19 original CI workflows are running against that candidate.
 
+[F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
+each AI proposal alias to its registered SFTP or FTPS connection. The
+responder suggests an order. freightctl checks the protocol and creates an
+ordinary unapproved draft. Focused regressions pass. Native PostgreSQL and
+private model qualification remain due.
+
 F442 implements direct DAV delivery schema3 through the existing custody,
 durable intent,draft/approval,worker slot,lease/fence and reconciliation paths.
 Exact pinned TLS1.3 and protected bearer/Basic references,private-stage contract,

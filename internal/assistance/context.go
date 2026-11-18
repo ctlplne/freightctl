@@ -106,15 +106,18 @@ func buildContext(ctx context.Context, t *store.Transaction, r PrepareRequest, p
 			if _, err = add("connection", conn.ID, conn.Version, conn.Revision, conn.Hash); err != nil {
 				return nil, nil, err
 			}
-			// Registered transport details remain bindings, never model context.
-			var def workflow.ConnectionDefinition
-			if json.Unmarshal(conn.Definition, &def) != nil {
-				return nil, nil, store.ErrState
+			def, err := workflow.DeliveryConnectionDefinition(conn)
+			if err != nil {
+				return nil, nil, err
 			}
-			labels = append(labels, d.Filename, def.Directory, def.Destination.Address, def.Destination.KeyFile, def.Destination.User)
+			labels = append(labels, d.Filename)
+			labels = appendDeliveryLabels(labels, def)
 			alias := "d" + strconv.Itoa(i+1)
 			c.Destinations = append(c.Destinations, alias)
-			draft.Steps = append(draft.Steps, workflow.Step{ID: "deliver_" + strconv.Itoa(i+1), Kind: "sftp.deliver", Connection: d.Connection, Filename: d.Filename})
+			if def.FTPS != nil {
+				c.FTPSDestinations = append(c.FTPSDestinations, alias)
+			}
+			draft.Steps = append(draft.Steps, orderedDeliveryStep(i, c, alias, d))
 		}
 		normalized, err := workflow.Normalize(draft)
 		if err != nil {
@@ -238,11 +241,11 @@ func buildContext(ctx context.Context, t *store.Transaction, r PrepareRequest, p
 				if conn.State != "active" {
 					finding("connection_revoked", "review_approval", cc)
 				}
-				var def workflow.ConnectionDefinition
-				if json.Unmarshal(conn.Definition, &def) != nil {
-					return nil, nil, store.ErrState
+				def, err := workflow.DeliveryConnectionDefinition(conn)
+				if err != nil {
+					return nil, nil, err
 				}
-				labels = append(labels, def.Directory, def.Destination.Address, def.Destination.KeyFile, def.Destination.User)
+				labels = appendDeliveryLabels(labels, def)
 			}
 		}
 		if len(completed) == len(steps) {
@@ -317,6 +320,23 @@ func buildContext(ctx context.Context, t *store.Transaction, r PrepareRequest, p
 		return nil, nil, store.ErrLimit
 	}
 	return c, b, nil
+}
+
+func appendDeliveryLabels(labels []string, def *workflow.ConnectionDefinition) []string {
+	if f := def.FTPS; f != nil {
+		d := f.Destination
+		return append(labels, def.Directory, f.StagingDirectory, d.Address, d.ServerName, d.User, d.CAFile, d.PasswordFile)
+	}
+	d := def.Destination
+	return append(labels, def.Directory, d.Address, d.KeyFile, d.User)
+}
+
+func orderedDeliveryStep(i int, c *Context, alias string, target Destination) workflow.Step {
+	kind := "sftp.deliver"
+	if slices.Contains(c.FTPSDestinations, alias) {
+		kind = "ftps.deliver"
+	}
+	return workflow.Step{ID: "deliver_" + strconv.Itoa(i+1), Kind: kind, Connection: target.Connection, Filename: target.Filename}
 }
 
 var explanations = map[string]string{
@@ -414,8 +434,9 @@ func validateOutput(j *store.AIJob, output string) (*ValidatedResult, error) {
 }
 func proposedDefinition(j *store.AIJob) (workflow.Definition, error) {
 	var b Bindings
+	var context Context
 	var result ValidatedResult
-	if json.Unmarshal(j.Bindings, &b) != nil || json.Unmarshal(j.Result, &result) != nil || result.Proposal == nil || result.Proposal.Status != "ready" {
+	if json.Unmarshal(j.Bindings, &b) != nil || json.Unmarshal(j.Context, &context) != nil || json.Unmarshal(j.Result, &result) != nil || result.Proposal == nil || result.Proposal.Status != "ready" {
 		return workflow.Definition{}, store.ErrState
 	}
 	proposalBytes, _, err := canonical(result.Proposal)
@@ -431,8 +452,7 @@ func proposedDefinition(j *store.AIJob) (workflow.Definition, error) {
 		if _, err := fmt.Sscanf(alias, "d%d", &n); err != nil || n < 1 || n > len(b.Request.Destinations) || alias != "d"+strconv.Itoa(n) {
 			return d, ErrModelOutput
 		}
-		target := b.Request.Destinations[n-1]
-		d.Steps = append(d.Steps, workflow.Step{ID: "deliver_" + strconv.Itoa(i+1), Kind: "sftp.deliver", Connection: target.Connection, Filename: target.Filename})
+		d.Steps = append(d.Steps, orderedDeliveryStep(i, &context, alias, b.Request.Destinations[n-1]))
 	}
 	return workflow.Normalize(d)
 }
