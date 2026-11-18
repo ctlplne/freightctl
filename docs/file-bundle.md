@@ -367,3 +367,27 @@ source bytes. Keep the destination delivery observation and a signed
 audit export. Their event IDs connect the restored revision and its
 lineage to the workflow, the recorded receiver readback, and the
 protected delivery receipt.
+
+## Export an account's namespace and permission policy
+
+An account manager can export an account revision using its ID and the
+revision from `account-status` or a saved command receipt. Use the original
+manager for historical revisions. A current account can also be exported
+from its ordinary status projection.
+
+```sh
+umask 077
+freightctl account-export --tenant "$TENANT" --partner "$PARTNER" \
+  --account-id "$ACCOUNT_ID" --expected-revision "$REVISION" \
+  --output .private/account-policy.json
+jq '.destination_registration' .private/account-policy.json \
+  > .private/account-registration.json
+```
+
+The export records the source namespace, permissions, expiration, and
+revocation at that revision. Review the destination namespace and
+permission list explicitly. Fill in those fields and the new account
+ID. Keep or review the original expiration, and use a freshly generated
+token with `account-create --new-token-file`. Verify the new account
+can access its intended path and fails outside that scope. Credential
+values and their hashes stay with the source.

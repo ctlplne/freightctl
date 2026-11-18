@@ -4,15 +4,25 @@ import (
 	"context"
 	"encoding/json"
 	"errors"
-	secure "github.com/ctlplne/freightctl/internal/crypto"
-	"github.com/ctlplne/freightctl/internal/store"
-	"github.com/ctlplne/freightctl/internal/workflow"
 	"io"
 	"os"
 	"strings"
+
+	secure "github.com/ctlplne/freightctl/internal/crypto"
+	"github.com/ctlplne/freightctl/internal/custody"
+	"github.com/ctlplne/freightctl/internal/store"
+	"github.com/ctlplne/freightctl/internal/workflow"
 )
 
-func runAccounts(ctx context.Context, command, dsn, token, tenant, partner, input, key, id, after, newToken string, limit int) error {
+func runAccounts(ctx context.Context, command, dsn, token, tenant, partner, input, key, id, after, newToken, output string, revision int64, limit int) error {
+	if command == "account-export" {
+		if err := validatePortableOutput(output); err != nil {
+			return err
+		}
+		if !store.ValidID(id) || revision < 1 {
+			return store.ErrAccountInput
+		}
+	}
 	secret, err := secure.ReadSecret(token, 64)
 	if err != nil {
 		return err
@@ -30,6 +40,12 @@ func runAccounts(ctx context.Context, command, dsn, token, tenant, partner, inpu
 		result, err = db.Accounts(ctx, scope, after, limit)
 	case "account-status":
 		result, err = db.Account(ctx, scope, id)
+	case "account-export":
+		service := &custody.Service{DB: db}
+		ref := custody.AccountExportReference{ID: id, Revision: revision}
+		return writePortableArtifact(ctx, output, "account-policy", func(staged io.Writer) (*custody.AccountExportReceipt, error) {
+			return service.PreparePortableAccount(ctx, scope, ref, staged)
+		}, os.Stdout)
 	default:
 		f, e := os.Open(input)
 		if e != nil {

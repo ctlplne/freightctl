@@ -246,6 +246,13 @@ GnuPG authenticated and decrypted both to the original bytes. A
 27-event destination audit links the restore, new run, readback and
 receipt export. OpenSSL refused a changed audit signature.
 
+[F495](docs/qualification/evidence/F495-portable-account-policy.json)
+exports the original account policy and a separate enrollment template.
+The real CLI replayed a revision recorded before revocation and
+re-enrolled the actor with a fresh token in another database. The new
+actor read its intended path. Reads outside that namespace, writes and
+account exports by the new actor were refused.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

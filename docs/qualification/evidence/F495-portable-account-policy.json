@@ -1,0 +1,42 @@
+{
+  "schema_version": 1,
+  "id": "F495",
+  "observed_at": "2026-11-18",
+  "base_candidate": "ccc4418",
+  "scope": "Historical account policy, current bootstrap metadata and constrained re-enrollment in a separate database",
+  "qualification_claim": false,
+  "red": {
+    "observation": "The prior binary rejects account-export and creates no artifact.",
+    "log_sha256": "79908aeb415dc166736adf47256be9a83108a48556683e9b8cdf330d6cd63ce2"
+  },
+  "green": {
+    "platform": "darwin/arm64 CLI with two Linux arm64 PostgreSQL databases and real local file custody",
+    "go_version": "go1.27.4",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "memory_limit_bytes": 201326592,
+    "cpu_limit": 1,
+    "private_witness_directory": ".private/freightctl-f495-witness",
+    "executable_sha256": "c3868e0077259401009050fae258739684afca05baca57b903b1b4b88298d78a",
+    "fixture_sha256": "1625fabff0eacfc8a8b461949ddcc2e933a6803061a77207187813fa9c1a208e",
+    "summary_sha256": "4bc30e47c2ff355e50eeb5c2b0a3fb0af3f5fb95e91d4e34705c3b3fe3934e8e",
+    "operations_sha256": "c489459f573861c3e5d8ac50ffe8c6b7efebd7e988925363bd0688ddd0ff6a10",
+    "historical_policy_archive_sha256": "c36488721a866adb39c31d11ee7284990c114e7bb181236c77bc78770d888979",
+    "exact_first_revision_and_event_after_later_policy_change_and_revocation": true,
+    "latest_revocation_and_current_bootstrap_projection_exported": true,
+    "source_token_bytes_and_digest_absent": true,
+    "fresh_destination_actor_and_token_with_reviewed_scope_and_original_expiration": true,
+    "unbound_template_wrong_tenant_missing_revision_and_unprivileged_export_refused": true,
+    "destination_visible_file_and_refused_foreign_file_and_write": true,
+    "exact_task_container_removed_verified": true
+  },
+  "checks": {
+    "affected_tagged_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass",
+    "record_references": "pass"
+  },
+  "remaining": [
+    "Native matrix replay, already-hidden prior manager history and complete cross-estate permission translation",
+    "External identity provider correlation, independent operators and production cutover"
+  ]
+}
