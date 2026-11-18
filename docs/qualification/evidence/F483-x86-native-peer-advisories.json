@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "F483",
+  "observed_at": "2026-11-18",
+  "candidate": "b1145f28c3a49170d3815ed3bb11f9a9ec2081b4",
+  "base_evidence": "docs/qualification/evidence/F475-guarded-native-batch.json",
+  "previous_failure": "docs/qualification/evidence/F470-terminal-native-and-disclosure-red.json",
+  "scope": "Completed original x86 native PostgreSQL and exact independent peer image scan",
+  "qualification_claim": false,
+  "workflow": {
+    "id": 44308573910,
+    "attempt": 1,
+    "job_id": 134816442984,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/44308573910/job/134816442984",
+    "conclusion": "failure",
+    "raw_log_bytes": 731775,
+    "raw_log_sha256": "1b43390e4b34ab7eb35518838a96ed463583f7550943d99658ba3bcdbd1d1191",
+    "native_postgresql_integration_step": "success",
+    "original_mixed_delivery_privacy_case": "pass",
+    "enforcing_peer_image_gate": "failure"
+  },
+  "image": {
+    "architecture": "amd64",
+    "id": "sha256:1dd715435ac454a173af3016d2bf8e57ee7b81b254b473217c9e63016f8120ec",
+    "base": "gcr.io/distroless/base-nossl-debian13:nonroot@sha256:e6b0f82595aa1edde72c8054de7a9dca30f0f8f54820c37a167c0ddfc21c5c67",
+    "report_sha256": "39c7d5ae28a8aa8c5c010dc877a515d5db1137e1ae3afb494cf26c09d6217c58",
+    "feed_database_sha256": "7244f40ff53c4ac2909d8fba04aa4937354a620c380dc83bbc51df715f6cd68d",
+    "feed_updated_at": "2026-11-18T13:03:23.615586+00:00",
+    "package_inventory": {"lang-pkgs": 2, "os-pkgs": 11},
+    "severity_counts": {"CRITICAL": 0, "HIGH": 0, "LOW": 12, "MEDIUM": 38, "UNKNOWN": 5},
+    "blocking_unknown_without_fix_metadata": [
+      "CVE-2026-100290",
+      "CVE-2026-115819",
+      "CVE-2026-121757",
+      "CVE-2026-121758",
+      "CVE-2026-124024"
+    ],
+    "new_since_F470": ["CVE-2026-121757", "CVE-2026-121758", "CVE-2026-124024"],
+    "suppressed_findings": 0
+  },
+  "debian": {
+    "source": "https://security-tracker.debian.org/tracker/source-package/glibc",
+    "observed_trixie_version": "2.41-12+deb13u4",
+    "all_five_advisories_listed_vulnerable_in_trixie": true
+  },
+  "remaining": [
+    "Preserve the original report and rerun against a genuinely patched independent peer with complete inventory and current feed.",
+    "Collect the original native ARM, Windows and macOS terminal results and retain the remaining runtime failures."
+  ]
+}

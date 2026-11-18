@@ -91,6 +91,13 @@ fast-forward to `b1145f2` after all previous originals finished. Gitleaks
 reported zero leaks across all twelve outgoing owner commits. The new native
 replay is underway.
 
+[F483](docs/qualification/evidence/F483-x86-native-peer-advisories.json)
+records the first x86 replay at `b1145f2`. The full PostgreSQL step and
+the original AI disclosure regression pass. The independent peer image
+gate blocks on five glibc advisories, three newly in the feed. Debian
+lists all five as vulnerable in trixie. The ARM and other original
+workflow outcomes still require their own evidence.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
