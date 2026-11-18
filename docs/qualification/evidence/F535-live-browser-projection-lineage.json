@@ -1,0 +1,87 @@
+{
+  "schema_version": 1,
+  "id": "F535",
+  "observed_at": "2026-11-19",
+  "base_candidate": "f74f924fb0f5001f616db6e8c20e3a7363f73bfd",
+  "qualification_claim": false,
+  "scope": "Live generated-artifact lineage in separate sender and recipient browser sessions",
+  "lineage_contract": "docs/qualification/evidence/F533-authorized-projection-lineage.json",
+  "first_failure": {
+    "observed_phase": "released-source",
+    "finding": "The real held-source read passed. Playwright could not retrieve the second response body after receipt of its headers. The browser transport raised Network.getResponseBody with no response data.",
+    "test_log": {
+      "sha256": "326b759784da9e1694567420f3dfbf793f24b5534148ef9c69e10809fb754e7e",
+      "bytes": 567
+    },
+    "protected_browser_log": {
+      "sha256": "b366f339ffe1a8a6570cda3c8a98688aa86eb9121535c04889405907a30dbecc",
+      "bytes": 576
+    }
+  },
+  "response_capture_diagnostic": {
+    "finding": "The CDP wire helper rejected the held-source request at its header evidence boundary. The final fixture observes the real bounded HTTPS response as the handler writes it. Chromium receives the original response and the same route guard remains active.",
+    "test_log": {
+      "sha256": "59be6a3f58d76b2d6f21c7be75e5249a8f3ead2bdedff775a8b3d7e9e7efeaca",
+      "bytes": 559
+    },
+    "protected_browser_log": {
+      "sha256": "6d08d08d7bf547ea08672cd63bba02ef26a02c2f89a026eba3944d1fada7888b",
+      "bytes": 603
+    }
+  },
+  "local_replay": {
+    "platform": "macOS ARM with sandboxed Chromium 151.0.7922.34, Node 26.13.0, Go 1.27.4 race detector, disk custody and PostgreSQL 16.15",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "focused_green": {
+      "sha256": "f290f55a9249466484d704cc89d2ab8961cfdc8386130f75c583e4d1e010809e",
+      "bytes": 560
+    },
+    "fresh_database_replay": {
+      "sha256": "9e266e7d9e2e4809cdedcd157e02a7db0ef8b19dc8afebee4ea4d44780288e1e",
+      "bytes": 755
+    },
+    "isolated_logins": 2,
+    "original_https_trace_requests": 5,
+    "accessibility_checks_passed": 2,
+    "external_egress": 0,
+    "unexpected_effect_requests": 0,
+    "assertions": [
+      "The actual approved CSV to JSON projection produced a separately checked and released output. The sender offered that exact immutable output. The initial browser v2 request returned the custody and offer facts and omitted the held input and projection.",
+      "After a separate ordinary intake release and owner-only path permission, the same authenticated Chromium sender session displayed the exact input revision, hash, acceptance event, definition identity and completion event. The original HTTPS JSON matched the database witness.",
+      "The recipient UI and a direct authenticated v2 request both omitted the input and completion facts. Direct input download and the original sender trace returned 404. Normal browser download returned the exact generated output bytes.",
+      "No browser evidence request accepted a file, created an offer, changed processing or created a delivery. Receiver retrieval, persistence and business processing remain unknown in the trace."
+    ]
+  },
+  "checks": {
+    "affected_tagged_go_vet": "pass",
+    "actionlint_1_7_12": "pass",
+    "node_syntax": "pass"
+  },
+  "sources": [
+    {
+      "path": ".github/workflows/artifact-exchange.yml",
+      "sha256": "b1b3f0db07e3fa87c9f12b04291054de83aac5508873f9ab3ade7a53e605f749",
+      "bytes": 3863
+    },
+    {
+      "path": "internal/checks/exchange_lineage_browser_integration_test.go",
+      "sha256": "e0175ebc0f3cb4ae568c50bd3d29a7a87aa5bd1dc6de2312a81cbaff9fbbbc7d",
+      "bytes": 9039
+    },
+    {
+      "path": "internal/checks/exchange_lineage_integration_test.go",
+      "sha256": "b00dfe46ab41e47dc983ec2e2785dec65df366626ae5f0729cdb86b28580c2dd",
+      "bytes": 8580
+    },
+    {
+      "path": "scripts/projection-lineage-browser.mjs",
+      "sha256": "5778fbb8bed547f6f572c38d91bfa1010f454d87d2fa6ab3ed48d4973286659f",
+      "bytes": 9150
+    }
+  ],
+  "remaining": [
+    "Original native Linux Chrome replay on exact source, broader derivation cases and full AX05 qualification remain due."
+  ]
+}

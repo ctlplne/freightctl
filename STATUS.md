@@ -335,7 +335,7 @@ links a generated exchange artifact to its exact input revision and completed
 record projection. The original sender sees the link under current source
 read authority. Held sources and incoming views omit it. Real PostgreSQL,
 the stock MCP SDK, HTTPS, the full CLI journey and browser contract checks
-passed locally. Native Linux and the live browser lineage journey remain due.
+passed locally. F535 records the live browser replay.
 
 [F534](docs/qualification/evidence/F534-native-recovery-and-policy-grammar.json)
 records the original stock OpenSSH recovery after worker death passing on
@@ -343,6 +343,12 @@ native Linux x86 and ARM. Both enclosing unit steps failed on the same stale
 MCP policy count as the core workflow. The corrected Go and browser checks
 exercise all nine published policy fields against 62 custody cases. The
 separate lost OpenSSH reply still needs its native replay.
+
+[F535](docs/qualification/evidence/F535-live-browser-projection-lineage.json)
+passes the actual generated-artifact lineage in sandboxed Chromium. The
+same sender session sees the input link after a separate release. The
+recipient receives the exact output with the source evidence withheld.
+The new native Linux Chrome step remains due.
 
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed

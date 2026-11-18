@@ -259,7 +259,8 @@
         "docs/qualification/evidence/F505-operator-connection-provisioning.json",
         "docs/qualification/evidence/F509-stock-ftps-producer-exchange.json",
         "docs/qualification/evidence/F510-supervised-stock-ftps-producer.json",
-        "docs/qualification/evidence/F533-authorized-projection-lineage.json"
+        "docs/qualification/evidence/F533-authorized-projection-lineage.json",
+        "docs/qualification/evidence/F535-live-browser-projection-lineage.json"
       ]
     },
     {
