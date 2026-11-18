@@ -82,19 +82,23 @@ same listener survived two full journeys in each TLS mode with no container
 restarts. The standalone failure remains open.
 [vsftpd configuration manual](https://security.appspot.com/vsftpd/vsftpd_conf.html) [F510 replay](../qualification/evidence/F510-supervised-stock-ftps-producer.json)
 
-To replay this profile, run a read-only loopback stock producer with the exact
-fixture in F509 and the supervisor configuration in F510. Give the test a `0600` JSON file matching
-the `destination` object of a registered FTPS connection, with the CA and
-password kept in separate referenced files. Use a fresh producer for each mode
-and set `FREIGHTCTL_TEST_STOCK_FTPS_PRODUCER_FILE` to that JSON file. Supply the
-real PostgreSQL test references and keep the source log for receipt verification.
-The registered connection reads from remote `/inbox`. The collection definition
-uses `/` as its local custody directory.
+The replay harness builds a read-only loopback producer from pinned Alpine
+packages and runs the full exchange twice per TLS mode. Use a task-owned
+PostgreSQL fixture with the two protected references produced by
+`scripts/dev-db.py`. The runner also needs Docker, stock OpenSSL, curl and
+OpenSSH server and client tools. Run as an unprivileged user.
 
 ```sh
-sh scripts/go.sh test -race -tags=integration,stockftpsproducer -count=2 \
-  -run '^TestStockFTPSProducerToAgentAndSeparatelyApprovedStockSFTP$' -v ./internal/workflow
+FREIGHTCTL_TEST_ADMIN_FILE="$PWD/.private/pg-admin.dsn" \
+FREIGHTCTL_TEST_RUNTIME_FILE="$PWD/.private/pg-runtime.dsn" \
+  python3 scripts/qualify-stock-ftps-producer.py
 ```
+
+The harness reads the producer's own completion log and final file tree. It
+prints a summary with artifact hashes and keeps raw logs in a private
+workspace directory. The registered connection reads `/inbox` on the producer.
+The collection definition uses `/` as its local custody directory.
+[F513 harness evidence](../qualification/evidence/F513-native-stock-ftps-producer-harness.json)
 
 The native Linux freightctl runtime matrix, the full SFTP pair, additional actor
 and transport pairs, process-death recovery and restore remain open.

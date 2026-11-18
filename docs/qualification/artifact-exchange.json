@@ -482,7 +482,7 @@
         "Independent destination receiver"
       ],
       "steps": [
-        "Initial pair frozen:verified HTTPS resumable browser upload -> registered custody-https-poll-v1 receive view -> native authenticated download. Freeze remaining stock SFTP/FTPS push and governed collection/onward adapter-role pairs against existing protocol contracts;all remain mandatory. Governed source pair pinned:stock SFTP immutable ready-manifest collection -> governed-collection-exchange-source-v1 -> separately authorized custody-https-poll-v1 offer;full SFTP pair remains owed. The F503 local pair runs explicit or implicit freightctl FTPS ready-manifest collection, scoped stock HTTPS retrieval, an agent-owned copy and separately approved onward delivery to stock OpenSSH. F509 repeats that chain with an independent stock Alpine vsftpd producer in both TLS modes using a macOS ARM freightctl runtime. F510 passes two serial journeys per mode using one stock inetd listener that remains running. The original standalone stock exit remains open. Native Linux freightctl replay and other adapter-role pairs remain due.",
+        "Initial pair frozen:verified HTTPS resumable browser upload -> registered custody-https-poll-v1 receive view -> native authenticated download. Freeze remaining stock SFTP/FTPS push and governed collection/onward adapter-role pairs against existing protocol contracts;all remain mandatory. Governed source pair pinned:stock SFTP immutable ready-manifest collection -> governed-collection-exchange-source-v1 -> separately authorized custody-https-poll-v1 offer;full SFTP pair remains owed. The F503 local pair runs explicit or implicit freightctl FTPS ready-manifest collection, scoped stock HTTPS retrieval, an agent-owned copy and separately approved onward delivery to stock OpenSSH. F509 repeats that chain with an independent stock Alpine vsftpd producer in both TLS modes using a macOS ARM freightctl runtime. F510 passes two serial journeys per mode using one stock inetd listener that remains running. The original standalone stock exit remains open. F513 adds the checked-in native Linux matrix step and passes the same journey twice per mode on macOS ARM. Its native results and other adapter-role pairs remain due.",
         "A human and a system separately provide known artifacts to an agent receive endpoint, including a governed collection case.",
         "The agent retrieves only approved revisions, then prepares a separately authorized onward exchange to a system endpoint.",
         "Independently verify exact received bytes, current-policy refusals, per-hop evidence and inference-disabled behavior.",
@@ -510,7 +510,8 @@
         "docs/qualification/evidence/F503-ftps-agent-stock-sftp.json",
         "docs/qualification/evidence/F505-operator-connection-provisioning.json",
         "docs/qualification/evidence/F509-stock-ftps-producer-exchange.json",
-        "docs/qualification/evidence/F510-supervised-stock-ftps-producer.json"
+        "docs/qualification/evidence/F510-supervised-stock-ftps-producer.json",
+        "docs/qualification/evidence/F513-native-stock-ftps-producer-harness.json"
       ]
     },
     {

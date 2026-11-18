@@ -1,0 +1,215 @@
+{
+  "schema_version": 1,
+  "id": "F514",
+  "observed_at": "2026-11-19",
+  "candidate": "0d1e20dbb767a6878178f3e8d6604768f4dd6790",
+  "qualification_claim": false,
+  "preceding_record": "docs/qualification/evidence/F512-guarded-stock-producer-batch.json",
+  "scope": "Terminal attempt-one status for source 0d1e20d and all native source security scans",
+  "workflow_totals": {
+    "success": 11,
+    "failure": 4
+  },
+  "job_totals": {
+    "success": 24,
+    "failure": 7
+  },
+  "terminal_metadata": {
+    "sha256": "baa5cce3e21a316d687ab7492e22dc97f8eeda27ef9a30ced3960198b49c93f6",
+    "bytes": 112647
+  },
+  "workflows": [
+    {
+      "run": 44355680593,
+      "name": "Core correctness and security",
+      "conclusion": "success"
+    },
+    {
+      "run": 44355680605,
+      "name": "Native reproducible core binaries",
+      "conclusion": "success"
+    },
+    {
+      "run": 44355680646,
+      "name": "Native legacy SCP regular-file custody",
+      "conclusion": "success"
+    },
+    {
+      "run": 44355680701,
+      "name": "Native FTPS dispatch approval qualification",
+      "conclusion": "success"
+    },
+    {
+      "run": 44355680868,
+      "name": "Native Windows and macOS unit checks",
+      "conclusion": "success"
+    },
+    {
+      "run": 44355680882,
+      "name": "Native FTPS workflow consent qualification",
+      "conclusion": "success"
+    },
+    {
+      "run": 44355680919,
+      "name": "Native tus stock client and custody checkpoints",
+      "conclusion": "success"
+    },
+    {
+      "run": 44355680927,
+      "name": "Native independent DAV application",
+      "conclusion": "failure"
+    },
+    {
+      "run": 44355680953,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "conclusion": "failure"
+    },
+    {
+      "run": 44355680998,
+      "name": "Native artifact receive browser",
+      "conclusion": "failure"
+    },
+    {
+      "run": 44355681028,
+      "name": "Native JSON intake and custody interfaces",
+      "conclusion": "failure"
+    },
+    {
+      "run": 44355681060,
+      "name": "Native FTPS stock clients and custody",
+      "conclusion": "success"
+    },
+    {
+      "run": 44355681107,
+      "name": "Native browser and FTPS operator qualification",
+      "conclusion": "success"
+    },
+    {
+      "run": 44355681124,
+      "name": "Native immutable HTTPS stock resume",
+      "conclusion": "success"
+    },
+    {
+      "run": 44355681609,
+      "name": "Native source vulnerability configurations",
+      "conclusion": "success"
+    }
+  ],
+  "failed_jobs": [
+    {
+      "run": 44355680927,
+      "job": 134983021975,
+      "name": "Native stock rclone DAV (arm64)",
+      "failed_steps": [
+        "Actual independent DAV application,exact bytes,conditional writes and current authority",
+        "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+        "Direct DAV delivery between separate freightctl custody instances"
+      ]
+    },
+    {
+      "run": 44355680927,
+      "job": 134983022308,
+      "name": "Native stock rclone DAV (amd64)",
+      "failed_steps": [
+        "Actual independent DAV application,exact bytes,conditional writes and current authority",
+        "Actual direct DAV delivery,independent stock receiver,CLI and approvals",
+        "Direct DAV delivery between separate freightctl custody instances"
+      ]
+    },
+    {
+      "run": 44355680953,
+      "job": 134983022730,
+      "name": "Native Go and PostgreSQL (x86_64)",
+      "failed_steps": [
+        "All implemented real PostgreSQL integration and migration tests"
+      ]
+    },
+    {
+      "run": 44355680953,
+      "job": 134983023341,
+      "name": "Native Go and PostgreSQL (arm64)",
+      "failed_steps": [
+        "All implemented real PostgreSQL integration and migration tests"
+      ]
+    },
+    {
+      "run": 44355680998,
+      "job": 134983023635,
+      "name": "receive-browser",
+      "failed_steps": [
+        "Actual recipient UI, exact bytes, unrelated user and endpoint revocation"
+      ]
+    },
+    {
+      "run": 44355681028,
+      "job": 134983026812,
+      "name": "Native JSON custody (arm64)",
+      "failed_steps": [
+        "Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes"
+      ]
+    },
+    {
+      "run": 44355681028,
+      "job": 134983027046,
+      "name": "Native JSON custody (x86_64)",
+      "failed_steps": [
+        "Actual JSON SQL, API, CLI, signature and scanner-protocol outcomes"
+      ]
+    }
+  ],
+  "source_scans": [
+    {
+      "run": 44355681609,
+      "job": 134983025685,
+      "name": "Native vulnerability source (windows/amd64)",
+      "conclusion": "success"
+    },
+    {
+      "run": 44355681609,
+      "job": 134983026148,
+      "name": "Native vulnerability source (darwin/arm64)",
+      "conclusion": "success"
+    },
+    {
+      "run": 44355681609,
+      "job": 134983026353,
+      "name": "Native vulnerability source (linux/arm64)",
+      "conclusion": "success"
+    }
+  ],
+  "independent_openpgp_steps": [
+    {
+      "run": 44355680953,
+      "job": 134983022730,
+      "name": "Native Go and PostgreSQL (x86_64)",
+      "selected_steps": {
+        "Encrypted FTPS workflow with independent OpenPGP recipient": "success",
+        "Scan the exact independent peer image and enforce complete evidence": "success"
+      }
+    },
+    {
+      "run": 44355680953,
+      "job": 134983023341,
+      "name": "Native Go and PostgreSQL (arm64)",
+      "selected_steps": {
+        "Encrypted FTPS workflow with independent OpenPGP recipient": "success",
+        "Scan the exact independent peer image and enforce complete evidence": "success"
+      }
+    }
+  ],
+  "path_filtered_at_this_commit": [
+    {
+      "workflow": ".github/workflows/first-run.yml",
+      "reason": "Only documentation and Go test files changed."
+    },
+    {
+      "workflow": ".github/workflows/stock-peers.yml",
+      "reason": "Only documentation and Go test files changed."
+    }
+  ],
+  "remaining": [
+    "Retain seven original failed jobs and defer their nonsecurity repair and required replays to FINISH under S003.",
+    "The new stock producer harness and its native workflow step are outside this candidate. Native proof still needs actual output from that step on both architectures.",
+    "Repeat mandatory security and runtime gates at the final source candidate."
+  ]
+}

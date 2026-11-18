@@ -196,6 +196,17 @@ records the fast-forward to `0d1e20d` after all 17 preceding originals
 finished. The enabled Gitleaks guard found zero leaks across three owner
 commits. The first snapshot shows 15 original runs for the new candidate.
 
+[F513](docs/qualification/evidence/F513-native-stock-ftps-producer-harness.json)
+turns the supervised replay into a checked-in harness and adds it to the
+native Linux ARM and x86 matrix. Both modes passed locally on macOS ARM with
+the pinned stock producer and real PostgreSQL. The runner step still needs
+its own native outcomes.
+
+[F514](docs/qualification/evidence/F514-stock-producer-originals-terminal.json)
+records 15 terminal first-attempt workflows at `0d1e20d`. All three native
+source scans and both independent OpenPGP peer scans passed. Seven jobs across
+PostgreSQL, JSON custody, DAV and the browser remain red.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

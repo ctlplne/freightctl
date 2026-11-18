@@ -34,6 +34,8 @@ on:
       - 'scripts/xlsx-stock-producer.py'
       - 'scripts/xlsxwriter-qualification.txt'
       - 'scripts/peers/openpgp/**'
+      - 'scripts/peers/stock-ftps-producer/**'
+      - 'scripts/qualify-stock-ftps-producer.py'
       - 'scripts/scan-peer-image.py'
       - 'scripts/ci-peer-image-summary.py'
       - 'scripts/test-ci-peer-image-summary.py'
@@ -76,6 +78,8 @@ on:
       - 'scripts/xlsx-stock-producer.py'
       - 'scripts/xlsxwriter-qualification.txt'
       - 'scripts/peers/openpgp/**'
+      - 'scripts/peers/stock-ftps-producer/**'
+      - 'scripts/qualify-stock-ftps-producer.py'
       - 'scripts/scan-peer-image.py'
       - 'scripts/ci-peer-image-summary.py'
       - 'scripts/test-ci-peer-image-summary.py'
@@ -126,6 +130,7 @@ jobs:
             test "$(uname -m)" = aarch64
           fi
       - name: Pinned stock FTPS client
+        id: stock_clients
         run: |
           sh scripts/install-ftps-clients.sh
           sudo apt-get install --yes --no-install-recommends openssh-server
@@ -139,9 +144,11 @@ jobs:
           .private/xlsx-producer/bin/python -m pip install --no-cache-dir --no-deps --no-compile --only-binary=:all: --require-hashes -r scripts/xlsxwriter-qualification.txt
           .private/xlsx-producer/bin/python scripts/xlsx-stock-producer.py .private/xlsx-stock-producer
           printf 'FREIGHTCTL_TEST_XLSX_DIR=%s\n' "$GITHUB_WORKSPACE/.private/xlsx-stock-producer" >> "$GITHUB_ENV"
-      - name: Task-owned PostgreSQL and offline GnuPG peer
+      - name: Task-owned PostgreSQL
+        id: postgres
+        run: python3 scripts/dev-db.py
+      - name: Offline GnuPG peer
         run: |
-          python3 scripts/dev-db.py
           docker build --label "freightctl.workspace=$PWD" \
             --label freightctl.purpose=pgp-interoperability \
             --tag freightctl-pgp-peer:2.4.9-r1 - <<'DOCKERFILE'
@@ -184,6 +191,15 @@ jobs:
           else
             python3 scripts/scan-peer-image.py --architecture arm64
           fi
+      - name: Independent stock FTPS producer through HTTPS agent custody to stock SFTP
+        if: ${{ !cancelled() && steps.postgres.outcome == 'success' && steps.stock_clients.outcome == 'success' }}
+        env:
+          FREIGHTCTL_TEST_ADMIN_FILE: ${{ github.workspace }}/.private/pg-admin.dsn
+          FREIGHTCTL_TEST_RUNTIME_FILE: ${{ github.workspace }}/.private/pg-runtime.dsn
+        run: |
+          curl --version
+          openssl version
+          python3 scripts/qualify-stock-ftps-producer.py
 
   metadata-restore:
     name: Native metadata restore (${{ matrix.arch }})

@@ -1,0 +1,217 @@
+{
+  "schema_version": 1,
+  "id": "F513",
+  "observed_at": "2026-11-19",
+  "base_commit": "a9b3443443d12abdc84a3cd6447cf8b1463ac0f9",
+  "qualification_claim": false,
+  "previous": "docs/qualification/evidence/F510-supervised-stock-ftps-producer.json",
+  "scope": "Checked-in stock FTPS producer fixture, independent qualification runner and native matrix wiring",
+  "stock_inputs": {
+    "base_index": "docker.io/library/alpine:3.24.4@sha256:f59abe656b692d901e184be3445e084786602108599d2a51d229c0f5a48c71bf",
+    "arm64_manifest": "sha256:1829893486be257df5049ab3b7fc95afbd0fc09d89803cbc580bda1ba5386b29",
+    "amd64_manifest": "sha256:0f49f331d9212aff11b932863be4eb01cdf962969aa86dab7d1ee21ac6f5f52b",
+    "architecture_package_count": 12,
+    "amd64_first_failure": {
+      "observation": "The ARM base uses architecture-specific signing keys and refused the x86_64 APK indexes.",
+      "repair": "Read only the signing keys from the exact pinned x86 image and verify the x86 indexes and packages with those keys. The x86 image was never started.",
+      "log": {
+        "sha256": "00d39675ae5d413b7b4c355e1d59eb628de0415e35ea39259f86af4693cb4b1c",
+        "bytes": 1206
+      }
+    },
+    "amd64_signature_witness": {
+      "sha256": "8a703b9fa39f17bb1d1ca698d788fae9f89eab2a68fa54d6a623c3e6bc7d8a0c",
+      "bytes": 842
+    },
+    "amd64_vsftpd_archive_member_sha256": "d821bd6a3485c6330f381f8c0b8920f01114900bfae3575be0369902254f13ce",
+    "amd64_inetd_archive_member_sha256": "1f9d7aa222c2cd571b659b08c26f435e64705adcfba6759d1acaefd0ab25f69b",
+    "packages": "Stock Alpine vsftpd 3.0.5-r3 with BusyBox inetd 1.37.0-r31"
+  },
+  "local_host_tools": {
+    "Go": "go version go1.27.4 darwin/arm64",
+    "curl": "curl 8.7.1 (x86_64-apple-darwin26.0) libcurl/8.7.1 (SecureTransport) LibreSSL/3.3.6 zlib/1.2.12 nghttp2/1.69.0",
+    "OpenSSH": "OpenSSH_10.5p1, LibreSSL 3.3.6",
+    "OpenSSL": "OpenSSL 4.0.3 29 Sep 2026 (Library: OpenSSL 4.0.3 29 Sep 2026)"
+  },
+  "local_postgres_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+  "local_postgres_resource_limits": "192 MiB memory, one CPU and task-owned loopback",
+  "local_final_summary": {
+    "sha256": "3703c3b953851be1d177360cd7cf77c127391e48976dcc2282342dd08dd64112",
+    "bytes": 2989
+  },
+  "local_final_result": {
+    "architecture": "arm64",
+    "commit": "a9b3443443d12abdc84a3cd6447cf8b1463ac0f9",
+    "fixture_certificate_tool": {
+      "bytes": 35757810,
+      "sha256": "b64fffa1f722f5deb90ec6157ccd49d2610e9a82622c11052fbccef1c51b0895"
+    },
+    "host": "Darwin",
+    "image": "sha256:1e4cd92e6d2a650619d77cffd7881cc1f3a5f794062b95c47959973e9e7fc06a",
+    "inetd_sha256": "ec3127316a53372ae3052cf3fa34c75108f2e391f2bfe49f49eb1c5cc0a86ce6",
+    "kind": "freightctl-stock-ftps-producer-v1",
+    "modes": {
+      "explicit": {
+        "confirmed_downloads": 4,
+        "evidence": {
+          "continuity.stdout": {
+            "bytes": 78,
+            "sha256": "4dcb1f596cfa4c39e0ed354593e80867a583b8936d76c185d2f589854381712d"
+          },
+          "journeys.stdout": {
+            "bytes": 4666,
+            "sha256": "f16a2ebf0fe3e90e87561189ae14cb74d207462cf835dad855adade01eaebc9e"
+          },
+          "peer-identity.stdout": {
+            "bytes": 184,
+            "sha256": "3456034b51025c7537dee3f01795258f7b9c462e56a2745c3a4d80d6fc83a994"
+          },
+          "producer-files.stdout": {
+            "bytes": 3584,
+            "sha256": "17beca865ff3d0507755a01f6f53d0eca7e766be8998419c33e9b0d967ac4922"
+          },
+          "reject-tls12.stderr": {
+            "bytes": 164,
+            "sha256": "6b9b22ae6f9347081aee495a5fd1dabcde8c12bd284f4faed6490e0b2f67c1b7"
+          },
+          "vsftpd.log": {
+            "bytes": 1121,
+            "sha256": "fbaa2fa4addaf080556af626d4e0d31cb60990adf94c3951eda3542d2fdfc509"
+          },
+          "xfer.log": {
+            "bytes": 368,
+            "sha256": "ca7186fd5d3b984feeaf4de87233564812ebb161ea3d06cea934be128b448edb"
+          }
+        },
+        "journeys": 2,
+        "listener_restarts": 0,
+        "tls12_refused": true,
+        "unchanged_source": true
+      },
+      "implicit": {
+        "confirmed_downloads": 4,
+        "evidence": {
+          "continuity.stdout": {
+            "bytes": 78,
+            "sha256": "c011aa0c3e4473b50478fa3cce031225be5c27c816dcdd1f0bd44a574fae5a93"
+          },
+          "journeys.stdout": {
+            "bytes": 4666,
+            "sha256": "e89d9460c5198eaeade6ba1270605925bfb1c7458b5393ab272f54ad693a5799"
+          },
+          "peer-identity.stdout": {
+            "bytes": 184,
+            "sha256": "3456034b51025c7537dee3f01795258f7b9c462e56a2745c3a4d80d6fc83a994"
+          },
+          "producer-files.stdout": {
+            "bytes": 3584,
+            "sha256": "f97d21be6c8def56ae200b40beb799f22f353404df51a3e17bb914feb4117132"
+          },
+          "reject-tls12.stderr": {
+            "bytes": 164,
+            "sha256": "6b9b22ae6f9347081aee495a5fd1dabcde8c12bd284f4faed6490e0b2f67c1b7"
+          },
+          "vsftpd.log": {
+            "bytes": 1121,
+            "sha256": "3a20f80a4be449a600bff1d6c9e9b5bd1f12f060ec1e80ab4cbf7512cbcddc9b"
+          },
+          "xfer.log": {
+            "bytes": 368,
+            "sha256": "554a611c8d778fb2b7c09271aa2035e8522aa94724090b23c17936e85543cc33"
+          }
+        },
+        "journeys": 2,
+        "listener_restarts": 0,
+        "tls12_refused": true,
+        "unchanged_source": true
+      }
+    },
+    "package_lock": {
+      "bytes": 1081,
+      "sha256": "7d25c977891048fa8e2b48b6f322f3cd9df2c74010cd5f0a2ce5c7e05508f962"
+    },
+    "schema_version": 1,
+    "state": "passed",
+    "tool_versions": {
+      "curl": {
+        "bytes": 413,
+        "sha256": "70631102a19b01fd5d0e0fa35a74d1c6616a2c7f5068e09e2209e921be454fe1"
+      },
+      "go": {
+        "bytes": 33,
+        "sha256": "c6f1c8d54aedc3afa72560d934397ad6c33b28f1b4d3546ec53176439b2397d5"
+      },
+      "openssl": {
+        "bytes": 63,
+        "sha256": "50bc8ea637df53e57f6a77e21416ec9a320b8123447130cd1be83698a4863c29"
+      },
+      "ssh": {
+        "bytes": 31,
+        "sha256": "6faf9904aac9ceb0fce08762e25a5a83dd82596100e2a6d2c6102da5eb7feaa7"
+      }
+    },
+    "vsftpd_sha256": "edb450c4e263459666f6b2139b16793a6a6df040b21d531f00ac978da903c8ce"
+  },
+  "witness_checks": {
+    "refused": [
+      "extra failed login",
+      "incoming transfer record",
+      "changed producer bytes",
+      "skipped Go test",
+      "package-only pass status",
+      "PostgreSQL host override"
+    ],
+    "passed": [
+      "real producer log and archive",
+      "two exact test passes",
+      "matching protected loopback PostgreSQL fixtures"
+    ],
+    "log": {
+      "sha256": "7010cb13f2e50fd1aeb780246b0441fb5005ad32d2e3748cc11411193d34cbc5",
+      "bytes": 277
+    }
+  },
+  "static_checks": [
+    "Pinned actionlint 1.7.12",
+    "Python byte compilation",
+    "POSIX shell syntax",
+    "git diff --check"
+  ],
+  "sources": [
+    {
+      "path": ".github/workflows/native-linux.yml",
+      "sha256": "49e6e28a54c4906cc0eca3919d2c4d4870ba2ec4114f861edcd5f4d870a62d66",
+      "bytes": 14135
+    },
+    {
+      "path": "scripts/qualify-stock-ftps-producer.py",
+      "sha256": "ea3cad49a7c489206de565602be8d375fb5ce080ba2657c29e3aa8d6c2cc8422",
+      "bytes": 16974
+    },
+    {
+      "path": "scripts/peers/stock-ftps-producer/Dockerfile",
+      "sha256": "acf144b689797c7030e56535ce4d94fa620f920b2cfe0a6348ef5bd2eb542829",
+      "bytes": 963
+    },
+    {
+      "path": "scripts/peers/stock-ftps-producer/start.sh",
+      "sha256": "95ecbe963ba1f5ea72c53334c926646f232f18ddfeb80f43758dead6ac300ecc",
+      "bytes": 2178
+    },
+    {
+      "path": "scripts/peers/stock-ftps-producer/arm64.sha256",
+      "sha256": "7d25c977891048fa8e2b48b6f322f3cd9df2c74010cd5f0a2ce5c7e05508f962",
+      "bytes": 1081
+    },
+    {
+      "path": "scripts/peers/stock-ftps-producer/amd64.sha256",
+      "sha256": "c8d9a431097b1637fe94bfe10f46950796c4a11b509d9f07fe1d5dc89b018cd0",
+      "bytes": 1081
+    }
+  ],
+  "remaining": [
+    "Collect actual native Linux ARM and x86 results for the new step. Signed x86 APK acquisition and extraction establish input integrity only.",
+    "Retain the standalone stock producer exit, original failed native gates and remaining AX-J02 adapter profiles.",
+    "Finish all mandatory final-source gates."
+  ]
+}
