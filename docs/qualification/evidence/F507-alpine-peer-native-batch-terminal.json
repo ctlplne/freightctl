@@ -1,0 +1,455 @@
+{
+  "schema_version": 1,
+  "id": "F507",
+  "observed_at": "2026-11-18",
+  "candidate": "f58dd143920290bb5537077abe12f6b9dc0fa859",
+  "base_evidence": "docs/qualification/evidence/F506-native-arm-alpine-peer-pass.json",
+  "qualification_claim": false,
+  "scope": "Original Linux x86 enforcing peer scan and terminal source-batch inventory",
+  "original_workflow_count": 19,
+  "original_job_count": 43,
+  "workflow_conclusions": {
+    "success": 13,
+    "failure": 6
+  },
+  "job_conclusions": {
+    "success": 33,
+    "failure": 9,
+    "cancelled": 1
+  },
+  "original_run_list_sha256": "968a95879160814b15d25b6ac1315f324e1df93d2ff4a31eb7ee5cf65ff4c2f1",
+  "terminal_matrix_sha256": "ba33eb5f45decf9836ccd025b60d80d02968573729ded9bd5f396a0c3fbffc1b",
+  "agent_did_not_cancel_replace_or_rerun_originals": true,
+  "original_x86_job": {
+    "run_id": 44340305606,
+    "job_id": 134928123209,
+    "attempt": 1,
+    "url": "https://github.com/ctlplne/freightctl/actions/runs/44340305606/job/134928123209",
+    "conclusion": "failure",
+    "raw_log_sha256": "831bbab17fda75ddd66660de9f81a489af39cc7016c8233aa5f83df5698d65df",
+    "raw_log_bytes": 724420,
+    "native_metadata_sha256": "dbe651457e05f55ee346cc3563b02e318cb63cbfeb182dae7eef567584d0c4a7",
+    "pinned_peer_build": "success",
+    "whole_postgresql_suite": "failure",
+    "focused_encrypted_ftps": "success",
+    "enforcing_image_scan": "success",
+    "focused_ftps_subcases_passed": 8,
+    "total_subcase_pass_markers_across_two_steps": 16
+  },
+  "runtime": {
+    "architecture": "x64",
+    "node_version": "v26.13.0",
+    "openpgp_version": "6.3.2",
+    "profile": "stock-node26-musl-alpine3.24-v1",
+    "node_sha256": "a3523371fe2f45562564332ba8166318e7afd9cf91959917ecb1b4d2f557df84",
+    "apk_database_sha256": "fa1de623eca61dfd8a83bda54f18f766d355177c85e17627b33adf71d649dcd8",
+    "stock_manifest_digest": "sha256:b2646ba6d774dc22c24d89fc37103fcf4c4467e870c78b9519aa403300b2835a"
+  },
+  "enforcing_scan": {
+    "image_id": "sha256:2710d9c5c117501e799584b3e5bc998d12bcb7040d8b95d7449414d3d1da590e",
+    "image_archive_sha256": "bf416ad93cbc7e6922b42c4ffb7802304f74492f46cc5f0ae576bd6802f24338",
+    "report_sha256": "ea829905b32594f95d6c76d5adf4c595eef87b2fddebb8724ea5ec21208ee5e4",
+    "feed_database_sha256": "7244f40ff53c4ac2909d8fba04aa4937354a620c380dc83bbc51df715f6cd68d",
+    "feed_updated_at": "2026-11-18T13:03:23.615586+00:00",
+    "report_created_at": "2026-11-18T16:28:35.352843+00:00",
+    "scanner_image": "aquasec/trivy:0.76.1@sha256:790fd66d1697395d8693d1acaa1ea702406a20f109b6fc7bac8db623eca6c06c",
+    "scanner_version": "0.76.1",
+    "os_family": "alpine",
+    "os_version": "3.24.4",
+    "package_counts": {
+      "lang-pkgs": 2,
+      "os-pkgs": 5
+    },
+    "severities": {
+      "CRITICAL": 0,
+      "HIGH": 0,
+      "LOW": 0,
+      "MEDIUM": 0,
+      "UNKNOWN": 0
+    },
+    "suppressed_findings": 0,
+    "blocking_advisory_ids": {
+      "CRITICAL": [],
+      "HIGH": [],
+      "UNKNOWN": []
+    },
+    "manifest_sha256": "f158f7f0d01df815c5eb989fd504682a76accf1f7cd594c8df18c6d14a71d953",
+    "scratch_bytes": 88650178560,
+    "scratch_cleanup": "unmounted",
+    "resource_policy": "github-runner-capacity"
+  },
+  "original_workflows": [
+    {
+      "id": 44340305480,
+      "name": "Native FTPS workflow consent qualification",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134928122612,
+          "name": "Native x86 registered FTPS workflow consent (plaintext)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928123293,
+          "name": "Native x86 registered FTPS workflow consent (recipient-encrypted)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305485,
+      "name": "Stock peer and browser qualification",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134928122539,
+          "name": "Stock peers (captured-routing)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928123086,
+          "name": "Stock peers (handoff-routing)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928123172,
+          "name": "Stock peers (intake-routing)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928123186,
+          "name": "Stock peers (routing)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928123188,
+          "name": "Stock peers (arrivals-schedules)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305496,
+      "name": "Native legacy SCP regular-file custody",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134928122411,
+          "name": "Native legacy SCP (arm64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928123190,
+          "name": "Native legacy SCP (x86_64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305527,
+      "name": "Native independent DAV application",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 134928122396,
+          "name": "Native stock rclone DAV (amd64)",
+          "conclusion": "failure"
+        },
+        {
+          "id": 134928123027,
+          "name": "Native stock rclone DAV (arm64)",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 44340305546,
+      "name": "Native artifact receive browser",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 134928122071,
+          "name": "receive-browser",
+          "conclusion": "failure"
+        }
+      ]
+    },
+    {
+      "id": 44340305548,
+      "name": "Native immutable HTTPS stock resume",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134928124278,
+          "name": "Native immutable HTTPS resume (x86_64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928124825,
+          "name": "Native immutable HTTPS resume (arm64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305581,
+      "name": "Native JSON intake and custody interfaces",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 134928128976,
+          "name": "Native JSON custody (x86_64)",
+          "conclusion": "failure"
+        },
+        {
+          "id": 134928129630,
+          "name": "Native JSON custody (arm64)",
+          "conclusion": "failure"
+        },
+        {
+          "id": 134928129843,
+          "name": "Native Chrome JSON policy and held bytes",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305596,
+      "name": "Native Windows and macOS unit checks",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 134928122801,
+          "name": "macos-arm64",
+          "conclusion": "cancelled"
+        },
+        {
+          "id": 134928123658,
+          "name": "windows-amd64",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305606,
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 134928122606,
+          "name": "bounded-fuzz",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928123142,
+          "name": "Native metadata restore (x86_64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928123209,
+          "name": "Native Go and PostgreSQL (x86_64)",
+          "conclusion": "failure"
+        },
+        {
+          "id": 134928123432,
+          "name": "Native Go and PostgreSQL (arm64)",
+          "conclusion": "failure"
+        },
+        {
+          "id": 134928123539,
+          "name": "Native metadata restore (arm64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305615,
+      "name": "Native FTPS stock clients and custody",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134928123557,
+          "name": "Native FTPS (x86_64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928124067,
+          "name": "Native FTPS (arm64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305625,
+      "name": "Native first enrollment and browser exchange",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134928122996,
+          "name": "first-run",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305641,
+      "name": "Core correctness and security",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134928122410,
+          "name": "source-and-browser",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305646,
+      "name": "Native reproducible core binaries",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134928123394,
+          "name": "Native core reproduction (arm64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928124116,
+          "name": "Native core reproduction (amd64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305687,
+      "name": "Native FTPS dispatch approval qualification",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134928122670,
+          "name": "Native x86 public FTPS dispatch consent",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305694,
+      "name": "Native browser and FTPS operator qualification",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134928125960,
+          "name": "Native x86 browser and live FTPS governance",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305703,
+      "name": "Native tus stock client and custody checkpoints",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134928123623,
+          "name": "Native tus resume (arm64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928124186,
+          "name": "Native tus resume (x86_64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305716,
+      "name": "Native document container contracts",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134928123330,
+          "name": "Native ZIP stock producer (arm64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928123733,
+          "name": "Native ZIP stock producer (x86_64)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340305727,
+      "name": "Native FTPS client and independent stock receiver",
+      "attempt": 1,
+      "conclusion": "failure",
+      "jobs": [
+        {
+          "id": 134928123886,
+          "name": "Native FTPS client (x86_64, system)",
+          "conclusion": "failure"
+        },
+        {
+          "id": 134928124064,
+          "name": "Native FTPS client (x86_64, no-ktls)",
+          "conclusion": "failure"
+        },
+        {
+          "id": 134928124214,
+          "name": "Native FTPS client (aarch64, no-ktls)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928124218,
+          "name": "Native FTPS client (aarch64, system)",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 44340306213,
+      "name": "Native source vulnerability configurations",
+      "attempt": 1,
+      "conclusion": "success",
+      "jobs": [
+        {
+          "id": 134928126171,
+          "name": "Native vulnerability source (darwin/arm64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928126629,
+          "name": "Native vulnerability source (windows/amd64)",
+          "conclusion": "success"
+        },
+        {
+          "id": 134928126758,
+          "name": "Native vulnerability source (linux/arm64)",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "remaining": [
+    "Both dedicated native encrypted FTPS and enforcing Alpine peer scans pass on this source. The original Debian findings remain recorded.",
+    "Both whole PostgreSQL suites and the listed original DAV, JSON, browser and FTPS receiver failures are open. A GitHub-canceled macOS job remains unverified. Keep the nonsecurity log investigation and final-source replay under S003 FINISH.",
+    "The runtime and vulnerability results cover only the pinned interoperability peer at this source. All required baseline and production qualification remains open."
+  ]
+}

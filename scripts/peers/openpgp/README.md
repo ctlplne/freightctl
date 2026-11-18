@@ -30,12 +30,14 @@ shorter string. The corrected assertion still requires the exact full version;
 the corrected native probes and full image gates pass at02140e7. Original
 independent interoperability/recovery and final-source qualification remain owed.
 
-The earlier Debian image passed both native image gates at `02140e7` with zero
-blocking or suppressed findings. Five glibc advisories subsequently blocked
-both architectures on `b7b0eb5`. The Alpine candidate must pass a new native
-scan and the exact encrypted FTPS workflow on both architectures. The peer
-remains a test fixture. [Earlier Debian pass](../../../docs/qualification/evidence/F124-native-peer-image-gate-passed.json)
+The earlier Debian image passed both native image gates at `02140e7`. Five
+glibc advisories subsequently blocked both architectures on `b7b0eb5`. The
+Alpine peer at `f58dd14` passed all eight dedicated encrypted FTPS cases and
+fresh enforcing scans on both architectures with zero findings or suppressions.
+Both broader PostgreSQL suites failed. Final-source replay remains due.
+[Earlier Debian pass](../../../docs/qualification/evidence/F124-native-peer-image-gate-passed.json)
 [Original Debian failures](../../../docs/qualification/evidence/F501-portability-native-batch-terminal.json)
+[Original Alpine outcomes](../../../docs/qualification/evidence/F507-alpine-peer-native-batch-terminal.json)
 
 GitHub builds the image and audits its JavaScript dependencies. Test execution
 uses no IP network, a read-only container root, no Linux capabilities, one CPU,

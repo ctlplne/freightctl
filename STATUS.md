@@ -159,6 +159,12 @@ records the original ARM Alpine peer image scan with zero findings and zero
 suppressions. All eight dedicated encrypted FTPS cases passed. The full ARM
 PostgreSQL suite still failed. Native x86 scan and runtime results remain due.
 
+[F507](docs/qualification/evidence/F507-alpine-peer-native-batch-terminal.json)
+records all 19 original `f58dd14` workflows and 43 jobs. Both native Alpine
+peer scans passed with zero findings and suppressions. Both dedicated
+encrypted FTPS replays passed. Both full PostgreSQL suites and the other
+listed original runtime failures remain open.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
