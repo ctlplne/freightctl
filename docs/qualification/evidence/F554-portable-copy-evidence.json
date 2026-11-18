@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "id": "F554",
+  "observed_at": "2026-11-19",
+  "base_candidate": "24939d0912ed869cae10e18800aca45ae0ace7fa",
+  "qualification_claim": false,
+  "scope": "Portable v4 copy evidence through the CLI with live parent authority and after parent closure",
+  "live_lineage_record": "docs/qualification/evidence/F553-authorized-received-copy-lineage.json",
+  "first_failure": {
+    "observation": "The original export fixture silently omitted the v4 selection. The CLI exported default v1, and both copy-history assertions failed.",
+    "log": {
+      "sha256": "7a8c6f7cb3def7601b593be6215b9e84668493e1da0c93d49e85e6f7fd41d0d1",
+      "bytes": 3528
+    }
+  },
+  "local_replay": {
+    "environment": "Native macOS ARM, Go 1.27.4 race build, real PostgreSQL 16.15 and disk custody, ordinary CLI entry point, private export directories under umask 022. Inference disabled.",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "postgresql_memory_limit_bytes": 201326592,
+    "postgresql_cpu_limit": 1,
+    "focused_log": {
+      "sha256": "e460cd3c16e02d9c4ee8f1d47ac94d4cc8b7967b841579ca69f4a01af721d94a",
+      "bytes": 3651
+    },
+    "observations": [
+      "The separately authorized copy author exported the v4 source edge to a protected file while the original receive view was readable.",
+      "After closure a new export preserved the child record and omitted the parent. The unrelated direction or actor and changed request hash produced no output.",
+      "The exact report, projection and copy fields are compared with the observed profile. The output bytes also match the returned digest and length. Original CLI, stock MCP receipt, process-death and custody assertions passed."
+    ]
+  },
+  "static_checks": {
+    "integration_tagged_go_vet": "pass",
+    "record_references": "pass"
+  },
+  "sources": [
+    {
+      "path": "cmd/freightctl/exchanges_integration_test.go",
+      "sha256": "e629db7989b2d2f5f120a418cf9db910b339d02e917b36a7ebb982c4b6d0dcd0",
+      "bytes": 26932
+    },
+    {
+      "path": "cmd/freightctl/portable_exchange_trace_integration_test.go",
+      "sha256": "47091e59499df28cae67c3563ec63406a9fe3d0038be4e05a8f4948502a36ddb",
+      "bytes": 3312
+    }
+  ],
+  "remaining": [
+    "Replay the exact v4 CLI and browser checks on native Linux. Separate partner outcome and full journey qualification remain due."
+  ]
+}

@@ -456,6 +456,11 @@ copy. HTTPS, the stock MCP SDK and Chromium verified the scoped link. A
 closed or changing source view hid it, and the downstream recipient could
 still read the independently authorized copy. Native Linux replay remains due.
 
+[F554](docs/qualification/evidence/F554-portable-copy-evidence.json)
+verifies the protected v4 CLI export before and after source closure. The
+archive matches its receipt hash and length. Wrong actor, direction and
+request hash produce no file.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

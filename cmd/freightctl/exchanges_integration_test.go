@@ -375,7 +375,7 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if json.Unmarshal(raw, &replayedOnward) != nil || !replayedOnward.Replayed || string(replayedOnward.Resource) != string(started.Resource) {
 		t.Fatal("CLI onward replay changed original run")
 	}
-	copyToken, copyScope, copyActor := participant([]string{"read", "write", "list"})
+	copyToken, copyScope, copyActor := participant([]string{"read", "write", "list", "deliver"})
 	copyEndpointCommand := store.ExchangeEndpointCommand{Operation: "create", ID: secure.NewID(), Definition: &store.ExchangeEndpointDefinition{Schema: 1, Profile: "custody-https-poll-v1", Recipient: copyActor, Senders: []store.ExchangeParticipant{actorA}}}
 	raw, err = command(adminToken, "exchange-endpoint-command", "-request-file", requestFile(copyEndpointCommand), "-idempotency-key", "cli-copy-endpoint")
 	var copyEndpoint store.ExchangeEndpointResult
@@ -409,9 +409,53 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if err != nil || !bytes.Equal(copyBytes, data) {
 		t.Fatal("CLI copy independently observed bytes differ", err)
 	}
+	onwardRoute := store.ExchangeEndpointCommand{Operation: "create", ID: secure.NewID(), Definition: &store.ExchangeEndpointDefinition{
+		Schema: 1, Profile: "custody-https-poll-v1", Recipient: actorB, Senders: []store.ExchangeParticipant{copyActor},
+	}}
+	raw, err = command(adminToken, "exchange-endpoint-command", "-request-file", requestFile(onwardRoute), "-idempotency-key", "cli-copy-onward-endpoint")
+	var onwardEndpoint store.ExchangeEndpointResult
+	if err != nil || json.Unmarshal(raw, &onwardEndpoint) != nil {
+		t.Fatal("CLI independently authorized copy destination", err)
+	}
+	onwardCopy := copyOfferRequest
+	onwardCopy.Artifact = copied.Artifact
+	onwardCopy.Endpoint = store.ExchangeEndpointReference{ID: onwardEndpoint.Endpoint.ID, Revision: onwardEndpoint.Endpoint.Revision, Hash: onwardEndpoint.Endpoint.Hash}
+	raw, err = command(copyToken, "exchange-offer", "-request-file", requestFile(onwardCopy), "-idempotency-key", "cli-copy-onward-offer")
+	var copyChild store.ArtifactExchangeResult
+	if err != nil || json.Unmarshal(raw, &copyChild) != nil {
+		t.Fatal("CLI separately offered the owned copy", err)
+	}
+	copyTrace := func(token, direction string) store.ExchangeTrace {
+		t.Helper()
+		wire, err := command(token, "exchange-trace", "-request-file", requestFile(store.ExchangeTraceRequest{
+			ID: copyChild.Exchange.ID, Direction: direction, Profile: store.ExchangeEvidenceV4,
+		}))
+		var observed store.ExchangeTrace
+		if err != nil || json.Unmarshal(wire, &observed) != nil || observed.Profile != store.ExchangeEvidenceV4 ||
+			observed.Artifact == nil || *observed.Artifact != copied.Artifact {
+			t.Fatal("CLI did not return the pinned copied revision", err)
+		}
+		return observed
+	}
+	liveCopyTrace := copyTrace(copyToken, "outgoing")
+	wantCopyLineage := store.ExchangeCopyLineage{Source: copied.Source, SourceAccepted: file.EventID, SourceOffer: copyOffer.Exchange.EventID}
+	if liveCopyTrace.ReceivedCopy == nil || *liveCopyTrace.ReceivedCopy != wantCopyLineage ||
+		copyTrace(b, "incoming").ReceivedCopy != nil {
+		t.Fatal("CLI copy lineage did not match the authorized direction and exact source")
+	}
+	t.Run("copy author exports the live source edge", func(t *testing.T) {
+		qualifyPortableExchangeTrace(t, copyActor.Actor, copyToken, b, liveCopyTrace, command, requestFile)
+	})
 	if _, err = command(a, "exchange-close", "-request-file", requestFile(store.ExchangeClosureCommand{Schema: 1, ID: copyOffer.Exchange.ID, RequestHash: copyOffer.Exchange.RequestHash, Operation: "cancel"}), "-idempotency-key", "cli-copy-close"); err != nil {
 		t.Fatal(err)
 	}
+	t.Run("copy author exports owned history after the source closes", func(t *testing.T) {
+		current := copyTrace(copyToken, "outgoing")
+		if current.ReceivedCopy != nil {
+			t.Fatal("CLI trace still exposed the closed parent")
+		}
+		qualifyPortableExchangeTrace(t, copyActor.Actor, copyToken, b, current, command, requestFile)
+	})
 	raw, err = command(copyToken, "exchange-copy", "-request-file", copyInput, "-idempotency-key", "cli-copy-original")
 	var copiedReplay custody.ExchangeCopyResult
 	if err != nil || json.Unmarshal(raw, &copiedReplay) != nil || !copiedReplay.Replayed || copiedReplay.Artifact != copied.Artifact || copiedReplay.EventID != copied.EventID {

@@ -22,7 +22,7 @@ func qualifyPortableExchangeTrace(t *testing.T, actor, token, unrelated string, 
 	selected := store.ExchangeTraceExportSelection{
 		ExchangeTraceRequest: store.ExchangeTraceRequest{ID: live.ID, Direction: live.Direction}, RequestHash: live.RequestHash,
 	}
-	if live.Profile == store.ExchangeEvidenceV2 {
+	if live.Profile != store.ExchangeEvidenceV1 {
 		selected.Profile = live.Profile
 	}
 	path := filepath.Join(privateCLIDirectory(t), "exchange-evidence.json")
@@ -62,6 +62,8 @@ func qualifyPortableExchangeTrace(t *testing.T, actor, token, unrelated string, 
 	}
 	if !reflect.DeepEqual(portable.Evidence.Events, live.Events) ||
 		portable.Evidence.Profile != live.Profile || !reflect.DeepEqual(portable.Evidence.Projection, live.Projection) ||
+		!reflect.DeepEqual(portable.Evidence.ReceivedCopy, live.ReceivedCopy) ||
+		!reflect.DeepEqual(portable.Evidence.IntegrityReport, live.IntegrityReport) ||
 		portable.Evidence.State != live.State || portable.Evidence.Artifact == nil || *portable.Evidence.Artifact != *live.Artifact ||
 		portable.Evidence.ReceiverPersistence != "unknown" || portable.Evidence.Retrieval != "unknown" ||
 		portable.Evidence.BusinessProcessing != "unknown" || portable.Evidence.StorageVerification != "not-checked" {
