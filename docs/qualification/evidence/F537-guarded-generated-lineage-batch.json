@@ -1,0 +1,147 @@
+{
+  "schema_version": 1,
+  "id": "F537",
+  "observed_at": "2026-11-19",
+  "candidate": "439881e7ee734c0118201e4fe56266ab3a949fd8",
+  "qualification_claim": false,
+  "preceding_terminal_record": "docs/qualification/evidence/F536-original-reviewed-onward-batch-terminal.json",
+  "browser_lineage_record": "docs/qualification/evidence/F535-live-browser-projection-lineage.json",
+  "push": {
+    "previous": "2c19ff2c83c0c13765a14f011dae28f0d8d7f515",
+    "remote_ref": "refs/heads/main",
+    "remote_head_verified": true,
+    "fast_forward": true,
+    "owner_author_and_committer": "imfeelingtheagi <288773099+imfeelingtheagi@users.noreply.github.com>",
+    "commits": [
+      "729198bd1dd1198c4041b9a43ae38509952cde5a",
+      "bcdf346ad43f7ad79c1d0f216f426e93fe9da861",
+      "56ec0897044190cb246613228ea0d0930a70bcbc",
+      "a34a6d8741abf7ffea2a1eb765cea174bcdf84da",
+      "32cabd1c5f87be8fd1e22e6d21391c97e8d9f796",
+      "f74f924fb0f5001f616db6e8c20e3a7363f73bfd",
+      "c3c7df7790eca3176ab5f8a36219b705cd5bd397",
+      "439881e7ee734c0118201e4fe56266ab3a949fd8"
+    ],
+    "previous_attempt_one_workflows_terminal": 17,
+    "pre_push_guard": ".githooks/pre-push",
+    "gitleaks_version": "8.30.1",
+    "gitleaks_commits_scanned": 8,
+    "gitleaks_reported_bytes": 1055389,
+    "gitleaks_leaks": 0,
+    "redacted_log": {
+      "sha256": "b1e938d8efc8871f285bcd80510f945a74056e86394cef58574601279eb22fd9",
+      "bytes": 210
+    }
+  },
+  "originals_at_first_observation": [
+    {
+      "name": "Core correctness and security",
+      "run": 44400839821,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native FTPS dispatch approval qualification",
+      "run": 44400840050,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native FTPS stock clients and custody",
+      "run": 44400839509,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native FTPS workflow consent qualification",
+      "run": 44400840068,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native JSON intake and custody interfaces",
+      "run": 44400839463,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "run": 44400840038,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native Windows and macOS unit checks",
+      "run": 44400839559,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native artifact receive browser",
+      "run": 44400839844,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native browser and FTPS operator qualification",
+      "run": 44400839818,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native first enrollment and browser exchange",
+      "run": 44400839654,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native immutable HTTPS stock resume",
+      "run": 44400839561,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native independent DAV application",
+      "run": 44400839983,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native legacy SCP regular-file custody",
+      "run": 44400839789,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native reproducible core binaries",
+      "run": 44400840006,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native source vulnerability configurations",
+      "run": 44400839475,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Native tus stock client and custody checkpoints",
+      "run": 44400839650,
+      "attempt": 1,
+      "status": "queued"
+    },
+    {
+      "name": "Stock peer and browser qualification",
+      "run": 44400839919,
+      "attempt": 1,
+      "status": "queued"
+    }
+  ],
+  "originals_metadata": {
+    "sha256": "a79c769000c7ef5f2e2ab02b23b183e987d0185a6e7d5ab3dc91d64331b034ad",
+    "bytes": 208115
+  },
+  "remaining": [
+    "Collect exact first-attempt outcomes for all 17 workflows. Keep the native x86 FTPS witness, native stock lost-reply run and browser lineage run distinct from the full product qualification."
+  ]
+}

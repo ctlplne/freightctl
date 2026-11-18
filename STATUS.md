@@ -356,6 +356,11 @@ and 25 jobs passed. The stock OpenSSH browser exchange and read-only
 recovery steps passed on native Linux Chrome. The terminal record keeps
 each failed workflow and job visible.
 
+[F537](docs/qualification/evidence/F537-guarded-generated-lineage-batch.json)
+records the guarded fast-forward to `439881e` and 17 original first-attempt
+workflows. Gitleaks scanned all eight outgoing commits and found zero leaks.
+Their native results remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6
