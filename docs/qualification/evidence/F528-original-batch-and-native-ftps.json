@@ -1,0 +1,259 @@
+{
+  "schema_version": 1,
+  "id": "F528",
+  "observed_at": "2026-11-19",
+  "candidate": "8219fd9a9194b8262cfb66cc6e847c0e9d03dae4",
+  "qualification_claim": false,
+  "launch_record": "docs/qualification/evidence/F521-guarded-sftp-console-batch.json",
+  "operator_and_source_scan_record": "docs/qualification/evidence/F525-native-operator-browser-and-source-scans.json",
+  "originals_metadata": {
+    "sha256": "e963b7196d3ef9fd7712ea882e43ec7776ec62e20d45521afa42c139df14b5de",
+    "bytes": 5552
+  },
+  "originals": [
+    {
+      "name": "Native reproducible core binaries",
+      "run": 44382172624,
+      "attempt": 1,
+      "conclusion": "success"
+    },
+    {
+      "name": "Native browser and FTPS operator qualification",
+      "run": 44382172459,
+      "attempt": 1,
+      "conclusion": "success"
+    },
+    {
+      "name": "Core correctness and security",
+      "run": 44382172494,
+      "attempt": 1,
+      "conclusion": "success"
+    },
+    {
+      "name": "Native artifact receive browser",
+      "run": 44382172482,
+      "attempt": 1,
+      "conclusion": "failure"
+    },
+    {
+      "name": "Native Windows and macOS unit checks",
+      "run": 44382172673,
+      "attempt": 1,
+      "conclusion": "success"
+    },
+    {
+      "name": "Native legacy SCP regular-file custody",
+      "run": 44382172553,
+      "attempt": 1,
+      "conclusion": "success"
+    },
+    {
+      "name": "Native tus stock client and custody checkpoints",
+      "run": 44382172631,
+      "attempt": 1,
+      "conclusion": "success"
+    },
+    {
+      "name": "Native independent DAV application",
+      "run": 44382172336,
+      "attempt": 1,
+      "conclusion": "failure"
+    },
+    {
+      "name": "Native first enrollment and browser exchange",
+      "run": 44382172412,
+      "attempt": 1,
+      "conclusion": "success"
+    },
+    {
+      "name": "Native immutable HTTPS stock resume",
+      "run": 44382172548,
+      "attempt": 1,
+      "conclusion": "success"
+    },
+    {
+      "name": "Native JSON intake and custody interfaces",
+      "run": 44382172549,
+      "attempt": 1,
+      "conclusion": "failure"
+    },
+    {
+      "name": "Native FTPS stock clients and custody",
+      "run": 44382172755,
+      "attempt": 1,
+      "conclusion": "success"
+    },
+    {
+      "name": "Native source vulnerability configurations",
+      "run": 44382172421,
+      "attempt": 1,
+      "conclusion": "failure"
+    },
+    {
+      "name": "Native FTPS dispatch approval qualification",
+      "run": 44382172593,
+      "attempt": 1,
+      "conclusion": "success"
+    },
+    {
+      "name": "Native FTPS workflow consent qualification",
+      "run": 44382172361,
+      "attempt": 1,
+      "conclusion": "success"
+    },
+    {
+      "name": "Stock peer and browser qualification",
+      "run": 44382172368,
+      "attempt": 1,
+      "conclusion": "success"
+    },
+    {
+      "name": "Native Linux Go, PostgreSQL and fuzz",
+      "run": 44382172367,
+      "attempt": 1,
+      "conclusion": "failure"
+    }
+  ],
+  "workflow_counts": {
+    "success": 12,
+    "failure": 5
+  },
+  "native_metadata": {
+    "sha256": "5aba5fa6387b5f7c07454bcea777730efa13a13893b3709615c18142f483dc55",
+    "bytes": 12573
+  },
+  "stock_ftps_producer": {
+    "run": 44382172367,
+    "arm64": {
+      "job": 135077134059,
+      "outcome": {
+        "state": "passed",
+        "architecture": "arm64",
+        "modes": {
+          "explicit": {
+            "confirmed_downloads": 4,
+            "evidence": {
+              "continuity.stdout": {
+                "bytes": 78,
+                "sha256": "c4fe6091d8e238c72453159d434d6c817fb18adbf922b579cdd44bf13b6d5e77"
+              },
+              "journeys.stdout": {
+                "bytes": 4618,
+                "sha256": "ed0c60b22731caf0fa1e383a910cc6ceaefcc1adcf70e952f535a5db414749f7"
+              },
+              "peer-identity.stdout": {
+                "bytes": 184,
+                "sha256": "3456034b51025c7537dee3f01795258f7b9c462e56a2745c3a4d80d6fc83a994"
+              },
+              "producer-files.stdout": {
+                "bytes": 3584,
+                "sha256": "0178779fe368cea564e7ba29588582c2acb0a3686f9f32ab47f009600a02afa4"
+              },
+              "reject-tls12.stderr": {
+                "bytes": 144,
+                "sha256": "01fa80e5204b2190ee80ff002d61ddf38c3792b41dc47aea24e99c152b311173"
+              },
+              "vsftpd.log": {
+                "bytes": 1121,
+                "sha256": "42d74fe782a830cc1f8e8ed9d78caf0b5f82f2069ddadd42f4b2a5328af74993"
+              },
+              "xfer.log": {
+                "bytes": 368,
+                "sha256": "a53f7a8d770e30b9529df567a4610f075404caac66c7fe0f02871fb53c45ce01"
+              }
+            },
+            "journeys": 2,
+            "listener_restarts": 0,
+            "tls12_refused": true,
+            "unchanged_source": true
+          },
+          "implicit": {
+            "confirmed_downloads": 4,
+            "evidence": {
+              "continuity.stdout": {
+                "bytes": 78,
+                "sha256": "368493b306efa4655c43a7e973c2ed16778601324ab6abc0df13d7aadc6acb6d"
+              },
+              "journeys.stdout": {
+                "bytes": 4620,
+                "sha256": "fa904694b06b569d4f34fa3b0634fe6e2f39c07f4dda2f088b572fec29261998"
+              },
+              "peer-identity.stdout": {
+                "bytes": 184,
+                "sha256": "3456034b51025c7537dee3f01795258f7b9c462e56a2745c3a4d80d6fc83a994"
+              },
+              "producer-files.stdout": {
+                "bytes": 3584,
+                "sha256": "14b8d05befca62a7711ad925704fc53fe12a7735414b2fc9255f37dea1bb6a09"
+              },
+              "reject-tls12.stderr": {
+                "bytes": 144,
+                "sha256": "65c762e2890621688affbe9c910daa55b38c423f2b4f8db7dcc9a6810d15af43"
+              },
+              "vsftpd.log": {
+                "bytes": 1121,
+                "sha256": "ec6554ded099f31b24b006684738212f6f9748851e7c9986e0e9b4907671a607"
+              },
+              "xfer.log": {
+                "bytes": 368,
+                "sha256": "d12551b3039cca202e093e5cbd4d0be62a2c61fe1bb3c41c54e3524e8a9b9897"
+              }
+            },
+            "journeys": 2,
+            "listener_restarts": 0,
+            "tls12_refused": true,
+            "unchanged_source": true
+          }
+        }
+      },
+      "metadata": {
+        "sha256": "4f20e7f4645ce13180cae89ea2642b2faace620261a97800b16597c12c59be72",
+        "bytes": 2588
+      }
+    },
+    "amd64": {
+      "job": 135077134005,
+      "outcome": {
+        "state": "failed",
+        "architecture": "amd64",
+        "failure": "producer did not reject TLS 1.2 by policy",
+        "tls12_diagnosis": {
+          "explicit": {
+            "categories": [
+              "unexpected-eof"
+            ],
+            "stock_control_connections": 0
+          }
+        },
+        "modes": {},
+        "diagnostics": {
+          "build-peer.stderr": {
+            "bytes": 5884,
+            "sha256": "b857dd55fbe998803024a5be626d2184fb03b01648fa19cddc4cbc3e70211405"
+          },
+          "explicit/container.log": {
+            "bytes": 44,
+            "sha256": "55ae83dd95d7be32a9a88db33152422f647e9b0b701cb8a978aad658767a668a"
+          },
+          "explicit/reject-tls12.stderr": {
+            "bytes": 120,
+            "sha256": "69d280ac42235f4952fd5a820faf7adae09a5e7b06d83401fd7fce57a03ed2fa"
+          },
+          "ssh-version.stderr": {
+            "bytes": 62,
+            "sha256": "87905b183f0ccb3b5a48013bb8fc08f3f94934106a1ddb7e2e02a09653211a4a"
+          }
+        }
+      },
+      "metadata": {
+        "sha256": "64ab4a225b13e3887e0ace0b1a6df3b907119c3f6b1661dc956dabfda2e30f10",
+        "bytes": 856
+      }
+    }
+  },
+  "remaining": [
+    "Both original native PostgreSQL suites remain red. Both enforcing independent OpenPGP peer scans passed. The independent DAV and JSON custody jobs and the separate receive browser failure remain recorded.",
+    "Linux ARM and Windows source scans passed. The macOS source job was canceled before runner assignment.",
+    "The x86 witness still lacks the required TLS protocol rejection. An EOF with zero producer control connections leaves the startup or ingress cause unverified. The next exact native replay must preserve TLS 1.2 refusal and positive TLS 1.3 resumed transfers."
+  ]
+}
