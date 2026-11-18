@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "id": "F497",
+  "observed_at": "2026-11-18",
+  "base_candidate": "43f1687",
+  "scope": "Pinned authorized directional artifact exchange evidence prepared as a protected JSON document",
+  "qualification_claim": false,
+  "red": {
+    "observation": "The prior binary rejects exchange-trace-export without publishing an artifact.",
+    "log_sha256": "79908aeb415dc166736adf47256be9a83108a48556683e9b8cdf330d6cd63ce2"
+  },
+  "green": {
+    "platform": "darwin/arm64 CLI with Linux arm64 PostgreSQL and real local file custody",
+    "go_version": "go1.27.4",
+    "postgresql_image": "postgres:16.15-alpine@sha256:721873c34ceb9f8d8fc265984940dc982404c105f19ad51be9fdc5970a6080ea",
+    "memory_limit_bytes": 201326592,
+    "cpu_limit": 1,
+    "private_witness_directory": ".private/freightctl-f497-corrected",
+    "executable_sha256": "56ef3125716edb282ff712b0bd98b9369ed1d18f6e65ee191ceedd3934091f04",
+    "fixture_sha256": "67147e23ab30d8d66a686d6fe70ceb23fea7ce5aee6d4a50214dab602bf61b50",
+    "full_original_cli_log_sha256": "b4b0cb6f05d323c5d2d3df6061bac49a505118ec5efef26e834a01b23e0f2e92",
+    "recipient_availability_archive_sha256": "60f225170edaee012418ac0086fca003d6b762b7305feaea2e32971736a99cdc",
+    "recipient_original_event_count": 2,
+    "sender_cancelled_archive_sha256": "1b6ae82cc4b27d340a3a8a5eeda10486d94a00f5ac00c68ea8af7f04484c9869",
+    "sender_original_event_count": 3,
+    "wrong_actor_direction_and_request_hash_refused_without_output": true,
+    "retrieval_receiver_persistence_and_business_processing_preserved_as_unknown": true,
+    "original_byte_retrieval_cancellation_and_process_recovery_cli_parent": "pass",
+    "race_enabled": true,
+    "exact_task_container_removed_verified": true
+  },
+  "checks": {
+    "focused_exchange_request_and_portability_regressions_with_race": "pass",
+    "focused_log_sha256": "6cc5ebe2758ec172dcda357a7df06a4a8a0bb6a37acc159cf39dc7ed893dcef5",
+    "affected_tagged_vet": "pass",
+    "core_architecture": "pass",
+    "format": "pass"
+  },
+  "remaining": [
+    "Native matrix replay and independently operated AX-J01 and AX-J02",
+    "Receiver persistence and downstream business acceptance need their own qualified evidence"
+  ]
+}

@@ -258,6 +258,12 @@ re-enrolled the actor with a fresh token in another database. The new
 actor read its intended path. Reads outside that namespace, writes and
 account exports by the new actor were refused.
 
+[F497](docs/qualification/evidence/F497-portable-exchange-evidence.json)
+preserves the recipient's authorized availability trace and the sender's
+later cancellation trace. Both artifacts cite the original events and
+retain unknown retrieval, persistence and business outcomes. The complete
+real PostgreSQL artifact exchange CLI replay passed.
+
 [F455](docs/qualification/evidence/F455-mixed-delivery-proposals.json) binds
 each AI proposal alias to its registered SFTP or FTPS connection. The
 responder suggests an order. freightctl checks the protocol and creates an

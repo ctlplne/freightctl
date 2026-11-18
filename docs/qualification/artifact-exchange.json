@@ -242,7 +242,8 @@
         "docs/qualification/evidence/F123-authorized-exchange-evidence.json",
         "docs/qualification/evidence/F128-received-artifact-copy.json",
         "docs/qualification/evidence/F129-mcp-received-copy.json",
-        "docs/qualification/evidence/F130-browser-received-copy.json"
+        "docs/qualification/evidence/F130-browser-received-copy.json",
+        "docs/qualification/evidence/F497-portable-exchange-evidence.json"
       ]
     },
     {

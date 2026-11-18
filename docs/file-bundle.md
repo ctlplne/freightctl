@@ -391,3 +391,27 @@ ID. Keep or review the original expiration, and use a freshly generated
 token with `account-create --new-token-file`. Verify the new account
 can access its intended path and fails outside that scope. Credential
 values and their hashes stay with the source.
+
+## Preserve evidence of an artifact exchange
+
+Get the exchange ID and request hash from the ordinary authorized
+`exchange-trace` result. Use `incoming` for the recipient view or
+`outgoing` for the sender view. Put those exact values in a protected
+request file with fields `exchange_id`, `direction`, and `request_hash`.
+
+```sh
+umask 077
+freightctl exchange-trace-export --tenant "$TENANT" --partner "$PARTNER" \
+  --request-file .private/exchange-evidence-request.json \
+  --output .private/exchange-evidence.json
+shasum -a 256 .private/exchange-evidence.json
+jq '.evidence' .private/exchange-evidence.json
+```
+
+Compare the checksum with the export response. The
+`freightctl-portable-exchange-evidence-v1` document preserves the
+actor's authorized event references and the metadata state observed at
+`checked_at`. A sender can retain its cancellation evidence after
+recipient retrieval closes. Use a signed audit export to verify the
+event IDs. Retrieval, receiver persistence and business processing
+stay unknown in this availability evidence.

@@ -242,6 +242,9 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if _, err = command(other, "exchange-trace", "-request-file", traceInput); !errors.Is(err, store.ErrNotFound) {
 		t.Fatal("unrelated CLI caller read evidence", err)
 	}
+	t.Run("recipient exports pinned availability evidence", func(t *testing.T) {
+		qualifyPortableExchangeTrace(t, actorB.Actor, b, other, trace, command, requestFile)
+	})
 	outputDirectory := t.TempDir()
 	if err = os.Chmod(outputDirectory, 0700); err != nil {
 		t.Fatal(err)
@@ -286,6 +289,9 @@ func TestArtifactExchangeCLIUsesOrdinaryAuthorityAndPublishesVerifiedDownload(t 
 	if err != nil || json.Unmarshal(traceRaw, &trace) != nil || trace.State != "canceled" || len(trace.Events) != 3 || trace.Events[2].ID != closed.EventID || trace.Events[2].Kind != "view-canceled" {
 		t.Fatal("CLI lost authorized historical closure evidence", err)
 	}
+	t.Run("sender exports pinned cancellation evidence", func(t *testing.T) {
+		qualifyPortableExchangeTrace(t, actorA.Actor, a, b, trace, command, requestFile)
+	})
 	body, err = command(a, "exchange-outgoing-inspect", "-exchange-id", offered.Exchange.ID)
 	var history store.OutgoingExchange
 	if err != nil || json.Unmarshal(body, &history) != nil || history.State != "canceled" || history.ClosureEvent != closed.EventID || history.Retrieval != "unknown" {

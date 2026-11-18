@@ -13,6 +13,18 @@ type ExchangeTraceRequest struct {
 	Direction string `json:"direction"`
 }
 
+type ExchangeTraceExportSelection struct {
+	ExchangeTraceRequest
+	RequestHash string `json:"request_hash"`
+}
+
+func (r ExchangeTraceExportSelection) Validate() error {
+	if !browserSecretHash.MatchString(r.RequestHash) {
+		return ErrExchangeInput
+	}
+	return ValidateExchangeTraceRequest(r.ExchangeTraceRequest)
+}
+
 func ValidateExchangeTraceRequest(r ExchangeTraceRequest) error {
 	if !ValidID(r.ID) || (r.Direction != "incoming" && r.Direction != "outgoing") {
 		return ErrExchangeInput
@@ -63,10 +75,22 @@ func (s *Store) TraceExchange(ctx context.Context, scope Scope, r ExchangeTraceR
 		return nil, err
 	}
 	defer t.Tx.Rollback(ctx)
+	result, err := t.TraceExchange(ctx, r, limits)
+	if err != nil {
+		return nil, err
+	}
+	if err = t.Reauthorize(ctx); err != nil {
+		return nil, err
+	}
+	return result, t.Tx.Commit(ctx)
+}
+
+func (t *Transaction) TraceExchange(ctx context.Context, r ExchangeTraceRequest, limits ExchangeLimits) (*ExchangeTrace, error) {
 	var e *ArtifactExchange
 	var file *File
 	var state, closure string
 	var checked time.Time
+	var err error
 	if r.Direction == "incoming" {
 		e, file, err = t.AuthorizeIncomingExchange(ctx, r.ID, limits)
 		if err != nil && !errors.Is(err, ErrState) {
@@ -103,7 +127,7 @@ func (s *Store) TraceExchange(ctx context.Context, scope Scope, r ExchangeTraceR
 			return nil, err
 		}
 	}
-	result := emptyExchangeTrace(scope, r, state, checked)
+	result := emptyExchangeTrace(t.Scope, r, state, checked)
 	if e != nil {
 		if file == nil || file.ID != e.Request.Artifact.ID || file.Size != e.Request.Artifact.Size || file.SHA256 != e.Request.Artifact.SHA256 || file.Policy != e.Request.Artifact.Policy {
 			return nil, ErrIsolation
@@ -142,8 +166,5 @@ func (s *Store) TraceExchange(ctx context.Context, scope Scope, r ExchangeTraceR
 			}
 		}
 	}
-	if err = t.Reauthorize(ctx); err != nil {
-		return nil, err
-	}
-	return result, t.Tx.Commit(ctx)
+	return result, nil
 }

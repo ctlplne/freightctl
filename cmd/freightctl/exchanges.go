@@ -38,6 +38,7 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 	var closure *store.ExchangeClosureCommand
 	var ingress custody.IngressDescriptorRequest
 	var trace store.ExchangeTraceRequest
+	var traceExport store.ExchangeTraceExportSelection
 	var copyRequest store.ExchangeCopyRequest
 	switch command {
 	case "exchange-copy":
@@ -70,6 +71,22 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 			return err
 		}
 		if err = store.ValidateExchangeTraceRequest(trace); err != nil {
+			return err
+		}
+	case "exchange-trace-export":
+		if err := validatePortableOutput(o.Output); err != nil {
+			return err
+		}
+		input, err := secure.ReadSecret(o.Input, 4096)
+		if err != nil {
+			return err
+		}
+		err = workflow.Decode(input.Bytes, &traceExport)
+		input.Close()
+		if err != nil {
+			return store.ErrExchangeInput
+		}
+		if err = traceExport.Validate(); err != nil {
 			return err
 		}
 	case "exchange-ingress-descriptor":
@@ -172,6 +189,10 @@ func runExchanges(ctx context.Context, command string, o exchangeOptions, output
 		result, err = service.CopyReceivedExchange(ctx, scope, o.Key, copyRequest)
 	case "exchange-trace":
 		result, err = service.TraceExchange(ctx, scope, trace)
+	case "exchange-trace-export":
+		return writePortableArtifact(ctx, o.Output, "exchange-evidence", func(staged io.Writer) (*custody.ExchangeTraceExportReceipt, error) {
+			return service.PreparePortableExchangeTrace(ctx, scope, traceExport, staged)
+		}, output)
 	case "exchange-ingress-descriptor":
 		result, err = service.PrepareArtifactIngress(ctx, scope, ingress)
 	case "exchange-close":
