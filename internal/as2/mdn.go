@@ -16,9 +16,12 @@ import (
 	secure "github.com/ctlplne/freightctl/internal/crypto"
 )
 
-const VerificationProfile = "as2-detached-positive-mdn-sha256-v1"
+const (
+	VerificationProfile = "as2-detached-positive-mdn-sha256-v1"
+	DispositionProfile  = "as2-signed-disposition-sha256-v1"
+)
 
-var ErrMDN = errors.New("AS2 MDN is outside the verified positive receipt profile or differs from the original message")
+var ErrMDN = errors.New("AS2 MDN is outside the selected receipt profile or differs from the original message")
 
 // ExpectedMDN comes from the sender's original message record. The MIC is
 // the hash of the original signed MIME entity, including its MIME headers.
@@ -34,7 +37,9 @@ type VerifiedMDN struct {
 	Profile            string `json:"profile"`
 	Disposition        string `json:"disposition"`
 	MessageIDSHA256    string `json:"original_message_id_sha256"`
-	ContentMIC         string `json:"content_mic_sha256"`
+	ContentMIC         string `json:"content_mic_sha256,omitempty"`
+	ContentMICStatus   string `json:"content_mic_status,omitempty"`
+	ErrorCode          string `json:"error_code,omitempty"`
 	SignerSHA256       string `json:"signer_certificate_sha256"`
 	ReportSHA256       string `json:"signed_report_sha256"`
 	SignatureSHA256    string `json:"signature_sha256"`
@@ -42,8 +47,12 @@ type VerifiedMDN struct {
 	BusinessAcceptance string `json:"business_acceptance"`
 }
 
-func VerifyPositiveMDN(expected ExpectedMDN, report, signature, certificate []byte, now time.Time) (VerifiedMDN, error) {
-	if expected.Schema != 1 || !visibleASCII(expected.OriginalMessageID, 998) ||
+func ValidMDNProfile(profile string) bool {
+	return profile == VerificationProfile || profile == DispositionProfile
+}
+
+func VerifyMDN(profile string, expected ExpectedMDN, report, signature, certificate []byte, now time.Time) (VerifiedMDN, error) {
+	if !ValidMDNProfile(profile) || expected.Schema != 1 || !visibleASCII(expected.OriginalMessageID, 998) ||
 		!visibleASCII(expected.FinalRecipient, 128) || !lowerHexSHA256(expected.ContentMIC) || !lowerHexSHA256(expected.SignerPin) {
 		return VerifiedMDN{}, ErrMDN
 	}
@@ -59,25 +68,98 @@ func VerifyPositiveMDN(expected ExpectedMDN, report, signature, certificate []by
 		(len(original) != 1 || !matchesRecipient(original[0], expected.FinalRecipient)) {
 		return VerifiedMDN{}, ErrMDN
 	}
-	mode, disposition, found := strings.Cut(one(fields, "Disposition"), ";")
-	if !found || !strings.EqualFold(strings.TrimSpace(mode), "automatic-action/MDN-sent-automatically") ||
-		!strings.EqualFold(strings.TrimSpace(disposition), "processed") ||
-		len(fields.Values("Failure")) != 0 || len(fields.Values("Error")) != 0 || len(fields.Values("Warning")) != 0 {
+	disposition, errorCode := reportedDisposition(fields, profile)
+	if disposition == "" {
 		return VerifiedMDN{}, ErrMDN
 	}
-	value, algorithm, found := strings.Cut(one(fields, "Received-Content-Mic"), ",")
-	if !found || !sha256MICAlgorithm(algorithm) {
-		return VerifiedMDN{}, ErrMDN
+	mic, err := observedMIC(fields.Values("Received-Content-Mic"), expected.ContentMIC, disposition == "processed")
+	if err != nil {
+		return VerifiedMDN{}, err
 	}
-	mic, err := base64.StdEncoding.Strict().DecodeString(strings.TrimSpace(value))
-	if err != nil || len(mic) != 32 || hex.EncodeToString(mic) != expected.ContentMIC {
-		return VerifiedMDN{}, ErrMDN
+	var status string
+	if profile == DispositionProfile {
+		status = "absent"
+		if mic != "" {
+			status = "matched"
+		}
 	}
 	return VerifiedMDN{
-		Profile: VerificationProfile, Disposition: "processed", MessageIDSHA256: secure.Digest([]byte(expected.OriginalMessageID)),
-		ContentMIC: expected.ContentMIC, SignerSHA256: expected.SignerPin, ReportSHA256: secure.Digest(report),
-		SignatureSHA256: secure.Digest(signature), ReceiverDurability: "unknown", BusinessAcceptance: "unknown",
+		Profile: profile, Disposition: disposition, MessageIDSHA256: secure.Digest([]byte(expected.OriginalMessageID)),
+		ContentMIC: mic, ContentMICStatus: status, ErrorCode: errorCode,
+		SignerSHA256: expected.SignerPin, ReportSHA256: secure.Digest(report), SignatureSHA256: secure.Digest(signature),
+		ReceiverDurability: "unknown", BusinessAcceptance: "unknown",
 	}, nil
+}
+
+func observedMIC(values []string, expected string, required bool) (string, error) {
+	if len(values) == 0 && !required {
+		return "", nil
+	}
+	if len(values) != 1 {
+		return "", ErrMDN
+	}
+	value, algorithm, found := strings.Cut(values[0], ",")
+	if !found || !sha256MICAlgorithm(algorithm) {
+		return "", ErrMDN
+	}
+	mic, err := base64.StdEncoding.Strict().DecodeString(strings.TrimSpace(value))
+	if err != nil || len(mic) != 32 || hex.EncodeToString(mic) != expected {
+		return "", ErrMDN
+	}
+	return expected, nil
+}
+
+func reportedDisposition(fields textproto.MIMEHeader, profile string) (disposition, errorCode string) {
+	mode, value, found := strings.Cut(one(fields, "Disposition"), ";")
+	if !found {
+		return "", ""
+	}
+	mode = strings.ToLower(strings.TrimSpace(mode))
+	const automatic = "automatic-action/mdn-sent-automatically"
+	switch mode {
+	case automatic:
+	case "automatic-action/mdn-sent-manually", "manual-action/mdn-sent-automatically", "manual-action/mdn-sent-manually":
+		if profile != DispositionProfile {
+			return "", ""
+		}
+	default:
+		return "", ""
+	}
+	name, annotation, annotated := strings.Cut(value, ":")
+	name = strings.ToLower(strings.TrimSpace(name))
+	hasFailure := len(fields.Values("Failure")) != 0
+	hasError := len(fields.Values("Error")) != 0
+	hasWarning := len(fields.Values("Warning")) != 0
+	if name == "processed" && !annotated && !hasFailure && !hasError && !hasWarning {
+		return "processed", ""
+	}
+	if profile != DispositionProfile {
+		return "", ""
+	}
+	switch {
+	case name == "processed/warning" && !hasFailure && !hasError:
+		return name, ""
+	case name == "processed/error" && !hasFailure && !hasWarning:
+		return name, mdnErrorCode(annotation, one(fields, "Error"))
+	case (name == "failed" && !annotated || name == "failed/failure") && !hasError && !hasWarning:
+		return "failed", ""
+	default:
+		return "", ""
+	}
+}
+
+func mdnErrorCode(annotation, detail string) string {
+	code := strings.ToLower(strings.TrimSpace(annotation))
+	if code == "" {
+		code = strings.ToLower(strings.TrimSpace(detail))
+	}
+	switch code {
+	case "authentication-failed", "decompression-failed", "decryption-failed",
+		"insufficient-message-security", "integrity-check-failed", "unexpected-processing-error":
+		return code
+	default:
+		return ""
+	}
 }
 
 var headerEnd = []byte("\r\n\r\n")

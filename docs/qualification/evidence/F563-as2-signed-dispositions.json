@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "F563",
+  "observed_at": "2026-11-19",
+  "base_candidate": "c6f2f8f14b3fd9095ea30a3c1a9791180a341943",
+  "qualification_claim": false,
+  "scope": "Verified signed AS2 processing warnings, errors and failures through an explicit local receipt profile",
+  "contract": "docs/protocols/as2-mdn-verification.md",
+  "prior": "docs/qualification/evidence/F562-as2-signed-receipt-capture.json",
+  "red": {
+    "log": {
+      "sha256": "1728bbbbd5ed5047c029fe861f456aa49df5ab9e70865d0cb8747256d44ee355",
+      "bytes": 592
+    },
+    "observation": "The original CLI refused the explicit signed outcome profile before reading the OpenSSL report."
+  },
+  "green": {
+    "environment": "macOS ARM, Go 1.27.4, stock OpenSSL 4.0.3, protected files",
+    "race_log": {
+      "sha256": "71239af935863518930d9c77a88b79fb6eb32e35fc3c0e14849a1198a3bebc49",
+      "bytes": 526
+    },
+    "native_binary": {
+      "sha256": "e7eb4bed09ff224c9dbd8f7c31b20e70ad02e268a64b977059404c9dd5ab2649",
+      "bytes": 36038578
+    },
+    "signed_error_capture": {
+      "sha256": "c2ed776ad30efc495d7634157fd2361cfebdfdd770ecc2492ffd8e9f3227fbfe",
+      "bytes": 3417
+    },
+    "native_observation": {
+      "sha256": "8adea2858f0dfaf472885e5d57ffc3e5e393fbdfc35aa0b07d52bfa87fbbd6d7",
+      "bytes": 573
+    },
+    "default_profile_refusal": {
+      "sha256": "38868fb163e63a1e15c874a58974d4519d6109359854c3ea35c95e1ae905086b",
+      "bytes": 97
+    },
+    "assertions": [
+      "The native command verifies signed processed, processed/warning, processed/error and failed reports using the same peer pin, original ID and recipient binding as the default profile.",
+      "A processed report requires a matching MIC. A warning, error or failure may omit it. An absent MIC has explicit status and the result omits the digest. All present MICs require the original digest.",
+      "Stock OpenSSL signed a complete processed/error capture without a MIC. The CLI reported decryption-failed, MIC absent, receiver durability unknown and business acceptance unknown. The default positive profile returned no verified output.",
+      "The race replay refused a false or missing MIC for positive processing, a false warning MIC, a different original message ID, contradictory report fields and unsupported dispositions. Free text stayed out of output."
+    ]
+  },
+  "static_checks": [
+    "affected Go vet",
+    "crypto import boundary",
+    "qualification record references",
+    "diff whitespace"
+  ],
+  "sources": {
+    "internal/as2/mdn.go": "7487b9440ec703f06223e0474fd98d4e311d0965777cf465d54df027f2183196",
+    "internal/as2/signed_mdn.go": "6b1d269a4095ab683b499a51c358df659fad00816b0b02e41509dfe74024148a",
+    "cmd/freightctl/as2_mdn.go": "a56502545a4ee3ae01ef63fa1552d6904f35749c8a139b8bfb7a037fd034188b",
+    "cmd/freightctl/as2_mdn_native_test.go": "ee266720a14aae0fc708d14cb3213b765887087998ebf986815e63e9026a3225"
+  },
+  "remaining": "Native Linux exact replay, durable storage of authenticated disposition evidence, live synchronous and asynchronous AS2 HTTP handling, encrypted messages, certificate rollover and independent stock AS2 application qualification."
+}

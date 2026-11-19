@@ -17,7 +17,7 @@ var ErrSignedMDN = errors.New("AS2 signed receipt container is invalid or outsid
 
 // VerifyMDNCapture takes a saved MIME entity with its outer Content-Type and
 // exact body bytes. Its MIME headers select framing only.
-func VerifyMDNCapture(expected ExpectedMDN, capture, certificate []byte, now time.Time) (VerifiedMDN, error) {
+func VerifyMDNCapture(profile string, expected ExpectedMDN, capture, certificate []byte, now time.Time) (VerifiedMDN, error) {
 	if len(capture) > MaxSignedMDN {
 		return VerifiedMDN{}, ErrSignedMDN
 	}
@@ -31,7 +31,7 @@ func VerifyMDNCapture(expected ExpectedMDN, capture, certificate []byte, now tim
 	}
 	switch encoding {
 	case "", "7bit", "8bit", "binary":
-		return VerifySignedMDN(expected, one(fields, "Content-Type"), body, certificate, now)
+		return VerifySignedMDN(profile, expected, one(fields, "Content-Type"), body, certificate, now)
 	default:
 		return VerifiedMDN{}, ErrSignedMDN
 	}
@@ -39,7 +39,7 @@ func VerifyMDNCapture(expected ExpectedMDN, capture, certificate []byte, now tim
 
 // VerifySignedMDN accepts the Content-Type and body as separate inputs for
 // callers that already have MIME metadata, including an AS2 HTTP response.
-func VerifySignedMDN(expected ExpectedMDN, contentType string, body, certificate []byte, now time.Time) (VerifiedMDN, error) {
+func VerifySignedMDN(profile string, expected ExpectedMDN, contentType string, body, certificate []byte, now time.Time) (VerifiedMDN, error) {
 	if len(contentType) > 4<<10 || len(body) > MaxSignedMDN {
 		return VerifiedMDN{}, ErrSignedMDN
 	}
@@ -59,7 +59,7 @@ func VerifySignedMDN(expected ExpectedMDN, contentType string, body, certificate
 	if err != nil {
 		return VerifiedMDN{}, err
 	}
-	return VerifyPositiveMDN(expected, report, signature, certificate, now)
+	return VerifyMDN(profile, expected, report, signature, certificate, now)
 }
 
 func validMIMEBoundary(boundary string) bool {

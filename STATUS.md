@@ -510,6 +510,12 @@ result matched the detached report and CMS. Removing the report's final
 signed CRLF failed verification. Stock AS2 HTTP and authority-bound
 receipt recovery remain due.
 
+[F563](docs/qualification/evidence/F563-as2-signed-dispositions.json)
+lets the CLI observe a signed AS2 warning, processing error or failure under
+an explicit profile. Stock OpenSSL fixtures verified all outcomes. A missing
+MIC remains absent, and another message's MIC is refused. Durable receipt
+recording and live AS2 HTTP roles remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

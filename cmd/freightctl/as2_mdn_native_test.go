@@ -247,6 +247,71 @@ func TestNativeAS2MDNVerification(t *testing.T) {
 	refused(path, signature)
 	path, signature = signed(report, "sha256", "-nocerts")
 	refused(path, signature)
+
+	const dispositionProfile = "as2-signed-disposition-sha256-v1"
+	type observedDisposition struct {
+		Profile            string `json:"profile"`
+		Disposition        string `json:"disposition"`
+		MICStatus          string `json:"content_mic_status"`
+		MIC                string `json:"content_mic_sha256"`
+		ErrorCode          string `json:"error_code"`
+		ReceiverDurability string `json:"receiver_durability"`
+		BusinessAcceptance string `json:"business_acceptance"`
+	}
+	noMIC := strings.Replace(report, "Received-Content-MIC: "+mic+", sha-256\r\n", "", 1)
+	warning := strings.Replace(report, disposition, disposition+"/warning: peer-private note", 1)
+	processingError := strings.Replace(noMIC, disposition, disposition+"/error: decryption-failed", 1)
+	failed := strings.Replace(noMIC, disposition, "manual-action/MDN-sent-manually; failed/failure: private rejection", 1)
+	for _, tc := range []struct {
+		report, disposition, micStatus, errorCode string
+	}{
+		{report, "processed", "matched", ""},
+		{warning, "processed/warning", "matched", ""},
+		{processingError, "processed/error", "absent", "decryption-failed"},
+		{failed, "failed", "absent", ""},
+	} {
+		path, signature = signed(tc.report, "sha256")
+		out := new(bytes.Buffer)
+		err := verifyAS2MDN(append(arguments(path, signature), "--receipt-profile", dispositionProfile), out)
+		var observed observedDisposition
+		if err != nil || json.Unmarshal(out.Bytes(), &observed) != nil ||
+			observed.Profile != dispositionProfile || observed.Disposition != tc.disposition ||
+			observed.MICStatus != tc.micStatus || observed.ErrorCode != tc.errorCode ||
+			observed.ReceiverDurability != "unknown" || observed.BusinessAcceptance != "unknown" {
+			t.Fatalf("signed disposition %s did not produce the bounded peer result: %v", tc.disposition, err)
+		}
+		if tc.micStatus == "matched" && observed.MIC != expectation["content_mic_sha256"] ||
+			tc.micStatus == "absent" && observed.MIC != "" ||
+			strings.Contains(out.String(), "peer-private") || strings.Contains(out.String(), "private rejection") {
+			t.Fatal("signed disposition overstated integrity or disclosed the free-text peer note")
+		}
+	}
+	for _, changed := range []string{
+		noMIC,
+		strings.Replace(warning, mic, base64.StdEncoding.EncodeToString(make([]byte, 32)), 1),
+		strings.Replace(processingError, messageID, "<changed@peer.example>", 1),
+		strings.Replace(processingError, "Disposition: ", "Warning: contradiction\r\nDisposition: ", 1),
+		strings.Replace(processingError, "/error: decryption-failed", "/unknown: peer-private note", 1),
+	} {
+		path, signature = signed(changed, "sha256")
+		output := new(bytes.Buffer)
+		if err := verifyAS2MDN(append(arguments(path, signature), "--receipt-profile", dispositionProfile), output); err == nil || output.Len() != 0 {
+			t.Fatal("invalid or inconsistent signed disposition produced an observation")
+		}
+	}
+	signed(processingError, "sha256")
+	runOpenSSL("cms", "-sign", "-binary", "-crlfeol", "-in", "report.mime", "-signer", "peer.pem",
+		"-inkey", "peer.key", "-md", "sha256", "-outform", "SMIME", "-out", "negative.mime")
+	cmd := append([]string{"-test.run=^TestAS2MDNCommandProcess$", "--", "as2-mdn-verify"},
+		captureArgs(string(readFile("negative.mime")))...)
+	cmd = append(cmd, "--receipt-profile", dispositionProfile)
+	out, err := exec.CommandContext(ctx, os.Args[0], cmd...).Output()
+	var observed observedDisposition
+	if err != nil || json.Unmarshal(out, &observed) != nil || observed.Disposition != "processed/error" ||
+		observed.MICStatus != "absent" || observed.ErrorCode != "decryption-failed" {
+		t.Fatalf("CLI full signed capture failed to observe the authenticated error: %v", err)
+	}
+	t.Log("signed AS2 warnings and failures retained their disposition without upgrading acceptance")
 }
 
 func TestAS2MDNCommandProcess(t *testing.T) {
