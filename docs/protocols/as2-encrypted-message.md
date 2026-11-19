@@ -1,4 +1,4 @@
-# Open a signed and encrypted AS2 message
+# Prepare and open a signed and encrypted AS2 message
 
 `freightctl as2-message-open` takes captured CMS DER and verifies two layers.
 The outer encrypted envelope must match the configured recipient certificate
@@ -38,6 +38,29 @@ private directory, verifies its digest while writing, syncs it, and links
 it into place without overwriting another file. The JSON output records
 the envelope digest, both certificate digests, the signed entity digest
 and its length. Those bytes are the input to a future custody decision.
+
+## Prepare the outbound envelope
+
+`freightctl as2-message-seal` takes the complete CRLF MIME entity as
+`--message-file`. Use the same certificate-pin request and the sender's
+protected signing key. The command signs the exact entity, wraps it in a
+`multipart/signed` message, and encrypts the multipart for the recipient.
+
+```sh
+freightctl as2-message-seal \
+  --request-file .private/as2-message.json \
+  --message-file .private/source.mime \
+  --recipient-certificate-file .private/recipient.der \
+  --signer-certificate-file .private/sender.der \
+  --signer-key-file .private/sender.pkcs8 \
+  --output .private/outbound.p7m
+```
+
+The command uses a fresh encryption key and nonce for each new envelope,
+then seals and syncs the DER file. Keep that exact file and its envelope
+digest for subsequent handoff. The `signed_entity_sha256` field identifies
+the original entity used for SHA-256 MIC checks. A live retry must use the
+original prepared bytes, message ID and approved endpoint.
 
 HTTP sending and receiving, admission into durable custody, receipt creation
 and recovery, certificate rollover, large-file streaming and independent

@@ -522,6 +522,11 @@ inner sender signature before publishing exact read-only MIME bytes.
 The native proof refused a changed encryption tag, wrong key and damaged
 inner signature. Live AS2 custody and stock application proof remain due.
 
+[F565](docs/qualification/evidence/F565-as2-encrypted-message-seal.json)
+prepares the reverse signed and encrypted AS2 envelope. Independent OpenSSL
+decrypted the native DER file, verified the configured signer, and recovered
+the exact original MIME bytes. Durable HTTP dispatch remains due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

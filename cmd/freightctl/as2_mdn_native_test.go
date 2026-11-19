@@ -320,7 +320,7 @@ func TestAS2CommandProcess(t *testing.T) {
 		return
 	}
 	switch os.Args[index+1] {
-	case "as2-mdn-verify", "as2-message-open":
+	case "as2-mdn-verify", "as2-message-open", "as2-message-seal":
 	default:
 		return
 	}

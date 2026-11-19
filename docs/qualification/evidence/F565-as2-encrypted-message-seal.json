@@ -1,0 +1,72 @@
+{
+  "schema_version": 1,
+  "id": "F565",
+  "observed_at": "2026-11-19",
+  "base_candidate": "376a0f844466784e640fb4016182cf9e3816265a",
+  "qualification_claim": false,
+  "scope": "Local native preparation of a signed AS2 MIME entity and single-recipient authenticated CMS envelope",
+  "contract": "docs/protocols/as2-encrypted-message.md",
+  "prior": "docs/qualification/evidence/F564-as2-encrypted-message-open.json",
+  "red": {
+    "log": {
+      "sha256": "41b538b5da36afe7c8e93c60c9facda19e3aaeb776d61f783425a5918eda8544",
+      "bytes": 11686
+    },
+    "observation": "The original native command could open an envelope and had no outbound sealing entry point."
+  },
+  "independent_fixture_correction": {
+    "log": {
+      "sha256": "c089843bbf398d15c22a5bef62a13611e5ff539d96b3d709b1dce450207d4aa3",
+      "bytes": 247
+    },
+    "observation": "OpenSSL 4.0.3 without its CRLF mode retained the CR from a delimiter on both its own and freightctl MIME. Repeating both with -binary -crlfeol recovered the original signed entity and verified the signature without changing the product wire bytes."
+  },
+  "green": {
+    "environment": "macOS ARM, Go 1.27.4, stock OpenSSL 4.0.3, private task-owned files",
+    "native_binary": {
+      "sha256": "951ad4e0c29a6172f4b0ed69277809ba7309698750b6082a33508b33a34e2989",
+      "bytes": 36160306
+    },
+    "native_envelope": {
+      "sha256": "faf83c6fc1fa9da9fcb1b7eefa08f5440248ce114525c1c2a90dad95e6d4ab2c",
+      "bytes": 3511
+    },
+    "preparation_observation": {
+      "sha256": "929564baf222a4b45462c9c6165f04b797669f78cdb3eaedf6823b1425139c62",
+      "bytes": 456
+    },
+    "independent_recovered_entity": {
+      "sha256": "6c293e964a1dd91d8937b3069e44d09b24200f2324bb83d7084cc5394b12b402",
+      "bytes": 103
+    },
+    "independent_verify_result": {
+      "sha256": "25b50603c259a4e3172ed0f6315497daa374b9935c92d78abcd3d2e2dce2b97e",
+      "bytes": 28
+    },
+    "race_log": {
+      "sha256": "1da440eb41624dcb5044562eaa4f7498d58bdbe33dda27e3e188ae56783f1ac1",
+      "bytes": 911
+    },
+    "assertions": [
+      "Stock OpenSSL decrypted the native AuthEnvelopedData and verified the fixed leaf signer. Its recovered bytes exactly matched the original MIME entity.",
+      "The native open path independently recovered the same original entity from the generated envelope. Fresh preparation produced different encrypted bytes.",
+      "Wrong signing key, a recipient certificate restricted to signing, and a pre-existing output were refused. The original sealed output was preserved.",
+      "The native protected open, signed receipt, and crypto architecture checks passed again."
+    ]
+  },
+  "static_checks": [
+    "affected Go vet",
+    "qualification record validation",
+    "diff whitespace"
+  ],
+  "sources": {
+    "internal/crypto/as2_cms.go": "c3095db6d8d95a8c1abbd31ac73218a6c96ee3413587ee5702b6bea22c1c5d0c",
+    "internal/crypto/as2_envelope.go": "27dd7a3869b0c624ac8c1a1409047fe50d5acd6add2d572bed8ac87b5d52558e",
+    "internal/as2/message.go": "9f4cc6e7e230d17ddb2b398610169ef217c3af27d3cf2889150c4b3ffb98f0f4",
+    "cmd/freightctl/as2_message.go": "0d200ae4c354bcbea57f295bbe38071f4d45a526530f95e7c09eec512d2cef5a",
+    "cmd/freightctl/as2_message_native_test.go": "65148cef96dd513ab19a515a300cd79c1b4687addb07870cb4f06b4956d0fe49",
+    "cmd/freightctl/as2_mdn_native_test.go": "d41713585cf55e1be2ea5915486c47b5b44bd88c14c9341c5c37bf6ce12ecaa5",
+    "cmd/freightctl/main.go": "15d6109b5500e813f3fdfb32e8116c7d210269586223b44d0eec363725a063a6"
+  },
+  "remaining": "Run exact native Linux proof. Implement authority-bound durable storage and HTTP send/receive, safe retry using the same prepared body and message ID, signed receipt creation and persistence, rollover, larger streams and stock AS2 application qualification."
+}

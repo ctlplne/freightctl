@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/aes"
 	"crypto/cipher"
+	"crypto/rand"
 	"crypto/rsa"
 	"crypto/sha256"
 	"crypto/x509"
@@ -42,13 +43,15 @@ type authEnvelope struct {
 }
 
 type envelopeRecipient struct {
-	Version int
-	ID      struct {
-		Issuer asn1.RawValue
-		Serial *big.Int
-	}
+	Version   int
+	ID        envelopeIssuerSerial
 	Algorithm pkix.AlgorithmIdentifier
 	Key       []byte
+}
+
+type envelopeIssuerSerial struct {
+	Issuer asn1.RawValue
+	Serial *big.Int
 }
 
 type envelopeCiphertext struct {
@@ -71,15 +74,10 @@ type as2GCMParameters struct {
 // AuthEnvelopedData. Go's RSA and AEAD implementations authenticate and decrypt
 // it. Callers must still verify the inner sender signature before custody.
 func OpenAS2Envelope(wire, certificate, pkcs8 []byte, pin string, now time.Time) (*Secret, error) {
-	if len(wire) == 0 || len(wire) > MaxAS2Envelope || len(certificate) == 0 || len(certificate) > MaxAS2Certificate ||
-		len(pkcs8) == 0 || len(pkcs8) > MaxAS2PrivateKey || Digest(certificate) != pin {
+	if len(wire) == 0 || len(wire) > MaxAS2Envelope {
 		return nil, ErrAS2Envelope
 	}
-	peer, err := x509.ParseCertificate(certificate)
-	if err != nil {
-		return nil, ErrAS2Envelope
-	}
-	public := usableAS2Certificate(peer, x509.KeyUsageKeyEncipherment, now)
+	peer, public := parseAS2Leaf(certificate, pin, x509.KeyUsageKeyEncipherment, now)
 	if public == nil {
 		return nil, ErrAS2Envelope
 	}
@@ -87,9 +85,8 @@ func OpenAS2Envelope(wire, certificate, pkcs8 []byte, pin string, now time.Time)
 	if !ok || len(recipient.Key) != public.Size() {
 		return nil, ErrAS2Envelope
 	}
-	key, err := x509.ParsePKCS8PrivateKey(pkcs8)
-	private, ok := key.(*rsa.PrivateKey)
-	if err != nil || !ok || len(private.Primes) != 2 || !public.Equal(&private.PublicKey) {
+	private := parseAS2PrivateKey(pkcs8, public)
+	if private == nil {
 		return nil, ErrAS2Envelope
 	}
 	contentKey, err := rsa.DecryptOAEP(sha256.New(), nil, private, recipient.Key, nil)
@@ -112,6 +109,101 @@ func OpenAS2Envelope(wire, certificate, pkcs8 []byte, pin string, now time.Time)
 		return nil, ErrAS2Envelope
 	}
 	return ProtectBytes(plain), nil
+}
+
+// SealAS2Envelope encrypts an already signed MIME message for the exact peer.
+func SealAS2Envelope(signed, certificate []byte, pin string, now time.Time) ([]byte, error) {
+	if len(signed) == 0 || len(signed) > MaxAS2SignedMessage {
+		return nil, ErrAS2Envelope
+	}
+	peer, public := parseAS2Leaf(certificate, pin, x509.KeyUsageKeyEncipherment, now)
+	if public == nil {
+		return nil, ErrAS2Envelope
+	}
+	contentKey := ProtectBytes(make([]byte, 32))
+	defer contentKey.Close()
+	if _, err := rand.Read(contentKey.Bytes); err != nil {
+		return nil, ErrAS2Envelope
+	}
+	wrapped, err := rsa.EncryptOAEP(sha256.New(), rand.Reader, public, contentKey.Bytes, nil)
+	if err != nil {
+		return nil, ErrAS2Envelope
+	}
+	block, err := aes.NewCipher(contentKey.Bytes)
+	if err != nil {
+		return nil, ErrAS2Envelope
+	}
+	gcm, err := cipher.NewGCM(block)
+	if err != nil {
+		return nil, ErrAS2Envelope
+	}
+	nonce := make([]byte, gcm.NonceSize())
+	if _, err := rand.Read(nonce); err != nil {
+		return nil, ErrAS2Envelope
+	}
+	sealed := gcm.Seal(nil, nonce, signed, nil)
+	payloadLen := len(sealed) - gcm.Overhead()
+	sha := pkix.AlgorithmIdentifier{Algorithm: pkcs7.OIDDigestAlgorithmSHA256}
+	maskHash, err := asn1.Marshal(sha)
+	if err != nil {
+		return nil, ErrAS2Envelope
+	}
+	oaep, err := asn1.Marshal(as2OAEPParameters{
+		Hash: sha, Mask: pkix.AlgorithmIdentifier{Algorithm: oidMGF1, Parameters: asn1.RawValue{FullBytes: maskHash}},
+	})
+	if err != nil {
+		return nil, ErrAS2Envelope
+	}
+	params, err := asn1.Marshal(as2GCMParameters{Nonce: nonce, TagSize: gcm.Overhead()})
+	if err != nil {
+		return nil, ErrAS2Envelope
+	}
+	content, err := asn1.Marshal(authEnvelope{
+		Recipients: []envelopeRecipient{{
+			ID:        envelopeIssuerSerial{Issuer: asn1.RawValue{FullBytes: peer.RawIssuer}, Serial: peer.SerialNumber},
+			Algorithm: pkix.AlgorithmIdentifier{Algorithm: oidRSAOAEP, Parameters: asn1.RawValue{FullBytes: oaep}},
+			Key:       wrapped,
+		}},
+		Encrypted: envelopeCiphertext{
+			Type:      pkcs7.OIDData,
+			Algorithm: pkix.AlgorithmIdentifier{Algorithm: pkcs7.OIDEncryptionAlgorithmAES256GCM, Parameters: asn1.RawValue{FullBytes: params}},
+			Data:      asn1.RawValue{Class: 2, Tag: 0, Bytes: sealed[:payloadLen]},
+		},
+		Tag: sealed[payloadLen:],
+	})
+	if err != nil {
+		return nil, ErrAS2Envelope
+	}
+	wire, err := asn1.Marshal(authEnvelopeContentInfo{
+		Type: oidAuthEnvelope, Data: asn1.RawValue{Class: 2, Tag: 0, IsCompound: true, Bytes: content},
+	})
+	if err != nil || len(wire) > MaxAS2Envelope {
+		return nil, ErrAS2Envelope
+	}
+	return wire, nil
+}
+
+func parseAS2Leaf(certificate []byte, pin string, usage x509.KeyUsage, now time.Time) (*x509.Certificate, *rsa.PublicKey) {
+	if len(certificate) == 0 || len(certificate) > MaxAS2Certificate || Digest(certificate) != pin {
+		return nil, nil
+	}
+	peer, err := x509.ParseCertificate(certificate)
+	if err != nil {
+		return nil, nil
+	}
+	return peer, usableAS2Certificate(peer, usage, now)
+}
+
+func parseAS2PrivateKey(wire []byte, public *rsa.PublicKey) *rsa.PrivateKey {
+	if len(wire) == 0 || len(wire) > MaxAS2PrivateKey {
+		return nil
+	}
+	key, err := x509.ParsePKCS8PrivateKey(wire)
+	private, ok := key.(*rsa.PrivateKey)
+	if err != nil || !ok || len(private.Primes) != 2 || !public.Equal(&private.PublicKey) {
+		return nil
+	}
+	return private
 }
 
 type as2SealedCiphertext struct {

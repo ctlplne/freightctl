@@ -21,6 +21,35 @@ const (
 
 var ErrAS2Signature = errors.New("AS2 CMS signature or pinned peer certificate verification failed")
 
+func SignAS2DetachedCMS(entity, certificate, pkcs8 []byte, pin string, now time.Time) ([]byte, error) {
+	if len(entity) == 0 || len(entity) > MaxAS2SignedEntity {
+		return nil, ErrAS2Signature
+	}
+	signer, public := parseAS2Leaf(certificate, pin, x509.KeyUsageDigitalSignature, now)
+	if public == nil {
+		return nil, ErrAS2Signature
+	}
+	private := parseAS2PrivateKey(pkcs8, public)
+	if private == nil {
+		return nil, ErrAS2Signature
+	}
+	signed, err := pkcs7.NewSignedData(entity)
+	if err != nil {
+		return nil, ErrAS2Signature
+	}
+	signed.SetDigestAlgorithm(pkcs7.OIDDigestAlgorithmSHA256)
+	signed.SetEncryptionAlgorithm(pkcs7.OIDEncryptionAlgorithmRSASHA256)
+	if err = signed.AddSigner(signer, private, pkcs7.SignerInfoConfig{}); err != nil {
+		return nil, ErrAS2Signature
+	}
+	signed.Detach()
+	signature, err := signed.Finish()
+	if err != nil || len(signature) == 0 || len(signature) > MaxAS2CMSSignature {
+		return nil, ErrAS2Signature
+	}
+	return signature, nil
+}
+
 // VerifyAS2DetachedCMS checks one SHA-256/RSA signature from the exact
 // configured peer certificate. The library verifies the signature over the
 // original bytes. The AS2 profile checks the certificate at observation time.

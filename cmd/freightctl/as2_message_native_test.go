@@ -73,9 +73,9 @@ func TestNativeAS2EncryptedMessage(t *testing.T) {
 	if !bytes.Equal(read("peer-opened.mime"), read("signed.mime")) {
 		t.Fatal("independent encrypted fixture did not retain the signed MIME entity")
 	}
-	request := as2.OpenMessageRequest{Schema: 1,
+	request := as2.MessageRequest{Schema: 1,
 		RecipientPin: secure.Digest(read("recipient.der")), SignerPin: secure.Digest(read("sender.der"))}
-	saveRequest := func(value as2.OpenMessageRequest) {
+	saveRequest := func(value as2.MessageRequest) {
 		t.Helper()
 		data, err := json.Marshal(value)
 		if err != nil {
@@ -94,7 +94,7 @@ func TestNativeAS2EncryptedMessage(t *testing.T) {
 	native := append([]string{"-test.run=^TestAS2CommandProcess$", "--", "as2-message-open"},
 		args("envelope.der", "sender.der", "recipient.pkcs8", "published.mime")...)
 	result, err := exec.CommandContext(ctx, os.Args[0], native...).Output()
-	var observed as2.OpenedMessage
+	var observed as2.MessageObservation
 	if err != nil || json.Unmarshal(result, &observed) != nil || observed.Profile != as2.EncryptedMessageProfile ||
 		observed.EnvelopeSHA != secure.Digest(read("envelope.der")) || observed.EntitySHA != secure.Digest(entity) ||
 		observed.EntitySize != int64(len(entity)) || observed.RecipientPin != request.RecipientPin || observed.SignerPin != request.SignerPin {
@@ -108,7 +108,7 @@ func TestNativeAS2EncryptedMessage(t *testing.T) {
 	refused := func(message, signer, key string) {
 		t.Helper()
 		out := new(bytes.Buffer)
-		if err := openAS2Message(ctx, args(message, signer, key, "refused.mime"), out); err == nil || out.Len() != 0 {
+		if err := runAS2Message(ctx, "as2-message-open", args(message, signer, key, "refused.mime"), out); err == nil || out.Len() != 0 {
 			t.Fatal("refused encryption or signature produced success output")
 		}
 		if _, err := os.Lstat(filepath.Join(dir, "refused.mime")); !os.IsNotExist(err) {
@@ -138,9 +138,63 @@ func TestNativeAS2EncryptedMessage(t *testing.T) {
 		refused("unsupported.der", "sender.der", "recipient.pkcs8")
 	}
 	out := new(bytes.Buffer)
-	if err := openAS2Message(ctx, args("envelope.der", "sender.der", "recipient.pkcs8", "published.mime"), out); err == nil ||
+	if err := runAS2Message(ctx, "as2-message-open", args("envelope.der", "sender.der", "recipient.pkcs8", "published.mime"), out); err == nil ||
 		out.Len() != 0 || !bytes.Equal(read("published.mime"), entity) {
 		t.Fatal("opening a second time overwrote or misreported the protected output")
 	}
 	t.Log("independent OpenSSL envelope opened as the exact signed MIME entity, with no output for an invalid seal or signer")
+
+	sealArgs := func(recipient, key, destination string) []string {
+		return []string{
+			"--request-file", filepath.Join(dir, "request.json"), "--message-file", filepath.Join(dir, "source.mime"),
+			"--recipient-certificate-file", filepath.Join(dir, recipient), "--signer-key-file", filepath.Join(dir, key),
+			"--signer-certificate-file", filepath.Join(dir, "sender.der"), "--output", filepath.Join(dir, destination),
+		}
+	}
+	seal := append([]string{"-test.run=^TestAS2CommandProcess$", "--", "as2-message-seal"},
+		sealArgs("recipient.der", "sender.pkcs8", "prepared.der")...)
+	preparation, err := exec.CommandContext(ctx, os.Args[0], seal...).Output()
+	var prepared as2.MessageObservation
+	if err != nil || json.Unmarshal(preparation, &prepared) != nil || prepared.Profile != as2.EncryptedMessageProfile ||
+		prepared.EnvelopeSHA != secure.Digest(read("prepared.der")) || prepared.EntitySHA != secure.Digest(entity) ||
+		prepared.EntitySize != int64(len(entity)) || prepared.RecipientPin != request.RecipientPin || prepared.SignerPin != request.SignerPin {
+		t.Fatalf("native CLI failed to sign and seal the exact MIME entity for the pinned peer: %v", err)
+	}
+	ssl("cms", "-decrypt", "-binary", "-inform", "DER", "-in", "prepared.der",
+		"-recip", "recipient.pem", "-inkey", "recipient.key", "-out", "prepared-signed.mime")
+	ssl("cms", "-verify", "-binary", "-crlfeol", "-inform", "SMIME", "-in", "prepared-signed.mime", "-nointern",
+		"-certfile", "sender.pem", "-CAfile", "sender.pem", "-out", "independent-entity.mime")
+	info, err = os.Stat(filepath.Join(dir, "prepared.der"))
+	if err != nil || info.Mode().Perm() != 0400 || !bytes.Equal(entity, read("independent-entity.mime")) {
+		t.Fatal("independent OpenSSL did not recover and verify the exact signed MIME bytes")
+	}
+	if second := new(bytes.Buffer); runAS2Message(ctx, "as2-message-seal", sealArgs("recipient.der", "sender.pkcs8", "second.der"), second) != nil ||
+		bytes.Equal(read("prepared.der"), read("second.der")) {
+		t.Fatal("outbound sealing failed to use fresh authenticated encryption")
+	}
+	out.Reset()
+	if err := runAS2Message(ctx, "as2-message-open", args("prepared.der", "sender.der", "recipient.pkcs8", "round-trip.mime"), out); err != nil ||
+		!bytes.Equal(read("round-trip.mime"), entity) {
+		t.Fatalf("the generated envelope did not survive the native receiver profile: %v", err)
+	}
+	refuseSeal := func(recipient, key, destination string) {
+		t.Helper()
+		output := new(bytes.Buffer)
+		if err := runAS2Message(ctx, "as2-message-seal", sealArgs(recipient, key, destination), output); err == nil || output.Len() != 0 {
+			t.Fatal("a refused seal produced a verified result")
+		}
+	}
+	refuseSeal("recipient.der", "sender.pkcs8", "prepared.der")
+	if secure.Digest(read("prepared.der")) != prepared.EnvelopeSHA {
+		t.Fatal("an output collision changed the original prepared artifact")
+	}
+	refuseSeal("recipient.der", "other.pkcs8", "refused-seal.der")
+	changed = request
+	changed.RecipientPin = request.SignerPin
+	saveRequest(changed)
+	refuseSeal("sender.der", "sender.pkcs8", "refused-seal.der")
+	if _, err := os.Lstat(filepath.Join(dir, "refused-seal.der")); !os.IsNotExist(err) {
+		t.Fatal("a wrong signing key or recipient role wrote an outbound artifact")
+	}
+	t.Log("independent OpenSSL decrypted and verified the native outbound envelope and matched the original binary entity")
 }
