@@ -516,6 +516,12 @@ an explicit profile. Stock OpenSSL fixtures verified all outcomes. A missing
 MIC remains absent, and another message's MIC is refused. Durable receipt
 recording and live AS2 HTTP roles remain due.
 
+[F564](docs/qualification/evidence/F564-as2-encrypted-message-open.json)
+opens an OpenSSL authenticated-encrypted AS2 capture and verifies the
+inner sender signature before publishing exact read-only MIME bytes.
+The native proof refused a changed encryption tag, wrong key and damaged
+inner signature. Live AS2 custody and stock application proof remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

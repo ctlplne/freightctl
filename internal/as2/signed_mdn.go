@@ -21,27 +21,46 @@ func VerifyMDNCapture(profile string, expected ExpectedMDN, capture, certificate
 	if len(capture) > MaxSignedMDN {
 		return VerifiedMDN{}, ErrSignedMDN
 	}
+	contentType, body, err := signedCapture(capture)
+	if err != nil {
+		return VerifiedMDN{}, err
+	}
+	return VerifySignedMDN(profile, expected, contentType, body, certificate, now)
+}
+
+func signedCapture(capture []byte) (string, []byte, error) {
 	fields, body, err := splitEntity(capture)
 	if err != nil {
-		return VerifiedMDN{}, ErrSignedMDN
+		return "", nil, ErrSignedMDN
 	}
 	encoding, ok := mimeTransferEncoding(fields)
 	if !ok {
-		return VerifiedMDN{}, ErrSignedMDN
+		return "", nil, ErrSignedMDN
 	}
 	switch encoding {
 	case "", "7bit", "8bit", "binary":
-		return VerifySignedMDN(profile, expected, one(fields, "Content-Type"), body, certificate, now)
+		return one(fields, "Content-Type"), body, nil
 	default:
-		return VerifiedMDN{}, ErrSignedMDN
+		return "", nil, ErrSignedMDN
 	}
 }
 
 // VerifySignedMDN accepts the Content-Type and body as separate inputs for
 // callers that already have MIME metadata, including an AS2 HTTP response.
 func VerifySignedMDN(profile string, expected ExpectedMDN, contentType string, body, certificate []byte, now time.Time) (VerifiedMDN, error) {
-	if len(contentType) > 4<<10 || len(body) > MaxSignedMDN {
+	if len(body) > MaxSignedMDN {
 		return VerifiedMDN{}, ErrSignedMDN
+	}
+	report, signature, err := signedEntityParts(contentType, body, secure.MaxAS2SignedReport)
+	if err != nil {
+		return VerifiedMDN{}, err
+	}
+	return VerifyMDN(profile, expected, report, signature, certificate, now)
+}
+
+func signedEntityParts(contentType string, body []byte, maxEntity int) ([]byte, []byte, error) {
+	if len(contentType) > 4<<10 {
+		return nil, nil, ErrSignedMDN
 	}
 	mediaType, params, err := mime.ParseMediaType(contentType)
 	protocol := strings.ToLower(params["protocol"])
@@ -49,17 +68,17 @@ func VerifySignedMDN(profile string, expected ExpectedMDN, contentType string, b
 	if err != nil || mediaType != "multipart/signed" ||
 		(protocol != "application/pkcs7-signature" && protocol != "application/x-pkcs7-signature") ||
 		!sha256MICAlgorithm(params["micalg"]) || !validMIMEBoundary(boundary) {
-		return VerifiedMDN{}, ErrSignedMDN
+		return nil, nil, ErrSignedMDN
 	}
 	report, signaturePart, ok := originalSignedParts(body, boundary)
-	if !ok || len(report) == 0 || len(report) > secure.MaxAS2SignedReport {
-		return VerifiedMDN{}, ErrSignedMDN
+	if !ok || len(report) == 0 || len(report) > maxEntity {
+		return nil, nil, ErrSignedMDN
 	}
 	signature, err := detachedSignature(signaturePart, protocol)
 	if err != nil {
-		return VerifiedMDN{}, err
+		return nil, nil, err
 	}
-	return VerifyMDN(profile, expected, report, signature, certificate, now)
+	return report, signature, nil
 }
 
 func validMIMEBoundary(boundary string) bool {

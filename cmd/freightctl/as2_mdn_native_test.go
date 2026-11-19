@@ -123,7 +123,7 @@ func TestNativeAS2MDNVerification(t *testing.T) {
 		strings.Contains(wire, messageID) || strings.Contains(wire, "freightctl-peer") {
 		t.Fatalf("stock SHA-256 CMS receipt did not verify with the exact wire bindings: %v", err)
 	}
-	childArgs := append([]string{"-test.run=^TestAS2MDNCommandProcess$", "--", "as2-mdn-verify"}, arguments(path, signature)...)
+	childArgs := append([]string{"-test.run=^TestAS2CommandProcess$", "--", "as2-mdn-verify"}, arguments(path, signature)...)
 	if actual, err := exec.CommandContext(ctx, os.Args[0], childArgs...).Output(); err != nil || string(actual) != wire {
 		t.Fatalf("native CLI command failed to produce the same verified receipt: %v", err)
 	}
@@ -151,7 +151,7 @@ func TestNativeAS2MDNVerification(t *testing.T) {
 		err := verifyAS2MDN(captureArgs(receipt), output)
 		return output.String(), err
 	}
-	childArgs = append([]string{"-test.run=^TestAS2MDNCommandProcess$", "--", "as2-mdn-verify"}, captureArgs(capture)...)
+	childArgs = append([]string{"-test.run=^TestAS2CommandProcess$", "--", "as2-mdn-verify"}, captureArgs(capture)...)
 	if actual, err := exec.CommandContext(ctx, os.Args[0], childArgs...).Output(); err != nil || string(actual) != wantCapture {
 		t.Fatalf("native CLI changed the signed entity or result from the complete OpenSSL receipt: %v", err)
 	}
@@ -302,7 +302,7 @@ func TestNativeAS2MDNVerification(t *testing.T) {
 	signed(processingError, "sha256")
 	runOpenSSL("cms", "-sign", "-binary", "-crlfeol", "-in", "report.mime", "-signer", "peer.pem",
 		"-inkey", "peer.key", "-md", "sha256", "-outform", "SMIME", "-out", "negative.mime")
-	cmd := append([]string{"-test.run=^TestAS2MDNCommandProcess$", "--", "as2-mdn-verify"},
+	cmd := append([]string{"-test.run=^TestAS2CommandProcess$", "--", "as2-mdn-verify"},
 		captureArgs(string(readFile("negative.mime")))...)
 	cmd = append(cmd, "--receipt-profile", dispositionProfile)
 	out, err := exec.CommandContext(ctx, os.Args[0], cmd...).Output()
@@ -314,9 +314,14 @@ func TestNativeAS2MDNVerification(t *testing.T) {
 	t.Log("signed AS2 warnings and failures retained their disposition without upgrading acceptance")
 }
 
-func TestAS2MDNCommandProcess(t *testing.T) {
+func TestAS2CommandProcess(t *testing.T) {
 	index := slices.Index(os.Args, "--")
-	if index < 0 || index+1 >= len(os.Args) || os.Args[index+1] != "as2-mdn-verify" {
+	if index < 0 || index+1 >= len(os.Args) {
+		return
+	}
+	switch os.Args[index+1] {
+	case "as2-mdn-verify", "as2-message-open":
+	default:
 		return
 	}
 	if err := run(os.Args[index+1:]); err != nil {

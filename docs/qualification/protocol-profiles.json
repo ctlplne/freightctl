@@ -337,6 +337,7 @@
         "F559 verifies one detached positive SHA-256/RSA MDN against a configured leaf certificate and the original MIME digest. The bounded offline command is covered with an independent OpenSSL signer.",
         "F562 verifies an entire stock OpenSSL multipart/signed MDN with the exact signed MIME bytes and either binary or base64 CMS. The whole capture and detached parts yield the same result.",
         "F563 adds an explicit signed outcome profile for processing warnings, errors and failures, with absent MIC recorded separately from a matching MIC.",
+        "F564 opens a stock OpenSSL AuthEnvelopedData capture with RSA-OAEP SHA-256 and AES-256-GCM, verifies its inner detached sender signature, and publishes only the verified MIME entity to a protected file.",
         "Pin the HTTP and encrypted CMS transport profiles, callback authority, identifier rollover and canonicalization for both complete HTTP roles. Qualify sync and async MDNs with a stock AS2 application."
       ],
       "qualification": {}

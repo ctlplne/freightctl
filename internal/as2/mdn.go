@@ -53,7 +53,8 @@ func ValidMDNProfile(profile string) bool {
 
 func VerifyMDN(profile string, expected ExpectedMDN, report, signature, certificate []byte, now time.Time) (VerifiedMDN, error) {
 	if !ValidMDNProfile(profile) || expected.Schema != 1 || !visibleASCII(expected.OriginalMessageID, 998) ||
-		!visibleASCII(expected.FinalRecipient, 128) || !lowerHexSHA256(expected.ContentMIC) || !lowerHexSHA256(expected.SignerPin) {
+		!visibleASCII(expected.FinalRecipient, 128) || !lowerHexSHA256(expected.ContentMIC) || !lowerHexSHA256(expected.SignerPin) ||
+		len(report) > secure.MaxAS2SignedReport {
 		return VerifiedMDN{}, ErrMDN
 	}
 	if err := secure.VerifyAS2DetachedCMS(report, signature, certificate, expected.SignerPin, now); err != nil {

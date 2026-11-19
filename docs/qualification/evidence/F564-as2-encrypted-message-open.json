@@ -1,0 +1,68 @@
+{
+  "schema_version": 1,
+  "id": "F564",
+  "observed_at": "2026-11-19",
+  "base_candidate": "c96f22ca9f28212e5185e8e9377dac1ed2a8e236",
+  "qualification_claim": false,
+  "scope": "Local opening of a signed and authenticated-encrypted AS2 CMS artifact with configured sender and recipient",
+  "contract": "docs/protocols/as2-encrypted-message.md",
+  "red": {
+    "command_output": {
+      "sha256": "6fc072504e3617c6a1fb451094fec76c041a96da313d8c2c5566b3fc9cfe144b",
+      "bytes": 11686
+    },
+    "observation": "The previous native binary had no encrypted-message opening command. The independent OpenSSL sender and receiver already agreed on the exact signed entity."
+  },
+  "green": {
+    "environment": "macOS ARM, Go 1.27.4, stock OpenSSL 4.0.3, private task-owned files",
+    "native_binary": {
+      "sha256": "3be981025e7083d30daa71c1a73937a9afdd4f90a411f2f5d037fffa67f1882d",
+      "bytes": 36092082
+    },
+    "original_envelope": {
+      "sha256": "c2c20e81f103bc7d883e6f66cb1878dfc8f846d4e1cdfc96dcf40a40177f0be3",
+      "bytes": 3701
+    },
+    "native_observation": {
+      "sha256": "cb6cb8ecdf4cdb298927be1a169d03374621f461e73d984e7c3b491d83a7bfc9",
+      "bytes": 456
+    },
+    "signed_entity": {
+      "sha256": "6c293e964a1dd91d8937b3069e44d09b24200f2324bb83d7084cc5394b12b402",
+      "bytes": 103
+    },
+    "rejected_changed_tag": {
+      "sha256": "62bf9bed605687c70c650d4fd5435ab8bf315ca36f017e3eef3c87de44eb322b",
+      "bytes": 93
+    },
+    "race_log": {
+      "sha256": "e96e48c2126f5fc0ba5a0a7f2b8c4bedd0f6c8deab151a9eb9225a25f349b8fc",
+      "bytes": 764
+    },
+    "assertions": [
+      "Stock OpenSSL signed the original binary MIME entity, sealed the signed multipart under the recipient key, and independently opened it byte for byte.",
+      "The native command bound the exact current recipient key and certificate pin, authenticated the envelope, then matched the separate sender certificate and inner signature before publishing the entity as an owner-read-only file.",
+      "Changed authentication tag, unsupported encryption suites or MGF hash, extra DER, wrong private key, wrong sender pin, and a valid outer envelope with a damaged inner signature produced no verified output.",
+      "A second run against an existing output preserved its bytes. The native MDN proof and the architecture boundary passed again."
+    ]
+  },
+  "static_checks": [
+    "Go vet on the affected packages",
+    "native workflow actionlint",
+    "qualification record validation",
+    "diff whitespace"
+  ],
+  "sources": {
+    "internal/crypto/as2_envelope.go": "6bca5aa0ba5cb9bf3cb7d9bead3fb393a99a8e8fa746ce4ba494b3c097483bad",
+    "internal/crypto/as2_cms.go": "c8952a6633642799c9bcf3b21085286108075cb65effb3208502a9b3185994cb",
+    "internal/as2/message.go": "38a8fe9bd8f8861335e8b5ea8127ae085671f6b9973a90920e4bc83ed97c2173",
+    "internal/as2/mdn.go": "e4b266e42d5a9f2d98c320db12abbc057d139c8928934dc01b0a978ab97cad2f",
+    "internal/as2/signed_mdn.go": "27e917da78a896ef2cb57a3e1e2f1788a8b764b3c0b8937c2357bfa4b1b4c323",
+    "cmd/freightctl/as2_message.go": "a042dfe2e6115ea323e62e26b9c47355babfc8299c031f106433dda463b87106",
+    "cmd/freightctl/as2_message_native_test.go": "9b2605860994cdddf9ecb0b37832077e6cbbdcf136929ec0f9a425d4f07d4db3",
+    "cmd/freightctl/as2_mdn_native_test.go": "9674d970cf840c66395cc0fe2e60285a719cf1192889a752754c4b53c55dcfe3",
+    "cmd/freightctl/main.go": "506d7a51315870d9af4b091ccea0dd162b3f074152f3d9921c0d6be33aedddfb",
+    ".github/workflows/native-linux.yml": "f7cdddb3b5b36585324cf93d077db68a28563da8fb3e82c3d3429e5d3355cb3b"
+  },
+  "remaining": "Verify the exact native Linux OpenSSL proof. Implement outgoing sealing, authenticated HTTP roles, durable custody and MDN recovery, certificate rollover, bounded large-file handling and independent stock AS2 application profiles."
+}

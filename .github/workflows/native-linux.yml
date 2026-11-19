@@ -174,13 +174,13 @@ jobs:
           sh scripts/go.sh -C third_party/ftpserverlib test -timeout=0 -p 1 -race -count=1 -v ./...
       - name: All implemented real PostgreSQL integration and migration tests
         run: sh scripts/integration.sh -timeout=0 -p 1 -race -v
-      - name: Independent OpenSSL signer and native AS2 receipt verification
+      - name: Independent OpenSSL signed receipt and encrypted AS2 entity verification
         if: ${{ !cancelled() }}
         run: |
           umask 077
           openssl version
           sh scripts/go.sh test -tags=cmspeer -count=1 -p 1 -race -v \
-            -run '^TestNativeAS2MDNVerification$' ./cmd/freightctl
+            -run '^TestNativeAS2(MDNVerification|EncryptedMessage)$' ./cmd/freightctl
       - name: Encrypted FTPS workflow with independent OpenPGP recipient
         if: ${{ !cancelled() && steps.aead_peer.outcome == 'success' }}
         env:

@@ -14,6 +14,7 @@ import (
 
 const (
 	MaxAS2SignedReport = 64 << 10
+	MaxAS2SignedEntity = 8 << 20
 	MaxAS2CMSSignature = 32 << 10
 	MaxAS2Certificate  = 16 << 10
 )
@@ -24,7 +25,7 @@ var ErrAS2Signature = errors.New("AS2 CMS signature or pinned peer certificate v
 // configured peer certificate. The library verifies the signature over the
 // original bytes. The AS2 profile checks the certificate at observation time.
 func VerifyAS2DetachedCMS(report, signature, certificate []byte, pin string, now time.Time) error {
-	if len(report) == 0 || len(report) > MaxAS2SignedReport ||
+	if len(report) == 0 || len(report) > MaxAS2SignedEntity ||
 		len(signature) == 0 || len(signature) > MaxAS2CMSSignature ||
 		len(certificate) == 0 || len(certificate) > MaxAS2Certificate ||
 		Digest(certificate) != pin || now.IsZero() {
@@ -39,23 +40,8 @@ func VerifyAS2DetachedCMS(report, signature, certificate []byte, pin string, now
 		return ErrAS2Signature
 	}
 	peer := signed.GetOnlySigner()
-	if peer == nil || !bytes.Equal(peer.Raw, certificate) || peer.IsCA ||
-		peer.KeyUsage&x509.KeyUsageDigitalSignature == 0 || len(peer.UnhandledCriticalExtensions) != 0 ||
-		now.Before(peer.NotBefore) || !now.Before(peer.NotAfter) {
+	if usableAS2Certificate(peer, x509.KeyUsageDigitalSignature, now) == nil || !bytes.Equal(peer.Raw, certificate) {
 		return ErrAS2Signature
-	}
-	key, ok := peer.PublicKey.(*rsa.PublicKey)
-	if !ok || key.N.BitLen() < 3072 || key.N.BitLen() > 8192 || key.E != 65537 {
-		return ErrAS2Signature
-	}
-	if len(peer.ExtKeyUsage)+len(peer.UnknownExtKeyUsage) != 0 {
-		allowed := false
-		for _, usage := range peer.ExtKeyUsage {
-			allowed = allowed || usage == x509.ExtKeyUsageEmailProtection
-		}
-		if !allowed {
-			return ErrAS2Signature
-		}
 	}
 	signer := signed.Signers[0]
 	signatureAlgorithm := signer.DigestEncryptionAlgorithm.Algorithm
@@ -90,6 +76,26 @@ func VerifyAS2DetachedCMS(report, signature, certificate []byte, pin string, now
 	signed.Content = report
 	if signed.VerifyWithChainAtTime(nil, now) != nil {
 		return ErrAS2Signature
+	}
+	return nil
+}
+
+func usableAS2Certificate(peer *x509.Certificate, keyUsage x509.KeyUsage, now time.Time) *rsa.PublicKey {
+	if peer == nil || peer.IsCA || peer.KeyUsage&keyUsage == 0 || len(peer.UnhandledCriticalExtensions) != 0 ||
+		now.IsZero() || now.Before(peer.NotBefore) || !now.Before(peer.NotAfter) {
+		return nil
+	}
+	key, ok := peer.PublicKey.(*rsa.PublicKey)
+	if !ok || key.N.BitLen() < 3072 || key.N.BitLen() > 8192 || key.E != 65537 {
+		return nil
+	}
+	if len(peer.ExtKeyUsage)+len(peer.UnknownExtKeyUsage) == 0 {
+		return key
+	}
+	for _, usage := range peer.ExtKeyUsage {
+		if usage == x509.ExtKeyUsageEmailProtection {
+			return key
+		}
 	}
 	return nil
 }
