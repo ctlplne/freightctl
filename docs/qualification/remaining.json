@@ -2099,7 +2099,8 @@
         "docs/qualification/evidence/F557-stock-sftp-browser-download-target.json",
         "docs/qualification/evidence/F560-original-restore-and-exchange-batch-terminal.json",
         "docs/qualification/evidence/F561-guarded-as2-restore-and-exchange-batch.json",
-        "docs/qualification/evidence/F566-opaque-revoked-receive-discovery.json"
+        "docs/qualification/evidence/F566-opaque-revoked-receive-discovery.json",
+        "docs/qualification/evidence/F567-original-as2-receipt-and-restore.json"
       ],
       "planning_records": [
         "docs/product/artifact-exchange-plan.md",
@@ -2311,7 +2312,8 @@
         "F557 reproduces the stock SFTP browser failure on the integrity download link's target size. The complete PostgreSQL, Chromium and stock OpenSSH replay passed five accessibility checks and recovered a lost work reply with one verified delivery. Native Linux Chrome remains due.",
         "F560 binds 19 terminal original workflows and 43 jobs at 5525129. Both native full PostgreSQL integration and scoped receipt checks passed. Both metadata restores, independent FTPS producer steps, independent stock DAV and separate browser failures stay recorded.",
         "F561 records the guarded fast-forward to 7a74bc2 after all 19 prior originals finished. The pinned Gitleaks hook found zero leaks across ten owner-authored and owner-committed commits. The new exact source started 19 original first-attempt workflows.",
-        "F566 reproduces the failed browser revocation check against real PostgreSQL and HTTPS. Discovery now returns the same opaque 404 for revoked and absent endpoints. Both cookie and bearer proofs passed, and revocation still stops an already-open reader. The original Linux Chrome replay is owed."
+        "F566 reproduces the failed browser revocation check against real PostgreSQL and HTTPS. Discovery now returns the same opaque 404 for revoked and absent endpoints. Both cookie and bearer proofs passed, and revocation still stops an already-open reader. The original Linux Chrome replay is owed.",
+        "F567 records the passing original schema-68 metadata restore, the detached AS2 receipt check, and the full PostgreSQL integration step on native x86 and ARM at 7a74bc2. The larger original batch and later local changes still need exact runtime evidence."
       ],
       "current_item": {
         "id": "F425",

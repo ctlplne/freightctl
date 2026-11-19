@@ -533,6 +533,11 @@ reproduced 409 and now gets the same 404 body as an absent endpoint with
 either cookie or bearer authentication. Revocation still stops an
 already-open reader. The original native browser replay remains due.
 
+[F567](docs/qualification/evidence/F567-original-as2-receipt-and-restore.json)
+records both original native schema-68 metadata restores and the detached
+AS2 receipt checks passing on `7a74bc2`. The full PostgreSQL integration
+step also passed on both architectures. Other original gates remain open.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

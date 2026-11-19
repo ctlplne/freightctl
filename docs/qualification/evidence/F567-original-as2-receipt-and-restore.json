@@ -1,0 +1,83 @@
+{
+  "schema_version": 1,
+  "id": "F567",
+  "observed_at": "2026-11-19",
+  "candidate": "7a74bc2f6c70a0681b4ebc0e8cf7567864798b30",
+  "workflow": 44424315405,
+  "attempt": 1,
+  "qualification_claim": false,
+  "scope": "Exact native detached AS2 receipt and metadata restore results inside the ongoing prior batch",
+  "source_results": {
+    "sha256": "7d97f152b63bc2a73d73b89468cd3d408f7ddb74108e369b885f0a56e34399a5",
+    "bytes": 17897
+  },
+  "jobs": [
+    {
+      "id": 135225085640,
+      "name": "Native Go and PostgreSQL (x86_64)",
+      "status": "completed",
+      "conclusion": "failure",
+      "passed_steps_at_observation": [
+        {
+          "step": "Independent OpenSSL signer and native AS2 receipt verification",
+          "item": "F559",
+          "conclusion": "success"
+        },
+        {
+          "step": "All implemented real PostgreSQL integration and migration tests",
+          "item": "native integration",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 135225086008,
+      "name": "Native metadata restore (x86_64)",
+      "status": "completed",
+      "conclusion": "success",
+      "passed_steps_at_observation": [
+        {
+          "step": "Back up, restore and verify exact metadata and access controls",
+          "item": "F552",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 135225086054,
+      "name": "Native Go and PostgreSQL (arm64)",
+      "status": "in_progress",
+      "conclusion": null,
+      "passed_steps_at_observation": [
+        {
+          "step": "Independent OpenSSL signer and native AS2 receipt verification",
+          "item": "F559",
+          "conclusion": "success"
+        },
+        {
+          "step": "All implemented real PostgreSQL integration and migration tests",
+          "item": "native integration",
+          "conclusion": "success"
+        }
+      ]
+    },
+    {
+      "id": 135225086138,
+      "name": "Native metadata restore (arm64)",
+      "status": "completed",
+      "conclusion": "success",
+      "passed_steps_at_observation": [
+        {
+          "step": "Back up, restore and verify exact metadata and access controls",
+          "item": "F552",
+          "conclusion": "success"
+        }
+      ]
+    }
+  ],
+  "evidence": [
+    "docs/qualification/evidence/F552-schema68-restore-check-parser.json",
+    "docs/qualification/evidence/F559-as2-detached-mdn-verification.json"
+  ],
+  "remaining": "Record the full terminal batch separately. Complete original FTPS and recipient authority paths, stock DAV incompatibilities, large and multi-host recovery, live AS2 custody and final qualification. F562 through F566 are later local source changes."
+}
