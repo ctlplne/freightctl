@@ -504,6 +504,12 @@ across ten owner-authored and owner-committed commits. The first exact
 snapshot shows 19 original workflows queued, including the new AS2
 verification and the corrected schema-68 restore.
 
+[F562](docs/qualification/evidence/F562-as2-signed-receipt-capture.json)
+lets the native CLI verify a complete OpenSSL signed receipt capture. The
+result matched the detached report and CMS. Removing the report's final
+signed CRLF failed verification. Stock AS2 HTTP and authority-bound
+receipt recovery remain due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

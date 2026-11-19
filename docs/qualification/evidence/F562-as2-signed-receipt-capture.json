@@ -1,0 +1,67 @@
+{
+  "schema_version": 1,
+  "id": "F562",
+  "observed_at": "2026-11-19",
+  "base_candidate": "05b7832090dc9d23eb1817d6d00fd04ede1df657",
+  "qualification_claim": false,
+  "scope": "Offline verification of the complete signed AS2 MIME receipt against the original message and pinned leaf",
+  "contract": "docs/protocols/as2-mdn-verification.md",
+  "prior": "docs/qualification/evidence/F559-as2-detached-mdn-verification.json",
+  "original_red": {
+    "output": {
+      "sha256": "4d56a2b3ab639c00874ce375fbc7e0d2b5837b873d6c1d95646084540db516b3",
+      "bytes": 188
+    },
+    "observation": "The existing native command refused complete MIME input and required detached files."
+  },
+  "implementation_red": {
+    "output": {
+      "sha256": "7aab92f007bb434fa065e4fb84eef47921d4046fc822af729e3f726cac0f7621",
+      "bytes": 428
+    },
+    "observation": "OpenSSL emitted LF-folded base64 despite CRLF MIME boundary framing. An early strict decode refused this independent original. The code now handles both line folds inside the base64 signature, after finding the exact MIME parts."
+  },
+  "fixture_correction": {
+    "output": {
+      "sha256": "5d012cd811befa12de7a19c9e60e2450817d7b5983e1845020f3feacaabbec45",
+      "bytes": 399
+    },
+    "observation": "The test had placed an invalid byte at a header terminator OpenSSL did not emit because Content-Disposition followed Content-Transfer-Encoding. The corrected fixture finds the actual signature body and checks that every change affected bytes."
+  },
+  "green": {
+    "environment": "macOS ARM, Go 1.27.4, stock OpenSSL 4.0.3, offline local files",
+    "native_binary": {
+      "sha256": "55e404b3469ac7db945897d7222d8294542d2e4de40e4298ebecdaac3a45ab0b",
+      "bytes": 36038338
+    },
+    "openSSL_mime_capture": {
+      "sha256": "85eb3f5d7ebba73cdced61696c974531162297c775c10a082d2c810e8330570b",
+      "bytes": 3469
+    },
+    "native_result": {
+      "sha256": "5d1ab4e5ae4d78c4747cbe144ab6b2d8a3b29999c127c11ac73c622cc7317207",
+      "bytes": 595
+    },
+    "race_proof": {
+      "sha256": "9769ea668a2f1cb749d319128ab9e57a41f6ef76c2d840beddc0f190801fb965",
+      "bytes": 405
+    },
+    "modified_signed_crlf_refusal": {
+      "sha256": "10b91e133d2fba2df803bca5256c67c2c2b9e55cbe371d4c6f15e5b930b2d200",
+      "bytes": 77
+    },
+    "assertions": [
+      "A fresh OpenSSL MIME capture and the same signature independently extracted by OpenSSL give byte-identical native CLI JSON with the report and signature digests observed independently.",
+      "Binary DER, binary DER with absent transfer encoding, unsigned epilogue and boundary transport padding preserve the exact same evidence.",
+      "Changed report bytes, removed signed CRLF, a wrong micalg, conflicting signature protocol or encoding, malformed base64, duplicate type, missing close, a third part, over-limit capture and mixed CLI input forms produce no verified result.",
+      "The original detached receipt and all existing native refusal cases ran again. The crypto import boundary passed with the race detector."
+    ]
+  },
+  "sources": {
+    "internal/as2/mdn.go": "52de9b9697a280607473a2a30f8212536ec40c5199a99358d268bcaa141f5e00",
+    "internal/as2/signed_mdn.go": "e07a3094f08944295fc1fa6974b65f81d650fd5d96d0ba556cd2b8d9c787211c",
+    "cmd/freightctl/as2_mdn.go": "85a76b31a8a18822a726c65cc7a5a84960d826d03573ea434938fd317fd9ea6d",
+    "cmd/freightctl/as2_mdn_native_test.go": "6532b44a5a072d1b6ce46217d3adc3e2521e71b5cd9a9ec10efa8ed589b1b3e5"
+  },
+  "remaining": "Exact native Linux replay, licensed or open stock AS2 application, signed negative outcomes, HTTP transport and callback authority, encrypted messages, durable intent/receipt recovery and certificate rollover."
+}

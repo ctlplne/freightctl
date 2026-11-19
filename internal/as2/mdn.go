@@ -66,8 +66,7 @@ func VerifyPositiveMDN(expected ExpectedMDN, report, signature, certificate []by
 		return VerifiedMDN{}, ErrMDN
 	}
 	value, algorithm, found := strings.Cut(one(fields, "Received-Content-Mic"), ",")
-	algorithm = strings.ToLower(strings.TrimSpace(algorithm))
-	if !found || (algorithm != "sha-256" && algorithm != "sha256") {
+	if !found || !sha256MICAlgorithm(algorithm) {
 		return VerifiedMDN{}, ErrMDN
 	}
 	mic, err := base64.StdEncoding.Strict().DecodeString(strings.TrimSpace(value))
@@ -84,17 +83,10 @@ func VerifyPositiveMDN(expected ExpectedMDN, report, signature, certificate []by
 var headerEnd = []byte("\r\n\r\n")
 
 func receiptFields(report []byte) (textproto.MIMEHeader, error) {
-	for pos, value := range report {
-		if value == '\n' && (pos == 0 || report[pos-1] != '\r') ||
-			value == '\r' && (pos == len(report)-1 || report[pos+1] != '\n') {
-			return nil, ErrMDN
-		}
-	}
-	header, body, found := bytes.Cut(report, headerEnd)
-	if !found || len(header) > 4<<10 {
+	if !canonicalCRLF(report) {
 		return nil, ErrMDN
 	}
-	outer, err := readHeader(header)
+	outer, body, err := splitEntity(report)
 	if err != nil || !identityEncoding(outer) {
 		return nil, ErrMDN
 	}
@@ -134,14 +126,47 @@ func receiptFields(report []byte) (textproto.MIMEHeader, error) {
 	return readHeader(header)
 }
 
+func splitEntity(wire []byte) (textproto.MIMEHeader, []byte, error) {
+	header, body, found := bytes.Cut(wire, headerEnd)
+	if !found || len(header) > 4<<10 || !canonicalCRLF(header) {
+		return nil, nil, ErrMDN
+	}
+	fields, err := readHeader(header)
+	return fields, body, err
+}
+
+func canonicalCRLF(wire []byte) bool {
+	for pos, value := range wire {
+		if value == '\n' && (pos == 0 || wire[pos-1] != '\r') ||
+			value == '\r' && (pos == len(wire)-1 || wire[pos+1] != '\n') {
+			return false
+		}
+	}
+	return true
+}
+
+func sha256MICAlgorithm(raw string) bool {
+	algorithm := strings.TrimSpace(raw)
+	return strings.EqualFold(algorithm, "sha-256") || strings.EqualFold(algorithm, "sha256")
+}
+
 func readHeader(raw []byte) (textproto.MIMEHeader, error) {
 	wire := bytes.TrimRight(raw, "\r\n")
 	return textproto.NewReader(bufio.NewReader(io.MultiReader(bytes.NewReader(wire), bytes.NewReader(headerEnd)))).ReadMIMEHeader()
 }
 
 func identityEncoding(fields textproto.MIMEHeader) bool {
+	encoding, ok := mimeTransferEncoding(fields)
+	return ok && (encoding == "" || encoding == "7bit")
+}
+
+func mimeTransferEncoding(fields textproto.MIMEHeader) (string, bool) {
 	values := fields.Values("Content-Transfer-Encoding")
-	return len(values) == 0 || (len(values) == 1 && strings.EqualFold(values[0], "7bit"))
+	if len(values) == 0 {
+		return "", true
+	}
+	value := one(fields, "Content-Transfer-Encoding")
+	return strings.ToLower(value), value != ""
 }
 
 func matchesRecipient(field, expected string) bool {

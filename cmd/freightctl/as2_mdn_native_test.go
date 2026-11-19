@@ -131,6 +131,79 @@ func TestNativeAS2MDNVerification(t *testing.T) {
 		expectation["signer_certificate_sha256"].(string), time.Now().Add(48*time.Hour)); err == nil {
 		t.Fatal("signed receipt survived expiration of the pinned certificate")
 	}
+
+	runOpenSSL("cms", "-sign", "-binary", "-crlfeol", "-in", "report.mime", "-signer", "peer.pem",
+		"-inkey", "peer.key", "-md", "sha256", "-outform", "SMIME", "-out", "generated.mime")
+	runOpenSSL("cms", "-cmsout", "-inform", "SMIME", "-in", "generated.mime", "-outform", "DER", "-out", "captured.der")
+	capture := string(readFile("generated.mime"))
+	capturedDER := string(readFile("captured.der"))
+	wantCapture, err := verify(path, writePrivate("capture-signature.der", capturedDER))
+	if err != nil {
+		t.Fatalf("OpenSSL detached the captured signature from the original MIME bytes: %v", err)
+	}
+	captureArgs := func(receipt string) []string {
+		t.Helper()
+		return []string{"--request-file", request(), "--receipt-file", writePrivate("receipt.mime", receipt), "--signer-certificate-file", cert}
+	}
+	verifyCapture := func(receipt string) (string, error) {
+		t.Helper()
+		output := new(bytes.Buffer)
+		err := verifyAS2MDN(captureArgs(receipt), output)
+		return output.String(), err
+	}
+	childArgs = append([]string{"-test.run=^TestAS2MDNCommandProcess$", "--", "as2-mdn-verify"}, captureArgs(capture)...)
+	if actual, err := exec.CommandContext(ctx, os.Args[0], childArgs...).Output(); err != nil || string(actual) != wantCapture {
+		t.Fatalf("native CLI changed the signed entity or result from the complete OpenSSL receipt: %v", err)
+	}
+	const binaryEnvelope = "Content-Type: multipart/signed; protocol=\"application/pkcs7-signature\"; micalg=sha256; boundary=freightctl-signed\r\n\r\n"
+	const binaryFirst = "--freightctl-signed \t\r\n"
+	const binarySecond = "\r\n--freightctl-signed\r\nContent-Type: application/pkcs7-signature\r\n"
+	const binaryClose = "\r\n--freightctl-signed--\r\n"
+	binaryCapture := binaryEnvelope + binaryFirst + report + binarySecond +
+		"Content-Transfer-Encoding: binary\r\n\r\n" + capturedDER + binaryClose
+	for _, accepted := range []string{
+		binaryCapture,
+		strings.Replace(binaryCapture, "Content-Transfer-Encoding: binary\r\n", "", 1),
+		capture + "\r\nUnsigned epilogue\r\n",
+	} {
+		if out, err := verifyCapture(accepted); err != nil || out != wantCapture {
+			t.Fatalf("MIME framing changed the verified report or signature bytes: %v", err)
+		}
+	}
+	_, signatureWire, found := strings.Cut(capture, "\r\nContent-Type: application/pkcs7-signature")
+	if !found {
+		t.Fatal("stock OpenSSL omitted its signature part")
+	}
+	_, encodedSignature, found := strings.Cut(signatureWire, "\r\n\r\n")
+	if !found || encodedSignature == "" {
+		t.Fatal("stock OpenSSL omitted its base64 signature body")
+	}
+	encodedStart := len(capture) - len(encodedSignature)
+	for index, changed := range []string{
+		strings.Replace(capture, "Received by the AS2 peer.", "Rejected by the AS2 peer.", 1),
+		strings.Replace(capture, report, strings.TrimSuffix(report, "\r\n"), 1),
+		strings.Replace(capture, `micalg="sha-256"`, `micalg="sha-512"`, 1),
+		strings.Replace(capture, `protocol="application/pkcs7-signature"`, `protocol="application/x-pkcs7-signature"`, 1),
+		strings.Replace(capture, "Content-Transfer-Encoding: base64", "Content-Transfer-Encoding: base64\r\nContent-Transfer-Encoding: binary", 1),
+		capture[:encodedStart] + "!" + encodedSignature,
+		capture[:encodedStart] + "\r" + encodedSignature,
+		"Content-Type: text/plain\r\n" + capture,
+		strings.TrimSuffix(binaryCapture, binaryClose),
+		strings.TrimSuffix(binaryCapture, binaryClose) + "\r\n--freightctl-signed\r\n\r\nextra" + binaryClose,
+		capture + strings.Repeat(" ", 128<<10),
+	} {
+		if changed == capture {
+			t.Fatalf("receipt fixture %d changed no bytes", index)
+		}
+		if out, err := verifyCapture(changed); err == nil || out != "" {
+			t.Fatalf("ambiguous, unsupported or changed signed capture %d produced evidence", index)
+		}
+	}
+	if output := new(bytes.Buffer); verifyAS2MDN(append(captureArgs(capture), "--report-file", path, "--signature-file", signature), output) == nil || output.Len() != 0 {
+		t.Fatal("the CLI accepted competing sources for the signed receipt")
+	}
+	t.Log("stock OpenSSL complete MIME receipt matched its detached report and signature")
+
 	refused := func(path, signature string) {
 		t.Helper()
 		if out, err := verify(path, signature); err == nil || out != "" {

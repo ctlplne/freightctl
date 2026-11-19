@@ -1,4 +1,4 @@
-# Verify a detached AS2 receipt
+# Verify a signed AS2 receipt
 
 `freightctl as2-mdn-verify` checks a captured positive AS2 message disposition
 notification (MDN) against the sender's saved message and its configured peer.
@@ -7,11 +7,21 @@ that exact message ID and the digest of its signed MIME entity. Both receiver
 durability and business acceptance remain `unknown`. [RFC 4130,
 sections 5.3.3 and 7](https://www.rfc-editor.org/rfc/rfc4130.html#section-7)
 
-Save four protected input files before running the command. The receipt MIME
-entity is the exact signed first part of the captured `multipart/signed` MDN.
-Keep its CRLF line endings and MIME headers. The detached signature file
-contains the decoded CMS bytes from the signature part. The certificate file
+Save the complete `multipart/signed` MIME entity in a protected file. Include
+the outer `Content-Type` header, the blank line and the untouched MIME body.
+Keep the original CRLF framing around the MIME parts. The certificate file
 contains the peer's reviewed leaf certificate in DER format.
+
+```sh
+freightctl as2-mdn-verify \
+  --request-file .private/as2-original.json \
+  --receipt-file .private/as2-receipt.mime \
+  --signer-certificate-file .private/as2-peer.der
+```
+
+If you already have the two parts, pass the exact signed MIME entity and
+decoded CMS signature separately. Both forms produce the same verified
+result. The command requires exactly one input form.
 
 ```sh
 freightctl as2-mdn-verify \
@@ -42,10 +52,18 @@ produces no verified receipt. [RFC 5652, section 5](https://www.rfc-editor.org/r
 
 The local JSON result carries the processed disposition, original message ID
 digest, MIC, signed report digest, signature digest and certificate digest.
-The request is bounded to 4 KiB, the signed report to 64 KiB, the CMS signature
-to 32 KiB and the certificate to 16 KiB. Inside the report, the top headers
-and machine-readable notification are bounded to 4 KiB and 8 KiB. The
-verifier accepts two MIME parts and keeps the free-text note out of its result.
+The complete capture is bounded to 128 KiB, the request to 4 KiB, the signed
+report to 64 KiB, the CMS signature to 32 KiB and the certificate to 16 KiB.
+The capture, signature part and signed report each have a 4 KiB top-header
+limit. The machine-readable notification is bounded to 8 KiB.
+
+The container must declare `multipart/signed` with a SHA-256 `micalg` and a
+matching PKCS#7 signature protocol. The verifier uses the first of exactly two
+parts as the signed bytes, including the part's headers and any final CRLF.
+Only the CRLF introducing the next delimiter belongs to the delimiter.
+The signature part can contain binary DER or base64, including LF or CRLF
+folds in the base64. This decoding applies to the signature part only. The
+free-text note stays out of the result. [RFC 1847, section 2.1](https://www.rfc-editor.org/rfc/rfc1847.html#section-2.1) · [RFC 2046, section 5.1.1](https://www.rfc-editor.org/rfc/rfc2046.html#section-5.1.1)
 
 This profile covers local verification of a positive receipt from protected
 files. AS2 HTTP sending and receiving, CMS encryption, synchronous and
