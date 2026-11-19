@@ -279,4 +279,23 @@ func TestArtifactExchangeHTTPSUsesSameCookieAndBearerAuthorityAndSeparateReply(t
 	if json.Unmarshal(data, &revoked) != nil || revoked.Endpoint.State != "revoked" || revoked.Endpoint.Revision != 2 {
 		t.Fatal("served endpoint revocation did not bind original revision")
 	}
+	replyIncoming := prefix + "/exchange-endpoints/" + r.Endpoint.ID + "/incoming?limit=20"
+	exchangeAPIRequest(t, server, "GET", replyIncoming, aCookie, nil, nil, 200)
+	adminHeaders["Idempotency-Key"] = "revoke-reply-endpoint"
+	revoke.ID, revoke.ExpectedRevision = r.Endpoint.ID, r.Endpoint.Revision
+	_, data = exchangeAPIRequest(t, server, "POST", prefix+"/exchange-endpoints/commands", cookie, adminHeaders, exchangeAPIJSON(t, revoke), 200)
+	if json.Unmarshal(data, &revoked) != nil || revoked.Endpoint.State != "revoked" || revoked.Endpoint.Revision != 2 {
+		t.Fatal("the current recipient endpoint was not revoked")
+	}
+	_, absent := exchangeAPIRequest(t, server, "GET", prefix+"/exchange-endpoints/"+secure.NewID()+"/incoming?limit=20", aCookie, nil, nil, 404)
+	_, hidden := exchangeAPIRequest(t, server, "GET", replyIncoming, aCookie, nil, nil, 404)
+	if !bytes.Equal(hidden, absent) {
+		t.Fatal("revoked and absent incoming endpoints had different refusal bodies")
+	}
+	for _, headers := range []map[string]string{bearerA, bearerB, {"Authorization": "Bearer " + string(other.Bytes)}} {
+		_, body := exchangeAPIRequest(t, server, "GET", replyIncoming, nil, headers, nil, 404)
+		if !bytes.Equal(body, absent) {
+			t.Fatal("endpoint revocation exposed metadata under bearer authentication")
+		}
+	}
 }

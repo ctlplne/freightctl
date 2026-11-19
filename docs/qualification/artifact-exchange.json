@@ -149,7 +149,8 @@
         "docs/qualification/evidence/F505-operator-connection-provisioning.json",
         "docs/qualification/evidence/F509-stock-ftps-producer-exchange.json",
         "docs/qualification/evidence/F510-supervised-stock-ftps-producer.json",
-        "docs/qualification/evidence/F534-native-recovery-and-policy-grammar.json"
+        "docs/qualification/evidence/F534-native-recovery-and-policy-grammar.json",
+        "docs/qualification/evidence/F566-opaque-revoked-receive-discovery.json"
       ]
     },
     {

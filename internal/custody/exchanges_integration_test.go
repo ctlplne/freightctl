@@ -177,8 +177,8 @@ func TestArtifactExchangeRevocationStopsAlreadyOpenReaderAndDiscovery(t *testing
 	if n, err := reader.ReadAt(chunk, 1024); err == nil || n != 0 {
 		t.Fatal("revoked view emitted more bytes", n, err)
 	}
-	if _, err = f.db.IncomingExchanges(f.ctx, f.b, f.endpoint.ID, "", 20, f.limits); err == nil {
-		t.Fatal("revoked endpoint remained discoverable")
+	if _, err = f.db.IncomingExchanges(f.ctx, f.b, f.endpoint.ID, "", 20, f.limits); !errors.Is(err, store.ErrNotFound) {
+		t.Fatal("revoked endpoint did not use opaque discovery refusal", err)
 	}
 	recovered, err := f.service.OfferExchange(f.ctx, f.a, "offer", r)
 	if err != nil || !recovered.Replayed || recovered.Exchange.ID != offer.Exchange.ID {

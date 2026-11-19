@@ -527,6 +527,12 @@ prepares the reverse signed and encrypted AS2 envelope. Independent OpenSSL
 decrypted the native DER file, verified the configured signer, and recovered
 the exact original MIME bytes. Durable HTTP dispatch remains due.
 
+[F566](docs/qualification/evidence/F566-opaque-revoked-receive-discovery.json)
+fixes the native browser's revoked discovery failure. The HTTPS replay
+reproduced 409 and now gets the same 404 body as an absent endpoint with
+either cookie or bearer authentication. Revocation still stops an
+already-open reader. The original native browser replay remains due.
+
 [F464](docs/qualification/evidence/F464-sftpgo-migration-plan.json) reads a
 protected SFTPGo Community export and reports rule/action links and proposed
 calendar fragments. The offline CLI passed twice on an exact stock 2.7.6

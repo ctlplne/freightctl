@@ -1,0 +1,59 @@
+{
+  "schema_version": 1,
+  "id": "F566",
+  "observed_at": "2026-11-19",
+  "base_candidate": "a5b174eae30f5f9f0eadb7375cbd04c780894f1e",
+  "qualification_claim": false,
+  "scope": "Current authorized receive discovery gives the same opaque refusal for a revoked endpoint and an absent endpoint",
+  "original": {
+    "candidate": "7a74bc2f6c70a0681b4ebc0e8cf7567864798b30",
+    "workflow": 44424315324,
+    "job": 135225085469,
+    "attempt": 1,
+    "phase": "revoked-discovery",
+    "gate": "completed-phase",
+    "assertion": "scripts/artifact-exchange-browser.mjs:1544",
+    "protected_job_log": {
+      "sha256": "b40c5facd4d72c9cbe254a6639aae00feacb066884d9ef610c367b59d19b0a45",
+      "bytes": 34814
+    },
+    "safe_result_digest": "f2863d53ef2863e56827cb4778e4b49f30964a6b1db3d9cefc3c6c57ad6ee3db",
+    "observation": "The native recipient browser stopped at its expected HTTP 404 after the administrator committed endpoint revocation."
+  },
+  "local_red": {
+    "log": {
+      "sha256": "736e172656cdd21b0388fc975193a98dbfe4e57cece42c7d6fc51b5498824a88",
+      "bytes": 357
+    },
+    "observation": "With the current recipient session authorized to discover the fixture, HTTPS returned 409 after committing revocation where an absent endpoint returned 404."
+  },
+  "fixture_bootstrap": {
+    "log": {
+      "sha256": "702b498298ec1dfca4e60bd5b783033d67f316b60634d8d8caf6500f2ef1a89c",
+      "bytes": 561
+    },
+    "observation": "The HTTP replay passed. A second package correctly refused the empty runtime database. The combined replay then initialized the task-owned schema with the normal native init command."
+  },
+  "local_green": {
+    "environment": "macOS ARM, real PostgreSQL 16.15 in a task-owned 192 MiB one-CPU container, HTTPS and race detector",
+    "log": {
+      "sha256": "40e11c20511dbc7ea77e45d60c1d3bc854ebdb4ba3f234531def12c59089fad5",
+      "bytes": 458
+    },
+    "assertions": [
+      "Active discovery succeeds. After native endpoint revocation, the recipient cookie and bearer identities receive an identical opaque 404 body to the missing control. The other current bearer identities receive the same refusal.",
+      "The previously open reader emits zero additional bytes after revocation. The original offer receipt is recoverable and carries no renewed receive authority."
+    ]
+  },
+  "sources": {
+    "internal/store/artifact_exchanges.go": "4ecf38a7a265fca11fe978f1ceb90ce4e2984e3f477999e5d932549241edb160",
+    "internal/api/artifact_exchanges_integration_test.go": "58f6ace9a06f36080abf9c2b766a47cf9f16d101acdc4c5e5d8a43b21b84d404",
+    "internal/custody/exchanges_integration_test.go": "561fb0a2a132b930e6b004f86ea93aa90a71da15e8bad328274ce54ff4e34ffa"
+  },
+  "static_checks": [
+    "affected integration and exchangebrowser Go vet",
+    "qualification record validation",
+    "diff whitespace"
+  ],
+  "remaining": "Replay the original native Linux Chrome recipient journey with its original authority and non-disclosure assertions. The independent stock DAV discovery and exclusive-write failures remain separately open."
+}

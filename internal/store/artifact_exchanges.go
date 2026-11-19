@@ -425,6 +425,11 @@ func (s *Store) IncomingExchanges(ctx context.Context, scope Scope, endpoint, af
 	if err != nil {
 		return nil, err
 	}
+	// Discovery carries no client-supplied revision. An inactive head
+	// has no current receive view and must use the ordinary opaque refusal.
+	if v.State != "active" {
+		return nil, ErrNotFound
+	}
 	d, err := bindExchangeEndpoint(v, ExchangeEndpointReference{ID: v.ID, Revision: v.Revision, Hash: v.Hash}, limits)
 	if err != nil {
 		return nil, err

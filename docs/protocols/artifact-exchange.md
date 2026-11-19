@@ -67,6 +67,7 @@ selectors must match the authenticated identity; they are not permission grants.
    `exchanges/{exchange}` or retrieves `exchanges/{exchange}/file`. Poll pages have
    at most 100 entries. Finish a pagination cycle with `next`, then start each new
    cycle without a cursor. A cursor is not a permanent new-arrival checkpoint.
+   A revoked or unknown endpoint returns the same opaque 404 in discovery.
 6. A reply is a new request, with separately authorized delivery and readable
    source bytes. `reply_to` links the original exchange; it grants no source,
    recipient, forwarding or execution right. Receiving a view does not add
